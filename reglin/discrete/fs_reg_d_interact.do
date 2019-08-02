@@ -2,14 +2,29 @@ cls
 clear
 
 /*
-  Back to Fan's Stata4Econ:
+  Back to Fan's Stata4Econ or other repositories:
   - http://fanwangecon.github.io
   - http://fanwangecon.github.io/Stata4Econ
+  - http://fanwangecon.github.io/R4Econ
+  - http://fanwangecon.github.io/M4Econ
+  - http://fanwangecon.github.io/CodeDynaAsset/
+  - http://fanwangecon.github.io/Math4Econ/
+  - http://fanwangecon.github.io/Stat4Econ/
+  - http://fanwangecon.github.io/Tex4Econ
 
   1. Same regression for two Subgroups
   2. Show alll subgroup coefficients in one regression
 */
 
+///--- Start log
+set more off
+capture log close
+cd "${root_log}"
+global curlogfile "~\Stata4Econ\reglin\discrete\fs_reg_d_interact"
+log using "${curlogfile}" , replace
+log on
+
+///--- Load Data
 set more off
 sysuse auto, clear
 
@@ -53,4 +68,15 @@ eststo, title(both): quietly regress ///
 esttab, mtitle title("Foreign or Domestic")
 
 
-translate @Results "~\Stata4Econ\reglin\discrete\fs_reg_d_interact.pdf", replace translator(Results2pdf)
+///--- End Log and to HTML
+log close
+capture noisily {
+  log2html "${curlogfile}", replace
+}
+capture noisily {
+  erase "${curlogfile}.smcl"
+}
+///--- to PDF
+capture noisily {
+	translate @Results "${curlogfile}.pdf", replace translator(Results2pdf)
+}

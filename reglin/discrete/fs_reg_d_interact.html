@@ -1,0 +1,323 @@
+
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css">
+BODY{background-color: ffffff;
+    font-family: monaco, "courier new", monospace;
+     color: #000000}
+.input {color: #CC6600}
+.result{color: #000099}
+.error{color: #dd0000}
+</style>
+</head>
+<body>
+<pre>
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\reglin\discrete\fs_reg_d_interact.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>opened on:  <span class=result> 1 Aug 2019, 21:24:50</span>
+<br><br>
+<span class=input>. log on</span>
+(log already on)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Load Data</span>
+<span class=input>&gt; set more off</span>
+<br><br>
+<span class=input>. sysuse auto, clear</span>
+(1978 Automobile Data)
+<br><br>
+<span class=input>. </span>
+<span class=input>. tab rep78</span>
+<br><br>
+<span class=result>     </span>Repair |
+Record 1978 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |<span class=result>          2        2.90        2.90</span>
+          2 |<span class=result>          8       11.59       14.49</span>
+          3 |<span class=result>         30       43.48       57.97</span>
+          4 |<span class=result>         18       26.09       84.06</span>
+          5 |<span class=result>         11       15.94      100.00</span>
+------------+-----------------------------------
+      Total |<span class=result>         69      100.00</span>
+<br><br>
+<span class=input>. tab foreign</span>
+<br><br>
+<span class=result>   </span>Car type |      Freq.     Percent        Cum.
+------------+-----------------------------------
+   Domestic |<span class=result>         52       70.27       70.27</span>
+    Foreign |<span class=result>         22       29.73      100.00</span>
+------------+-----------------------------------
+      Total |<span class=result>         74      100.00</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. * 1. Same regression for two Subgroups</span>
+<span class=input>. eststo clear</span>
+<br><br>
+<span class=input>. eststo, title(dom): regress weight ib3.rep78 if foreign == 0</span>
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        48</span>
+-------------+----------------------------------   F(4, 43)        = <span class=result>     2.73</span>
+       Model | <span class=result> 4501656.94         4  1125414.24   </span>Prob &gt; F        =<span class=result>    0.0414</span>
+    Residual | <span class=result> 17746209.7        43  412702.552   </span>R-squared       =<span class=result>    0.2023</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.1281</span>
+       Total | <span class=result> 22247866.7        47  473358.865   </span>Root MSE        =   <span class=result> 642.42</span>
+<br><br>
+------------------------------------------------------------------------------
+      weight |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       rep78 |
+          1  |<span class=result>  -342.2222   470.7829    -0.73   0.471    -1291.646     607.202</span>
+          2  |<span class=result>  -88.47222   258.5983    -0.34   0.734    -609.9855     433.041</span>
+          4  |<span class=result>         90   247.2673     0.36   0.718     -408.662     588.662</span>
+          5  |<span class=result>  -1482.222   470.7829    -3.15   0.003    -2431.646    -532.798</span>
+             |
+       _cons |<span class=result>   3442.222   123.6337    27.84   0.000     3192.891    3691.553</span>
+------------------------------------------------------------------------------
+(<span class=result>est1</span> stored)
+<br><br>
+<span class=input>. eststo, title(foreign): regress weight ib3.rep78 if foreign == 1</span>
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        21</span>
+-------------+----------------------------------   F(2, 18)        = <span class=result>     1.58</span>
+       Model | <span class=result> 396711.111         2  198355.556   </span>Prob &gt; F        =<span class=result>    0.2338</span>
+    Residual | <span class=result> 2263555.56        18  125753.086   </span>R-squared       =<span class=result>    0.1491</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.0546</span>
+       Total | <span class=result> 2660266.67        20  133013.333   </span>Root MSE        =   <span class=result> 354.62</span>
+<br><br>
+------------------------------------------------------------------------------
+      weight |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       rep78 |
+          4  |<span class=result>   197.7778   236.4112     0.84   0.414    -298.9037    694.4593</span>
+          5  |<span class=result>   393.3333   236.4112     1.66   0.113    -103.3482    890.0149</span>
+             |
+       _cons |<span class=result>       2010   204.7381     9.82   0.000     1579.861    2440.139</span>
+------------------------------------------------------------------------------
+(<span class=result>est2</span> stored)
+<br><br>
+<span class=input>. esttab, mtitle title("Foreign or Domestic")</span>
+<br><br>
+Foreign or Domestic
+--------------------------------------------
+                      (1)             (2)   
+                      dom         foreign   
+--------------------------------------------
+1.rep78     <span class=result>       -342.2                   </span>
+            <span class=result>      </span>(<span class=result>-0.73</span>)<span class=result>                   </span>
+<br><br>
+2.rep78     <span class=result>       -88.47                   </span>
+            <span class=result>      </span>(<span class=result>-0.34</span>)<span class=result>                   </span>
+<br><br>
+3.rep78     <span class=result>            0               0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>             </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+4.rep78     <span class=result>        90.00           197.8   </span>
+            <span class=result>       </span>(<span class=result>0.36</span>)<span class=result>          </span>(<span class=result>0.84</span>)<span class=result>   </span>
+<br><br>
+5.rep78     <span class=result>      -1482.2**         393.3   </span>
+            <span class=result>      </span>(<span class=result>-3.15</span>)<span class=result>          </span>(<span class=result>1.66</span>)<span class=result>   </span>
+<br><br>
+_cons       <span class=result>       3442.2***       2010.0***</span>
+            <span class=result>      </span>(<span class=result>27.84</span>)<span class=result>          </span>(<span class=result>9.82</span>)<span class=result>   </span>
+--------------------------------------------
+N           <span class=result>           48              21   </span>
+--------------------------------------------
+t statistics in parentheses
+* p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
+<br><br>
+<span class=input>. </span>
+<span class=input>. * 2. Show alll subgroup coefficients in one regression</span>
+<span class=input>. capture drop domestic</span>
+<br><br>
+<span class=input>. recode foreign ///</span>
+<span class=input>&gt;    (0 = 1 "domestic") ///1</span>
+<span class=input>&gt;    (1 = 0 "foreign") ///</span>
+<span class=input>&gt;    (else = .) ///</span>
+<span class=input>&gt;    , ///</span>
+<span class=input>&gt;    gen(domestic)</span>
+(74 differences between foreign and domestic)
+<br><br>
+<span class=input>. tab domestic foreign</span>
+<br><br>
+<span class=result> </span>RECODE of |
+   foreign |       Car type
+(Car type) |  Domestic    Foreign |     Total
+-----------+----------------------+----------
+   foreign |<span class=result>         0         22 </span>|<span class=result>        22 </span>
+  domestic |<span class=result>        52          0 </span>|<span class=result>        52 </span>
+-----------+----------------------+----------
+     Total |<span class=result>        52         22 </span>|<span class=result>        74 </span>
+<br><br>
+<br><br>
+<span class=input>. </span>
+<span class=input>. * using factor for binary</span>
+<span class=input>. eststo clear</span>
+<br><br>
+<span class=input>. eststo, title(both): quietly regress ///</span>
+<span class=input>&gt;     weight ///</span>
+<span class=input>&gt;     ib0.foreign ib0.domestic ///</span>
+<span class=input>&gt;     ib3.rep78#ib0.foreign ///</span>
+<span class=input>&gt;     ib3.rep78#ib0.domestic ///</span>
+<span class=input>&gt;     , noc</span>
+(<span class=result>est1</span> stored)
+<br><br>
+<span class=input>. esttab, mtitle title("Foreign or Domestic")</span>
+<br><br>
+Foreign or Domestic
+----------------------------
+                      (1)   
+                     both   
+----------------------------
+0.foreign   <span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+1.foreign   <span class=result>       2010.0***</span>
+            <span class=result>       </span>(<span class=result>6.08</span>)<span class=result>   </span>
+<br><br>
+0.domestic  <span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+1.domestic  <span class=result>       3442.2***</span>
+            <span class=result>      </span>(<span class=result>31.23</span>)<span class=result>   </span>
+<br><br>
+1.rep78#0.~n<span class=result>       -342.2   </span>
+            <span class=result>      </span>(<span class=result>-0.82</span>)<span class=result>   </span>
+<br><br>
+1.rep78#1.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+2.rep78#0.~n<span class=result>       -88.47   </span>
+            <span class=result>      </span>(<span class=result>-0.38</span>)<span class=result>   </span>
+<br><br>
+2.rep78#1.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+3.rep78#0.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+3.rep78#1.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+4.rep78#0.~n<span class=result>        90.00   </span>
+            <span class=result>       </span>(<span class=result>0.41</span>)<span class=result>   </span>
+<br><br>
+4.rep78#1.~n<span class=result>        197.8   </span>
+            <span class=result>       </span>(<span class=result>0.52</span>)<span class=result>   </span>
+<br><br>
+5.rep78#0.~n<span class=result>      -1482.2***</span>
+            <span class=result>      </span>(<span class=result>-3.53</span>)<span class=result>   </span>
+<br><br>
+5.rep78#1.~n<span class=result>        393.3   </span>
+            <span class=result>       </span>(<span class=result>1.03</span>)<span class=result>   </span>
+<br><br>
+1.rep78#0.~c<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+1.rep78#1.~c<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+2.rep78#0.~c<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+2.rep78#1.~c<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+3.rep78#0.~c<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+3.rep78#1.~c<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+4.rep78#0.~c<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+4.rep78#1.~c<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+5.rep78#0.~c<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+5.rep78#1.~c<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+----------------------------
+N           <span class=result>           69   </span>
+----------------------------
+t statistics in parentheses
+* p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
+<br><br>
+<span class=input>. </span>
+<span class=input>. * using cts for binary</span>
+<span class=input>. eststo clear</span>
+<br><br>
+<span class=input>. eststo, title(both): quietly regress ///</span>
+<span class=input>&gt;     weight ///</span>
+<span class=input>&gt;     c.foreign c.domestic ///</span>
+<span class=input>&gt;     ib3.rep78#c.foreign ///</span>
+<span class=input>&gt;     ib3.rep78#c.domestic ///</span>
+<span class=input>&gt;     , noc</span>
+(<span class=result>est1</span> stored)
+<br><br>
+<span class=input>. esttab, mtitle title("Foreign or Domestic")</span>
+<br><br>
+Foreign or Domestic
+----------------------------
+                      (1)   
+                     both   
+----------------------------
+foreign     <span class=result>       2010.0***</span>
+            <span class=result>       </span>(<span class=result>6.08</span>)<span class=result>   </span>
+<br><br>
+domestic    <span class=result>       3442.2***</span>
+            <span class=result>      </span>(<span class=result>31.23</span>)<span class=result>   </span>
+<br><br>
+1.rep78#c.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+2.rep78#c.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+3.rep78#c.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+4.rep78#c.~n<span class=result>        197.8   </span>
+            <span class=result>       </span>(<span class=result>0.52</span>)<span class=result>   </span>
+<br><br>
+5.rep78#c.~n<span class=result>        393.3   </span>
+            <span class=result>       </span>(<span class=result>1.03</span>)<span class=result>   </span>
+<br><br>
+1.rep78#c.~c<span class=result>       -342.2   </span>
+            <span class=result>      </span>(<span class=result>-0.82</span>)<span class=result>   </span>
+<br><br>
+2.rep78#c.~c<span class=result>       -88.47   </span>
+            <span class=result>      </span>(<span class=result>-0.38</span>)<span class=result>   </span>
+<br><br>
+3.rep78#c.~c<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+4.rep78#c.~c<span class=result>        90.00   </span>
+            <span class=result>       </span>(<span class=result>0.41</span>)<span class=result>   </span>
+<br><br>
+5.rep78#c.~c<span class=result>      -1482.2***</span>
+            <span class=result>      </span>(<span class=result>-3.53</span>)<span class=result>   </span>
+----------------------------
+N           <span class=result>           69   </span>
+----------------------------
+t statistics in parentheses
+* p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
+<br><br>
+<span class=input>. </span>
+<span class=input>. </span>
+<span class=input>. ///--- End Log and to HTML</span>
+<span class=input>&gt; log close</span>
+<span class=result>      </span>name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\reglin\discrete\fs_reg_d_interact.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>closed on:  <span class=result> 1 Aug 2019, 21:24:51</span>
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</pre>
+</body>
+</html>

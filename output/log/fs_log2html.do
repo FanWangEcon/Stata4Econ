@@ -76,3 +76,8 @@ capture noisily {
 capture noisily {
   erase "${curlogfile}.smcl"
 }
+
+///--- to PDF
+capture noisily {
+	translate @Results "${curlogfile}.pdf", replace translator(Results2pdf)
+}
