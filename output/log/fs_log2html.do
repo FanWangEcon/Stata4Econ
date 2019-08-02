@@ -32,11 +32,47 @@ log on
 set more off
 sysuse auto, clear
 
-bys foreign (price): list *
+///--- Vars to Show
+
+#delimit ;
+global st_ids_etc "
+			make
+			foreign
+			";
+
+global st_outcomes "
+			displacement
+			weight length
+			";
+
+global st_inputs "
+			trunk headroom
+			price
+			turn
+			";
+
+#delimit cr
+
+///--- Describe Vars
+d $st_ids_etc
+d $st_outcomes
+d $st_inputs
+
+///--- Summ Vars
+summ $st_ids_etc
+summ $st_outcomes
+summ $st_inputs
+		
+bys foreign (price): list ///
+	$st_ids_etc ///
+	$st_outcomes ///
+	$st_inputs
 
 ///--- End Log and to HTML
 log close
 capture noisily {
-  log2html ${curlogfile}, replace
-  erase ${curlogfile}.smcl
+  log2html "${curlogfile}", replace
+}
+capture noisily {
+  erase "${curlogfile}.smcl"
 }
