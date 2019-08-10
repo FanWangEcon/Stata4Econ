@@ -1,0 +1,144 @@
+
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css">
+BODY{background-color: ffffff;
+    font-family: monaco, "courier new", monospace;
+     color: #000000}
+.input {color: #CC6600}
+.result{color: #000099}
+.error{color: #dd0000}
+</style>
+</head>
+<body>
+<pre>
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\reglin\basic\fs_reg_get_stats.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>opened on:  <span class=result>10 Aug 2019, 18:40:23</span>
+<br><br>
+<span class=input>. log on</span>
+(log already on)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Load Data</span>
+<span class=input>&gt; set more off</span>
+<br><br>
+<span class=input>. sysuse auto, clear</span>
+(1978 Automobile Data)
+<br><br>
+<span class=input>. </span>
+<span class=input>. tab rep78</span>
+<br><br>
+<span class=result>     </span>Repair |
+Record 1978 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |<span class=result>          2        2.90        2.90</span>
+          2 |<span class=result>          8       11.59       14.49</span>
+          3 |<span class=result>         30       43.48       57.97</span>
+          4 |<span class=result>         18       26.09       84.06</span>
+          5 |<span class=result>         11       15.94      100.00</span>
+------------+-----------------------------------
+      Total |<span class=result>         69      100.00</span>
+<br><br>
+<span class=input>. tab foreign</span>
+<br><br>
+<span class=result>   </span>Car type |      Freq.     Percent        Cum.
+------------+-----------------------------------
+   Domestic |<span class=result>         52       70.27       70.27</span>
+    Foreign |<span class=result>         22       29.73      100.00</span>
+------------+-----------------------------------
+      Total |<span class=result>         74      100.00</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Regression</span>
+<span class=input>&gt; regress weight ib3.rep78 if foreign == 0</span>
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        48</span>
+-------------+----------------------------------   F(4, 43)        = <span class=result>     2.73</span>
+       Model | <span class=result> 4501656.94         4  1125414.24   </span>Prob &gt; F        =<span class=result>    0.0414</span>
+    Residual | <span class=result> 17746209.7        43  412702.552   </span>R-squared       =<span class=result>    0.2023</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.1281</span>
+       Total | <span class=result> 22247866.7        47  473358.865   </span>Root MSE        =   <span class=result> 642.42</span>
+<br><br>
+------------------------------------------------------------------------------
+      weight |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       rep78 |
+          1  |<span class=result>  -342.2222   470.7829    -0.73   0.471    -1291.646     607.202</span>
+          2  |<span class=result>  -88.47222   258.5983    -0.34   0.734    -609.9855     433.041</span>
+          4  |<span class=result>         90   247.2673     0.36   0.718     -408.662     588.662</span>
+          5  |<span class=result>  -1482.222   470.7829    -3.15   0.003    -2431.646    -532.798</span>
+             |
+       _cons |<span class=result>   3442.222   123.6337    27.84   0.000     3192.891    3691.553</span>
+------------------------------------------------------------------------------
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Get r(table) Column Names</span>
+<span class=input>&gt; global colnames : colnames r(table)</span>
+<br><br>
+<span class=input>. di "$colnames"</span>
+<span class=result>1.rep78 2.rep78 3b.rep78 4.rep78 5.rep78 _cons</span>
+<br><br>
+<span class=input>. global rownames : rownames r(table)</span>
+<br><br>
+<span class=input>. di "$rownames"</span>
+<span class=result>b se t pvalue ll ul df crit eform</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Regression Statistics as matrix</span>
+<span class=input>&gt; matrix list r(table)</span>
+<br><br>
+r(table)[9,6]
+                 1.          2.         3b.          4.          5.            
+             rep78       rep78       rep78       rep78       rep78       _cons
+     b <span class=result> -342.22222  -88.472222           0          90  -1482.2222   3442.2222</span>
+    se <span class=result>  470.78292   258.59833           .    247.2673   470.78292   123.63365</span>
+     t <span class=result> -.72692149  -.34212217           .   .36397857  -3.1484197   27.842114</span>
+pvalue <span class=result>  .47121318   .73392554           .   .71765767   .00298173   3.865e-29</span>
+    ll <span class=result> -1291.6465  -609.98547           .  -408.66204  -2431.6465   3192.8912</span>
+    ul <span class=result>  607.20202   433.04102           .   588.66204  -532.79798   3691.5532</span>
+    df <span class=result>         43          43          43          43          43          43</span>
+  crit <span class=result>  2.0166922   2.0166922   2.0166922   2.0166922   2.0166922   2.0166922</span>
+ eform <span class=result>          0           0           0           0           0           0</span>
+<br><br>
+<span class=input>. matrix rtable = r(table)</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. //-- Get All p values</span>
+<span class=input>. matrix pval_row = rtable[rownumb(rtable, "pvalue"), 1...]</span>
+<br><br>
+<span class=input>. matrix list pval_row</span>
+<br><br>
+pval_row[1,6]
+                1.         2.        3b.         4.         5.           
+            rep78      rep78      rep78      rep78      rep78      _cons
+pvalue <span class=result> .47121318  .73392554          .  .71765767  .00298173  3.865e-29</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. //-- Get One Particular pValue</span>
+<span class=input>. di colnumb(rtable, "5.rep78")</span>
+<span class=result>5</span>
+<br><br>
+<span class=input>. di rownumb(rtable, "pvalue")</span>
+<span class=result>4</span>
+<br><br>
+<span class=input>. global pval = rtable[rownumb(rtable, "pvalue"), colnumb(rtable, "5.rep78")]</span>
+<br><br>
+<span class=input>. di "$pval"</span>
+<span class=result>.0029817253864863</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- End Log and to HTML</span>
+<span class=input>&gt; log close</span>
+<span class=result>      </span>name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\reglin\basic\fs_reg_get_stats.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>closed on:  <span class=result>10 Aug 2019, 18:40:23</span>
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</pre>
+</body>
+</html>
