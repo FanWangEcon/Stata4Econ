@@ -49,9 +49,9 @@ matrix pval_row = rtable[rownumb(rtable, "pvalue"), 1...]
 matrix list pval_row
 
 //-- Get One Particular pValue
-global colnames : colnames r(table)
-di "$colnames"
-global pval = rtable[rownumb(rtable, "pvalue"), colnumb(rtable, "5:rep78")]
+di colnumb(rtable, "5.rep78")
+di rownumb(rtable, "pvalue")
+global pval = rtable[rownumb(rtable, "pvalue"), colnumb(rtable, "5.rep78")]
 di "$pval"
 
 ///--- End Log and to HTML
@@ -59,6 +59,7 @@ log close
 capture noisily {
   log2html "${curlogfile}", replace
 }
+
 ///--- to PDF
 capture noisily {
 	translator set Results2pdf logo off
