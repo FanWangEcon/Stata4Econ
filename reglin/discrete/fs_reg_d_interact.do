@@ -73,10 +73,19 @@ log close
 capture noisily {
   log2html "${curlogfile}", replace
 }
-capture noisily {
-  erase "${curlogfile}.smcl"
-}
 ///--- to PDF
 capture noisily {
+	translator set Results2pdf logo off
+	translator set Results2pdf fontsize 8
+	translator set Results2pdf pagesize custom
+	translator set Results2pdf pagewidth 9
+	translator set Results2pdf pageheight 20
+	translator set Results2pdf lmargin 0.2
+	translator set Results2pdf rmargin 0.2
+	translator set Results2pdf tmargin 0.2
+	translator set Results2pdf bmargin 0.2
 	translate @Results "${curlogfile}.pdf", replace translator(Results2pdf)
+}
+capture noisily {
+  erase "${curlogfile}.smcl"
 }
