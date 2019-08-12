@@ -94,6 +94,9 @@ capture noisily {
 	translator set Results2pdf pagewidth 9
 	* 20 is max height
 	translator set Results2pdf pageheight 20
+	// A3
+	translator set Results2pdf pagewidth 11.69
+	translator set Results2pdf pageheight 16.53
 	translator set Results2pdf lmargin 0.2
 	translator set Results2pdf rmargin 0.2
 	translator set Results2pdf tmargin 0.2

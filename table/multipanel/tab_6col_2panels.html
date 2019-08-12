@@ -1,0 +1,777 @@
+
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css">
+BODY{background-color: ffffff;
+    font-family: monaco, "courier new", monospace;
+     color: #000000}
+.input {color: #CC6600}
+.result{color: #000099}
+.error{color: #dd0000}
+</style>
+</head>
+<body>
+<pre>
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\table\multipanel\tab_6col_2panels.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>opened on:  <span class=result>11 Aug 2019, 23:59:41</span>
+<br><br>
+<span class=input>. log on</span>
+(log already on)
+<br><br>
+<span class=input>. </span>
+<span class=input>. set trace off</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Load Data</span>
+<span class=input>&gt; set more off</span>
+<br><br>
+<span class=input>. sysuse auto, clear</span>
+(1978 Automobile Data)
+<br><br>
+<span class=input>. tab rep78</span>
+<br><br>
+<span class=result>     </span>Repair |
+Record 1978 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |<span class=result>          2        2.90        2.90</span>
+          2 |<span class=result>          8       11.59       14.49</span>
+          3 |<span class=result>         30       43.48       57.97</span>
+          4 |<span class=result>         18       26.09       84.06</span>
+          5 |<span class=result>         11       15.94      100.00</span>
+------------+-----------------------------------
+      Total |<span class=result>         69      100.00</span>
+<br><br>
+<span class=input>. tab foreign</span>
+<br><br>
+<span class=result>   </span>Car type |      Freq.     Percent        Cum.
+------------+-----------------------------------
+   Domestic |<span class=result>         52       70.27       70.27</span>
+    Foreign |<span class=result>         22       29.73      100.00</span>
+------------+-----------------------------------
+      Total |<span class=result>         74      100.00</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- A1. Define Regression Variables</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         global svr_outcome "price"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         global svr_rhs_panel_a "mpg ib1.rep78 displacement gear_ratio"</span>
+<br><br>
+<span class=input>.         global svr_rhs_panel_b "headroom mpg trunk weight displacement gear_ratio"</span>
+<br><br>
+<span class=input>.         global svr_rhs_panel_c "headroom turn length weight trunk"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         global sif_col_1 "weight &lt;= 4700"</span>
+<br><br>
+<span class=input>.         global sif_col_2 "weight &lt;= 4500"</span>
+<br><br>
+<span class=input>.         global sif_col_3 "weight &lt;= 4300"</span>
+<br><br>
+<span class=input>.         global sif_col_4 "weight &lt;= 4100"</span>
+<br><br>
+<span class=input>.         global sif_col_5 "weight &lt;= 3900"</span>
+<br><br>
+<span class=input>.         global sif_col_6 "weight &lt;= 3700"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- A2. Define Regression Technical Strings</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>. ///--- Technical Controls</span>
+<span class=input>&gt;         global stc_regc "regress"</span>
+<br><br>
+<span class=input>.         global stc_opts ", noc"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- B1. Define Regressions Panel A</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         foreach it_regre of numlist 1(1)6 {</span>
+  2<span class=input>.                 #delimit;       </span>
+delimiter now ;
+<span class=input>.                 global srg_panel_a_col_`it_regre' "</span>
+<span class=input>&gt;                   $stc_regc $svr_outcome $svr_rhs_panel_a if $sif_col_`it_regre' $stc_opts</span>
+<span class=input>&gt;                   ";</span>
+  3<span class=input>.                 #delimit cr</span>
+delimiter now cr
+<span class=input>.         }</span>
+<br><br>
+<span class=input>.         </span>
+<span class=input>.         di "$srg_panel_a_col_1"</span>
+<span class=result>                   regress price mpg ib1.rep78 displacement gear_ratio if 1 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_a_col_2"</span>
+<span class=result>                   regress price mpg ib1.rep78 displacement gear_ratio if 2 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_a_col_3"</span>
+<span class=result>                   regress price mpg ib1.rep78 displacement gear_ratio if 3 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_a_col_4"</span>
+<span class=result>                   regress price mpg ib1.rep78 displacement gear_ratio if 4 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_a_col_5"</span>
+<span class=result>                   regress price mpg ib1.rep78 displacement gear_ratio if 5 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_a_col_6"</span>
+<span class=result>                   regress price mpg ib1.rep78 displacement gear_ratio if 6 , noc                   </span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- B2. Define Regressions Panel B</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         foreach it_regre of numlist 1(1)6 {</span>
+  2<span class=input>.                 #delimit;</span>
+delimiter now ;
+<span class=input>.                 global srg_panel_b_col_`it_regre' "</span>
+<span class=input>&gt;                   $stc_regc $svr_outcome $svr_rhs_panel_b if $sif_col_`it_regre' $stc_opts</span>
+<span class=input>&gt;                   ";</span>
+  3<span class=input>.                 #delimit cr</span>
+delimiter now cr
+<span class=input>.         }</span>
+<br><br>
+<span class=input>.         </span>
+<span class=input>.         di "$srg_panel_b_col_1"</span>
+<span class=result>                   regress price headroom mpg trunk weight displacement gear_ratio if 1 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_b_col_2"</span>
+<span class=result>                   regress price headroom mpg trunk weight displacement gear_ratio if 2 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_b_col_3"</span>
+<span class=result>                   regress price headroom mpg trunk weight displacement gear_ratio if 3 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_b_col_4"</span>
+<span class=result>                   regress price headroom mpg trunk weight displacement gear_ratio if 4 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_b_col_5"</span>
+<span class=result>                   regress price headroom mpg trunk weight displacement gear_ratio if 5 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_b_col_6"</span>
+<span class=result>                   regress price headroom mpg trunk weight displacement gear_ratio if 6 , noc                   </span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- B3. Define Regressions Panel C</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         foreach it_regre of numlist 1(1)6 {</span>
+  2<span class=input>.                 #delimit;</span>
+delimiter now ;
+<span class=input>.                 global srg_panel_c_col_`it_regre' "</span>
+<span class=input>&gt;                   $stc_regc $svr_outcome $svr_rhs_panel_c if $sif_col_`it_regre' $stc_opts</span>
+<span class=input>&gt;                   ";</span>
+  3<span class=input>.                 #delimit cr</span>
+delimiter now cr
+<span class=input>.         }</span>
+<br><br>
+<span class=input>.         </span>
+<span class=input>.         di "$srg_panel_c_col_1"</span>
+<span class=result>                   regress price headroom turn length weight trunk if 1 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_c_col_2"</span>
+<span class=result>                   regress price headroom turn length weight trunk if 2 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_c_col_3"</span>
+<span class=result>                   regress price headroom turn length weight trunk if 3 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_c_col_4"</span>
+<span class=result>                   regress price headroom turn length weight trunk if 4 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_c_col_5"</span>
+<span class=result>                   regress price headroom turn length weight trunk if 5 , noc                   </span>
+<br><br>
+<span class=input>.         di "$srg_panel_c_col_6"</span>
+<span class=result>                   regress price headroom turn length weight trunk if 6 , noc                   </span>
+<br><br>
+<span class=input>.         </span>
+<span class=input>.         </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- C. Run Regressions</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt;                 </span>
+<span class=input>. qui {</span>
+<br><br>
+<span class=input>.         di "$smd_panel_a_m"</span>
+<span class=result> m1 m2 m3 m4 m5 m6</span>
+<br><br>
+<span class=input>.         di "$smd_panel_b_m"</span>
+<span class=result> m7 m8 m9 m10 m11 m12</span>
+<br><br>
+<span class=input>.         di "$smd_panel_c_m"</span>
+<span class=result> m13 m14 m15 m16 m17 m18</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- D1. Labeling</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>. ///--- Title overall</span>
+<span class=input>&gt;         global slb_title "Outcome: Attending School or Not"</span>
+<br><br>
+<span class=input>.         global slb_panel_a "Group A: Coefficients for Distance to Elementary School Variables"</span>
+<br><br>
+<span class=input>.         global slb_panel_b "Group B: Coefficients for Elementary School Physical Quality Variables"</span>
+<br><br>
+<span class=input>.         global slb_panel_c "Group C: More Coefficientss"</span>
+<br><br>
+<span class=input>.         global slb_note "${slb_starLvl}. Standard Errors clustered at village level. Each Column is a spearate regression."</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Show which coefficients to keep</span>
+<span class=input>&gt;         #delimit;</span>
+delimiter now ;
+<span class=input>.         global svr_coef_keep_panel_a "</span>
+<span class=input>&gt;           mpg</span>
+<span class=input>&gt;           2.rep78 3.rep78</span>
+<span class=input>&gt;           4.rep78 5.rep78</span>
+<span class=input>&gt;           ";</span>
+<br><br>
+<span class=input>.         global svr_coef_keep_panel_b "</span>
+<span class=input>&gt;           headroom</span>
+<span class=input>&gt;           mpg</span>
+<span class=input>&gt;           trunk</span>
+<span class=input>&gt;           weight</span>
+<span class=input>&gt;           ";</span>
+<br><br>
+<span class=input>.         global svr_coef_keep_panel_c "</span>
+<span class=input>&gt;           turn</span>
+<span class=input>&gt;           ";</span>
+<br><br>
+<span class=input>.                 #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>. ///--- Labeling for for Coefficients to Show</span>
+<span class=input>&gt;         #delimit;</span>
+delimiter now ;
+<span class=input>.         global svr_starts_var_panel_a "mpg";</span>
+<br><br>
+<span class=input>.         global slb_coef_label_panel_a "</span>
+<span class=input>&gt;           mpg "miles per gallon"</span>
+<span class=input>&gt;           2.rep78 "rep78 is 2"</span>
+<span class=input>&gt;           3.rep78 "rep78 is 3"</span>
+<span class=input>&gt;           4.rep78 "rep78 is 4"</span>
+<span class=input>&gt;           5.rep78 "rep78 is 5"</span>
+<span class=input>&gt;           ";</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>.         </span>
+<span class=input>.         #delimit;</span>
+delimiter now ;
+<span class=input>.         global svr_starts_var_panel_b "headroom";</span>
+<br><br>
+<span class=input>.         global slb_coef_label_panel_b "</span>
+<span class=input>&gt;           headroom "headroom variable"</span>
+<span class=input>&gt;           mpg "miles per gallon"</span>
+<span class=input>&gt;           trunk "this is the trunk variable"</span>
+<span class=input>&gt;           weight "and here the weight variable"</span>
+<span class=input>&gt;           ";</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>.         #delimit;</span>
+delimiter now ;
+<span class=input>.         global svr_starts_var_panel_c "turn";</span>
+<br><br>
+<span class=input>.         global slb_coef_label_panel_c "</span>
+<span class=input>&gt;           turn "variable is turn"</span>
+<span class=input>&gt;           ";</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>.         </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- D2. Regression Display Controls</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         global slb_starLvl "* 0.10 ** 0.05 *** 0.01"</span>
+<br><br>
+<span class=input>.         global slb_starComm "nostar"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         global slb_sd `"se(fmt(a2) par("\vspace*{-2mm}{\footnotesize (" ") }"))"'</span>
+<br><br>
+<span class=input>.         global slb_cells `"cells(b(star fmt(a2)) $slb_sd)"'</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         global slb_sd_local `"se(fmt(a2) par("(" ")"))"'</span>
+<br><br>
+<span class=input>.         global slb_cells_local `"cells(b(star fmt(a2)) $slb_sd_local)"'</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         global slb_esttab_local_opt "collabels(none) mtitle nonumbers varwidth(30) modelwidth(15)"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- E. Regression Shows</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         esttab $smd_panel_a_m , ///</span>
+<span class=input>&gt;                 title("${slb_panel_a}") ///</span>
+<span class=input>&gt;                 keep(${svr_coef_keep_panel_a}) order(${svr_coef_keep_panel_a}) ///</span>
+<span class=input>&gt;                 coeflabels($slb_coef_label_panel_a) ///</span>
+<span class=input>&gt;                 stats(N provage countfe) ///</span>
+<span class=input>&gt;                 star($starLvl) $slb_cells_local ///             </span>
+<span class=input>&gt;                 ${slb_esttab_local_opt} addnotes(${slb_note})</span>
+<br><br>
+Group A: Coefficients for Distance to Elementary School Variables
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                weight &lt;= 4700     weight &lt;= 4500     weight &lt;= 4300     weight &lt;= 4100     weight &lt;= 3900     weight &lt;= 3700   
+------------------------------------------------------------------------------------------------------------------------------------------------
+miles per gallon              <span class=result>          -126.3*            -126.3*            -126.3*            -126.3*            -126.3*            -126.3*  </span>
+                              <span class=result>          (71.6)             (71.6)             (71.6)             (71.6)             (71.6)             (71.6)   </span>
+rep78 is 2                    <span class=result>            57.1               57.1               57.1               57.1               57.1               57.1   </span>
+                              <span class=result>        (1794.0)           (1794.0)           (1794.0)           (1794.0)           (1794.0)           (1794.0)   </span>
+rep78 is 3                    <span class=result>           583.0              583.0              583.0              583.0              583.0              583.0   </span>
+                              <span class=result>        (1683.1)           (1683.1)           (1683.1)           (1683.1)           (1683.1)           (1683.1)   </span>
+rep78 is 4                    <span class=result>          1191.4             1191.4             1191.4             1191.4             1191.4             1191.4   </span>
+                              <span class=result>        (1743.1)           (1743.1)           (1743.1)           (1743.1)           (1743.1)           (1743.1)   </span>
+rep78 is 5                    <span class=result>          2996.5*            2996.5*            2996.5*            2996.5*            2996.5*            2996.5*  </span>
+                              <span class=result>        (1791.3)           (1791.3)           (1791.3)           (1791.3)           (1791.3)           (1791.3)   </span>
+------------------------------------------------------------------------------------------------------------------------------------------------
+N                             <span class=result>              69                 69                 69                 69                 69                 69   </span>
+provage                       <span class=result>              No                 No                Yes                Yes                 No                Yes   </span>
+countfe                       <span class=result>              No                 No                Yes                Yes                 No                Yes   </span>
+------------------------------------------------------------------------------------------------------------------------------------------------
+* 0.10 ** 0.05 *** 0.01. Standard Errors clustered at village level. Each Column is a spearate regression.
+<br><br>
+<span class=input>.                         </span>
+<span class=input>.         esttab $smd_panel_b_m , ///</span>
+<span class=input>&gt;                 title("${slb_panel_b}") ///</span>
+<span class=input>&gt;                 keep(${svr_coef_keep_panel_b}) order(${svr_coef_keep_panel_b}) ///</span>
+<span class=input>&gt;                 coeflabels($slb_coef_label_panel_b) ///</span>
+<span class=input>&gt;                 stats(N provage countfe) ///</span>
+<span class=input>&gt;                 star($starLvl) $slb_cells_local ///             </span>
+<span class=input>&gt;                 ${slb_esttab_local_opt} addnotes(${slb_note})</span>
+<br><br>
+Group B: Coefficients for Elementary School Physical Quality Variables
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                weight &lt;= 4700     weight &lt;= 4500     weight &lt;= 4300     weight &lt;= 4100     weight &lt;= 3900     weight &lt;= 3700   
+------------------------------------------------------------------------------------------------------------------------------------------------
+headroom variable             <span class=result>          -823.0*            -823.0*            -823.0*            -823.0*            -823.0*            -823.0*  </span>
+                              <span class=result>         (454.9)            (454.9)            (454.9)            (454.9)            (454.9)            (454.9)   </span>
+miles per gallon              <span class=result>          -108.1             -108.1             -108.1             -108.1             -108.1             -108.1   </span>
+                              <span class=result>          (69.7)             (69.7)             (69.7)             (69.7)             (69.7)             (69.7)   </span>
+this is the trunk variable    <span class=result>            22.8               22.8               22.8               22.8               22.8               22.8   </span>
+                              <span class=result>         (106.3)            (106.3)            (106.3)            (106.3)            (106.3)            (106.3)   </span>
+and here the weight variable  <span class=result>            1.22               1.22               1.22               1.22               1.22               1.22   </span>
+                              <span class=result>          (0.89)             (0.89)             (0.89)             (0.89)             (0.89)             (0.89)   </span>
+------------------------------------------------------------------------------------------------------------------------------------------------
+N                             <span class=result>              74                 74                 74                 74                 74                 74   </span>
+provage                       <span class=result>              No                 No                Yes                Yes                 No                Yes   </span>
+countfe                       <span class=result>              No                 No                Yes                Yes                 No                Yes   </span>
+------------------------------------------------------------------------------------------------------------------------------------------------
+* 0.10 ** 0.05 *** 0.01. Standard Errors clustered at village level. Each Column is a spearate regression.
+<br><br>
+<span class=input>. </span>
+<span class=input>.         esttab $smd_panel_c_m , ///</span>
+<span class=input>&gt;                 title("${slb_panel_c}") ///</span>
+<span class=input>&gt;                 keep(${svr_coef_keep_panel_c}) order(${svr_coef_keep_panel_c}) ///</span>
+<span class=input>&gt;                 coeflabels($slb_coef_label_panel_c) ///</span>
+<span class=input>&gt;                 stats(N provage countfe) ///</span>
+<span class=input>&gt;                 star($starLvl) $slb_cells_local ///             </span>
+<span class=input>&gt;                 ${slb_esttab_local_opt} addnotes(${slb_note})           </span>
+<br><br>
+Group C: More Coefficientss
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                weight &lt;= 4700     weight &lt;= 4500     weight &lt;= 4300     weight &lt;= 4100     weight &lt;= 3900     weight &lt;= 3700   
+------------------------------------------------------------------------------------------------------------------------------------------------
+variable is turn              <span class=result>          -163.0             -163.0             -163.0             -163.0             -163.0             -163.0   </span>
+                              <span class=result>         (126.1)            (126.1)            (126.1)            (126.1)            (126.1)            (126.1)   </span>
+------------------------------------------------------------------------------------------------------------------------------------------------
+N                             <span class=result>              74                 74                 74                 74                 74                 74   </span>
+provage                       <span class=result>              No                 No                Yes                Yes                 No                Yes   </span>
+countfe                       <span class=result>              No                 No                Yes                Yes                 No                Yes   </span>
+------------------------------------------------------------------------------------------------------------------------------------------------
+* 0.10 ** 0.05 *** 0.01. Standard Errors clustered at village level. Each Column is a spearate regression.
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- F1. Define Latex Column Groups and Column Sub-Groups</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         ///--- Column Groups</span>
+<span class=input>&gt;         global it_max_col = 8</span>
+<br><br>
+<span class=input>.         global it_min_col = 2</span>
+<br><br>
+<span class=input>.         global colSeq "2 4 6 8"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- Group 1, columns 1 and 2</span>
+<span class=input>&gt;         global labG1 "All Age 5 to 12"</span>
+<br><br>
+<span class=input>.         global labC1 "{\small All Villages}"</span>
+<br><br>
+<span class=input>.         global labC2 "{\small No Teachng Points}"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- Group 2, columns 3 and 4</span>
+<span class=input>&gt;         global labG2 "Girls Age 5 to 12"</span>
+<br><br>
+<span class=input>.         global labC3 "{\small All Villages}"</span>
+<br><br>
+<span class=input>.         global labC4 "{\small No Teachng Points}"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- Group 3, columns 5 and 6</span>
+<span class=input>&gt;         global labG3 "Boys Age 5 to 12"</span>
+<br><br>
+<span class=input>.         global labC5 "{\small All Villages}"</span>
+<br><br>
+<span class=input>.         global labC6 "{\small No Teachng Points}"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- Column Widths</span>
+<span class=input>&gt;         global perCoefColWid = 1.85</span>
+<br><br>
+<span class=input>.         global labColWid = 6.75</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- Column Fractional Adjustment, 1 = 100%</span>
+<span class=input>&gt;         global tableAdjustBoxWidth = 1.0</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- F2. Tabling Calculations</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         ///--- Width Calculation</span>
+<span class=input>&gt;         global totCoefColWid = ${perCoefColWid}*${totCoefColCnt}</span>
+<br><br>
+<span class=input>.         global totColCnt = $totCoefColCnt + 1</span>
+<br><br>
+<span class=input>.         global totColWid = ${labColWid} + ${totCoefColWid} + ${perCoefColWid}</span>
+<br><br>
+<span class=input>.         global totColWidFootnote = ${labColWid} + ${totCoefColWid} + ${perCoefColWid} + ${perCoefColWid}/2</span>
+<br><br>
+<span class=input>.         global totColWidLegend = ${labColWid} + ${totCoefColWid} + ${perCoefColWid}</span>
+<br><br>
+<span class=input>.         global totColWidLegendthin = ${totCoefColWid} + ${perCoefColWid}</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         di "totCoefColCnt:$totCoefColCnt"</span>
+<span class=result>totCoefColCnt:6</span>
+<br><br>
+<span class=input>.         di "totCoefColWid:$totCoefColWid"</span>
+<span class=result>totCoefColWid:11.1</span>
+<br><br>
+<span class=input>.         di "totCoefColWid:$totCoefColWid"</span>
+<span class=result>totCoefColWid:11.1</span>
+<br><br>
+<span class=input>.         di "totCoefColWid:$totCoefColWid"</span>
+<span class=result>totCoefColWid:11.1</span>
+<br><br>
+<span class=input>.         di "totCoefColWid:$totCoefColWid"</span>
+<span class=result>totCoefColWid:11.1</span>
+<br><br>
+<span class=input>.         di "totCoefColWid:$totCoefColWid"</span>
+<span class=result>totCoefColWid:11.1</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- G1. Tex Sectioning</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt;         </span>
+<span class=input>.         global rcSpaceInit "\vspace*{-5mm}\hspace*{-3mm}"</span>
+<br><br>
+<span class=input>.         </span>
+<span class=input>.         #delimit ;      </span>
+delimiter now ;
+<span class=input>.         global slb_titling_panel_a "</span>
+<span class=input>&gt;                 ${slb_coef_label_panel_a} "\multicolumn{$totColCnt}{L{${totColWidLegendthin}cm}}{${rcSpaceInit}\textbf{${slb_panel_a}}} \\"</span>
+<span class=input>&gt;                 ";</span>
+<br><br>
+<span class=input>.         global slb_refcat_panel_a `"refcat(${slb_titling_panel_a}, nolabel)"';</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>.         </span>
+<span class=input>.         #delimit ;</span>
+delimiter now ;
+<span class=input>.         global slb_titling_panel_b "</span>
+<span class=input>&gt;                 ${slb_coef_label_panel_b} "\multicolumn{$totColCnt}{L{${totColWidLegendthin}cm}}{${rcSpaceInit}\textbf{${slb_panel_b}}} \\"</span>
+<span class=input>&gt;                 ";</span>
+<br><br>
+<span class=input>.         global slb_refcat_panel_b `"refcat(${slb_titling_panel_b}, nolabel)"';</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>.         #delimit ;</span>
+delimiter now ;
+<span class=input>.         global slb_titling_panel_c "</span>
+<span class=input>&gt;                 ${slb_coef_label_panel_c} "\multicolumn{$totColCnt}{L{${totColWidLegendthin}cm}}{${rcSpaceInit}\textbf{${slb_panel_c}}} \\"</span>
+<span class=input>&gt;                 ";</span>
+<br><br>
+<span class=input>.         global slb_refcat_panel_c `"refcat(${slb_titling_panel_c}, nolabel)"';</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>.         </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- G2. Tex Align</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         global ampersand ""</span>
+<br><br>
+<span class=input>.         foreach curLoop of numlist 1(1)$totCoefColCnt {</span>
+  2<span class=input>.           global ampersand "$ampersand &amp;"</span>
+  3<span class=input>.         }</span>
+<br><br>
+<span class=input>.         di "$ampersand"</span>
+<span class=result> &amp; &amp; &amp; &amp; &amp; &amp;</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         global alignCenter "m{${labColWid}cm}"</span>
+<br><br>
+<span class=input>.         local eB1 "&gt;{\centering\arraybackslash}m{${perCoefColWid}cm}"</span>
+<br><br>
+<span class=input>.         foreach curLoop of numlist 1(1)$totCoefColCnt {</span>
+  2<span class=input>.           global alignCenter "$alignCenter `eB1'"</span>
+  3<span class=input>.         }</span>
+<br><br>
+<span class=input>.         di "$alignCenter"</span>
+<span class=result>m{6.75cm} &gt;{\centering\arraybackslash}m{1.85cm} &gt;{\centering\arraybackslash}m{1.85cm} &gt;{\centering\arraybackslash}m{1.85cm} &gt;{\centering\arraybackslash}m{1.85cm} &gt;{\centering\arraybackslash}m{1.8</span>
+<span class=result>&gt; 5cm} &gt;{\centering\arraybackslash}m{1.85cm}</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- G3. Tex Headline</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         ///--- C.3.A. Initialize</span>
+<span class=input>&gt;         global row1 "&amp;"</span>
+<br><br>
+<span class=input>.         global row1MidLine ""</span>
+<br><br>
+<span class=input>.         global row2 ""</span>
+<br><br>
+<span class=input>.         global row2MidLine ""</span>
+<br><br>
+<span class=input>.         global row3 ""</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- B. Row 2 and row 2 midline</span>
+<span class=input>&gt;         * global colSeq "2 3 6"</span>
+<span class=input>.         global cmidrule ""</span>
+<br><br>
+<span class=input>.         global colCtr = -1</span>
+<br><br>
+<span class=input>.         foreach curCol of numlist $colSeq {</span>
+  2<span class=input>. </span>
+<span class=input>.                 global colCtr = $colCtr + 1</span>
+  3<span class=input>.                 global curCol1Min = `curCol' - 1</span>
+  4<span class=input>.                 if ($colCtr == 0 ) {</span>
+  5<span class=input>.                         global minCoefCol = "`curCol'"</span>
+  6<span class=input>.                 }</span>
+  7<span class=input>.                 if ($colCtr != 0 ) {</span>
+  8<span class=input>.                         global gapCnt = (`curCol' - `lastCol')</span>
+  9<span class=input>.                         global gapWidth = (`curCol' - `lastCol')*$perCoefColWid</span>
+ 10<span class=input>.                         di "curCol1Min:$curCol1Min, lastCol:`lastCol'"</span>
+ 11<span class=input>.                         di "$gapCnt"</span>
+ 12<span class=input>. </span>
+<span class=input>.                         di "\multicolumn{$gapCnt}{C{${gapWidth}cm}}{\small no Control}"</span>
+ 13<span class=input>.                         di "\cmidrule(l{5pt}r{5pt}){`lastCol'-$curCol1Min}"</span>
+ 14<span class=input>. </span>
+<span class=input>.                         global curRow2MidLine "\cmidrule(l{5pt}r{5pt}){`lastCol'-$curCol1Min}"</span>
+ 15<span class=input>.                         global row2MidLine "$row2MidLine $curRow2MidLine"</span>
+ 16<span class=input>. </span>
+<span class=input>.                         global curRow2 "\multicolumn{$gapCnt}{C{${gapWidth}cm}}{\small ${labG${colCtr}}}"</span>
+ 17<span class=input>.                         global row2 "$row2 &amp; $curRow2"</span>
+ 18<span class=input>. </span>
+<span class=input>.                 }</span>
+ 19<span class=input>.                 local lastCol = `curCol'</span>
+ 20<span class=input>. </span>
+<span class=input>.         }</span>
+<span class=result>curCol1Min:3, lastCol:2</span>
+<span class=result>2</span>
+<span class=result>\multicolumn{2}{C{3.7cm}}{\small no Control}</span>
+<span class=result>\cmidrule(l{5pt}r{5pt}){2-3}</span>
+<span class=result>curCol1Min:5, lastCol:4</span>
+<span class=result>2</span>
+<span class=result>\multicolumn{2}{C{3.7cm}}{\small no Control}</span>
+<span class=result>\cmidrule(l{5pt}r{5pt}){4-5}</span>
+<span class=result>curCol1Min:7, lastCol:6</span>
+<span class=result>2</span>
+<span class=result>\multicolumn{2}{C{3.7cm}}{\small no Control}</span>
+<span class=result>\cmidrule(l{5pt}r{5pt}){6-7}</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- C. Row 3</span>
+<span class=input>&gt;         * Initial &amp; for label column</span>
+<span class=input>.         foreach curLoop of numlist 1(1)$totCoefColCnt {</span>
+  2<span class=input>.                 global curText "${labC`curLoop'}"</span>
+  3<span class=input>.                 global textUse "(`curLoop')"</span>
+  4<span class=input>.                 if ("$curText" != "") {</span>
+  5<span class=input>.                         global textUse "$curText"</span>
+  6<span class=input>.                 }</span>
+  7<span class=input>.                 global curRow3 "\multicolumn{1}{C{${perCoefColWid}cm}}{$textUse}"</span>
+  8<span class=input>.                 global row3 "$row3 &amp; $curRow3"</span>
+  9<span class=input>.         }</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- D. Row 1 and midline:</span>
+<span class=input>&gt;         global row1 "${row1} \multicolumn{${totCoefColCnt}}{C{${totCoefColWid}cm}}{${allCoefRowHeading}}"</span>
+<br><br>
+<span class=input>.         global row1MidLine "\cmidrule(l{5pt}r{5pt}){${minCoefCol}-${curCol1Min}}"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- C.3.E Print lines</span>
+<span class=input>&gt;         di "$row1 \\"</span>
+<span class=result>&amp; \multicolumn{6}{C{11.1cm}}{Outcome: Attending School or Not} \\</span>
+<br><br>
+<span class=input>.         di "$row1MidLine "</span>
+<span class=result>\cmidrule(l{5pt}r{5pt}){2-7} </span>
+<br><br>
+<span class=input>.         di "$row2 \\"</span>
+<span class=result> &amp; \multicolumn{2}{C{3.7cm}}{\small All Age 5 to 12} &amp; \multicolumn{2}{C{3.7cm}}{\small Girls Age 5 to 12} &amp; \multicolumn{2}{C{3.7cm}}{\small Boys Age 5 to 12} \\</span>
+<br><br>
+<span class=input>.         di "$row2MidLine"</span>
+<span class=result> \cmidrule(l{5pt}r{5pt}){2-3} \cmidrule(l{5pt}r{5pt}){4-5} \cmidrule(l{5pt}r{5pt}){6-7}</span>
+<br><br>
+<span class=input>.         di "$row3 \\"</span>
+<span class=result> &amp; \multicolumn{1}{C{1.85cm}}{{\small All Villages}} &amp; \multicolumn{1}{C{1.85cm}}{{\small No Teachng Points}} &amp; \multicolumn{1}{C{1.85cm}}{{\small All Villages}} &amp; \multicolumn{1}{C{1.85cm}}{{\sm</span>
+<span class=result>&gt; all No Teachng Points}} &amp; \multicolumn{1}{C{1.85cm}}{{\small All Villages}} &amp; \multicolumn{1}{C{1.85cm}}{{\small No Teachng Points}} \\</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- C.4 Together</span>
+<span class=input>&gt;         #delimit ;</span>
+delimiter now ;
+<span class=input>.         local fileTitle "${MainCaption}";</span>
+<br><br>
+<span class=input>.         local tableLabelName "${labelName}";</span>
+<br><br>
+<span class=input>.         ///--- 1. Section</span>
+<span class=input>&gt;         * local section "</span>
+<span class=input>&gt;                 * \section{`fileTitle'}\vspace*{-6mm}</span>
+<span class=input>&gt;                 * ";</span>
+<span class=input>.         ///--- 2. Align and Column Define</span>
+<span class=input>&gt;         local centering "$alignCenter";</span>
+<br><br>
+<span class=input>.         global headline "</span>
+<span class=input>&gt;                         $row1 \\</span>
+<span class=input>&gt;                         $row1MidLine</span>
+<span class=input>&gt;                         $row2 \\</span>
+<span class=input>&gt;                         $row2MidLine</span>
+<span class=input>&gt;                         $row3 \\</span>
+<span class=input>&gt;                 ";</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- G4. Head</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         #delimit ;</span>
+delimiter now ;
+<span class=input>.         global adjustBoxStart "\begin{adjustbox}{max width=${tableAdjustBoxWidth}\textwidth}";</span>
+<br><br>
+<span class=input>.         global adjustBoxEnd "\end{adjustbox}";</span>
+<br><br>
+<span class=input>.         global notewrap "</span>
+<span class=input>&gt;                         \addlinespace[-0.5em]</span>
+<span class=input>&gt;                         \multicolumn{${totColCnt}}{L{${totColWidFootnote}cm}}{</span>
+<span class=input>&gt;                                 \footnotesize</span>
+<span class=input>&gt;                                 \justify</span>
+<span class=input>&gt;                                 $notelong} \\</span>
+<span class=input>&gt;                 ";</span>
+<br><br>
+<span class=input>.         global startTable "\begin{table}[htbp]</span>
+<span class=input>&gt;                         \centering</span>
+<span class=input>&gt;                         \def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}</span>
+<span class=input>&gt;                         \caption{`fileTitle'\label{`tableLabelName'}}</span>
+<span class=input>&gt;                         ${adjustBoxStart}</span>
+<span class=input>&gt;                         \begin{tabular}{`centering'}</span>
+<span class=input>&gt;                         \toprule</span>
+<span class=input>&gt;                         ";</span>
+<br><br>
+<span class=input>.         global headlineAll "prehead(${startTable}${headline})";</span>
+<br><br>
+<span class=input>.         global headlineAllNoHead "prehead(${startTable})";</span>
+<br><br>
+<span class=input>.         global postAll "postfoot(\bottomrule ${notewrap} \end{tabular}${adjustBoxEnd}\end{table})";</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- H1. Latex Controls</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         global slb_starLvl "* 0.10 ** 0.05 *** 0.01"</span>
+<br><br>
+<span class=input>.         global slb_starComm "nostar"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         global slb_esttab_tex_opt "collabels(none) nomtitles nonumbers booktabs"</span>
+<br><br>
+<span class=input>.         global slb_esttab_tex_opt "stats(N provage countfe) star($starLvl) $slb_cells ${slb_esttab_tex_opt} "</span>
+<br><br>
+<span class=input>.                 </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- H2. Output Results to Tex</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         esttab $smd_panel_a_m using "${curlogfile}.tex", ///</span>
+<span class=input>&gt;                 title("${slb_panel_a}") ///</span>
+<span class=input>&gt;                 keep(${svr_coef_keep_panel_a}) order(${svr_coef_keep_panel_a}) ///</span>
+<span class=input>&gt;                 coeflabels($slb_coef_label_panel_a) ///</span>
+<span class=input>&gt;                 $slb_refcat_panel_a ///</span>
+<span class=input>&gt;                 $slb_esttab_tex_opt ///         </span>
+<span class=input>&gt;                 fragment ///</span>
+<span class=input>&gt;                 $headlineAll postfoot("") replace</span>
+(output written to ~\Stata4Econ\table\multipanel\tab_6col_2panels.tex)
+<br><br>
+<span class=input>.                         </span>
+<span class=input>.         esttab $smd_panel_b_m using "${curlogfile}.tex", ///</span>
+<span class=input>&gt;                 title("${slb_panel_b}") ///</span>
+<span class=input>&gt;                 keep(${svr_coef_keep_panel_b}) order(${svr_coef_keep_panel_b}) ///</span>
+<span class=input>&gt;                 coeflabels($slb_coef_label_panel_b) ///</span>
+<span class=input>&gt;                 $slb_refcat_panel_b ///</span>
+<span class=input>&gt;                 $slb_esttab_tex_opt ///         </span>
+<span class=input>&gt;                 fragment ///</span>
+<span class=input>&gt;                 prehead("") postfoot("") append</span>
+(output written to ~\Stata4Econ\table\multipanel\tab_6col_2panels.tex)
+<br><br>
+<span class=input>. </span>
+<span class=input>.         esttab $smd_panel_c_m using "${curlogfile}.tex", ///</span>
+<span class=input>&gt;                 title("${slb_panel_c}") ///</span>
+<span class=input>&gt;                 keep(${svr_coef_keep_panel_c}) order(${svr_coef_keep_panel_c}) ///</span>
+<span class=input>&gt;                 coeflabels($slb_coef_label_panel_c) ///</span>
+<span class=input>&gt;                 $slb_refcat_panel_c ///</span>
+<span class=input>&gt;                 $slb_esttab_tex_opt ///</span>
+<span class=input>&gt;                 addnotes(${slb_note}) ///               </span>
+<span class=input>&gt;                 prehead("") $postAll append</span>
+(output written to ~\Stata4Econ\table\multipanel\tab_6col_2panels.tex)
+<br><br>
+<span class=input>. </span>
+<span class=input>.                 </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- I. Out Logs</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt;                 </span>
+<span class=input>. ///--- End Log and to HTML</span>
+<span class=input>&gt; log close</span>
+<span class=result>      </span>name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\table\multipanel\tab_6col_2panels.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>closed on:  <span class=result>11 Aug 2019, 23:59:42</span>
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</pre>
+</body>
+</html>
