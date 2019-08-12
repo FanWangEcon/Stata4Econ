@@ -1,0 +1,112 @@
+
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css">
+BODY{background-color: ffffff;
+    font-family: monaco, "courier new", monospace;
+     color: #000000}
+.input {color: #CC6600}
+.result{color: #000099}
+.error{color: #dd0000}
+</style>
+</head>
+<body>
+<pre>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\matrix\define\basic.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>opened on:  <span class=result>12 Aug 2019, 17:01:36</span>
+<br><br>
+<span class=input>. log on</span>
+(log already on)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Generate matrix with all 0</span>
+<span class=input>&gt;         scalar it_rowcnt = 4</span>
+<br><br>
+<span class=input>.         scalar it_colcnt = 6</span>
+<br><br>
+<span class=input>.         scalar bl_fillval = 0</span>
+<br><br>
+<span class=input>.         matrix mt_bl_estd = J(it_rowcnt, it_colcnt, bl_fillval)</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Give Matrix Row and Column Names</span>
+<span class=input>&gt;         matrix rownames mt_bl_estd = hhfe vilfe provfe morecontrols</span>
+<br><br>
+<span class=input>.         matrix colnames mt_bl_estd = reg1 reg2 reg3 reg4 reg5 reg6</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Assign value to matrix cell single</span>
+<span class=input>&gt;         matrix mt_bl_estd[rownumb(mt_bl_estd, "hhfe"), colnumb(mt_bl_estd, "reg1")] = 1</span>
+<br><br>
+<span class=input>.         matrix mt_bl_estd[2,2] = 3</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Assign value to 4th row, 3nd to 6th</span>
+<span class=input>&gt;         matrix mt_bl_estd[4,3] = (9,8,7,6)</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Assign value to 4th column, 2nd 3rd values</span>
+<span class=input>&gt;         matrix mt_bl_estd[2,4] = (-3\-44.3)</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Obtain value from matrix</span>
+<span class=input>&gt;         scalar bl_hhfe_reg1 = mt_bl_estd[rownumb(mt_bl_estd, "hhfe"), colnumb(mt_bl_estd, "reg1")]</span>
+<br><br>
+<span class=input>.         di bl_hhfe_reg1</span>
+<span class=result>1</span>
+<br><br>
+<span class=input>.         di el(mt_bl_estd, rownumb(mt_bl_estd, "hhfe"), colnumb(mt_bl_estd, "reg1"))</span>
+<span class=result>1</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Select a column from matrix</span>
+<span class=input>&gt;         matrix mt_bl_estd_colreg1 = mt_bl_estd[1..., colnumb(mt_bl_estd, "reg1")]</span>
+<br><br>
+<span class=input>.         matrix list mt_bl_estd_colreg1</span>
+<br><br>
+mt_bl_estd_colreg1[4,1]
+              reg1
+        hhfe <span class=result>    1</span>
+       vilfe <span class=result>    0</span>
+      provfe <span class=result>    0</span>
+morecontrols <span class=result>    0</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Get Row and Column Names</span>
+<span class=input>&gt;         global st_colnames : colnames mt_bl_estd</span>
+<br><br>
+<span class=input>.         di "${st_colnames}"</span>
+<span class=result>reg1 reg2 reg3 reg4 reg5 reg6</span>
+<br><br>
+<span class=input>.         global st_rownames : rownames mt_bl_estd</span>
+<br><br>
+<span class=input>.         di "${st_rownames}"</span>
+<span class=result>hhfe vilfe provfe morecontrols</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Show Matrix</span>
+<span class=input>&gt;         matrix list mt_bl_estd</span>
+<br><br>
+mt_bl_estd[4,6]
+               reg1   reg2   reg3   reg4   reg5   reg6
+        hhfe <span class=result>     1      0      0      0      0      0</span>
+       vilfe <span class=result>     0      3      0     -3      0      0</span>
+      provfe <span class=result>     0      0      0  -44.3      0      0</span>
+morecontrols <span class=result>     0      0      9      8      7      6</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- End Log and to HTML</span>
+<span class=input>&gt; log close</span>
+<span class=result>      </span>name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\matrix\define\basic.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>closed on:  <span class=result>12 Aug 2019, 17:01:36</span>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</pre>
+</body>
+</html>
