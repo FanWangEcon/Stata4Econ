@@ -12,43 +12,68 @@ clear
   - http://fanwangecon.github.io/Stat4Econ/
   - http://fanwangecon.github.io/Tex4Econ
 
-  1. Get statistics from regression, for example the p value
-  2. Show alll subgroup coefficients in one regression
+	Regression Table where:
+  - shared regression outcome lhs variable
+  - for each panel, rhs variables differ
+	- for each column, conditioning differs, but rhs vars the same
 */
-
 
 ///--- Start log
 capture log close
 cd "${root_log}"
 global curlogfile "~\Stata4Econ\table\multipanel\tab_6col_2panels"
-log using "${curlogfile}" , replace
+log using "${curlogfile}_log" , replace
 log on
 
 set trace off
+set tracedepth 1
 
+/////////////////////////////////////////////////
 ///--- Load Data
+/////////////////////////////////////////////////
+
 set more off
 sysuse auto, clear
 tab rep78
 tab foreign
 
-
 /////////////////////////////////////////////////
 ///--- A1. Define Regression Variables
 /////////////////////////////////////////////////
 
+	* shared regression outcome lhs variable
 	global svr_outcome "price"
 
+	* for each panel, rhs variables differ
 	global svr_rhs_panel_a "mpg ib1.rep78 displacement gear_ratio"
 	global svr_rhs_panel_b "headroom mpg trunk weight displacement gear_ratio"
 	global svr_rhs_panel_c "headroom turn length weight trunk"
 
+	* for each column, conditioning differs
+	global it_reg_n = 6
 	global sif_col_1 "weight <= 4700"
 	global sif_col_2 "weight <= 4500"
 	global sif_col_3 "weight <= 4300"
 	global sif_col_4 "weight <= 4100"
 	global sif_col_5 "weight <= 3900"
 	global sif_col_6 "weight <= 3700"
+
+	* esttad strings for conditioning what were included
+	scalar it_esttad_n = 4
+	matrix mt_bl_estd = J(it_esttad_n, $it_reg_n, 0)
+	matrix rownames mt_bl_estd = incdgr4500 incdgr4000 incdgr3500 incdgr3000
+	matrix colnames mt_bl_estd = reg1 reg2 reg3 reg4 reg5 reg6
+	matrix mt_bl_estd[1, 1] = (1\1\1\1)
+	matrix mt_bl_estd[1, 2] = (1\1\1\1)
+	matrix mt_bl_estd[1, 3] = (0\1\1\1)
+	matrix mt_bl_estd[1, 4] = (0\1\1\1)
+	matrix mt_bl_estd[1, 5] = (0\0\1\1)
+	matrix mt_bl_estd[1, 6] = (0\0\1\1)
+	global st_estd_rownames : rownames mt_bl_estd
+	global slb_estd_1 "the weight <= 4700"
+	global slb_estd_2 "the weight <= 4500"
+	global slb_estd_3 "the weight <= 4300"
+	global slb_estd_4 "the weight <= 4100"
 
 /////////////////////////////////////////////////
 ///--- A2. Define Regression Technical Strings
@@ -62,115 +87,88 @@ tab foreign
 ///--- B1. Define Regressions Panel A
 /////////////////////////////////////////////////
 
-	foreach it_regre of numlist 1(1)6 {
-		#delimit;	
+	/*
+		di "$srg_panel_a_col_1"
+		di "$srg_panel_a_col_2"
+		di "$srg_panel_a_col_6"
+	*/
+	foreach it_regre of numlist 1(1)$it_reg_n {
+		#delimit;
 		global srg_panel_a_col_`it_regre' "
-		  $stc_regc $svr_outcome $svr_rhs_panel_a if $sif_col_`it_regre' $stc_opts
+		  $stc_regc $svr_outcome $svr_rhs_panel_a if ${sif_col_`it_regre'} $stc_opts
 		  ";
 		#delimit cr
+		di "${srg_panel_a_col_`it_regre'}"
 	}
-	
-	di "$srg_panel_a_col_1"
-	di "$srg_panel_a_col_2"
-	di "$srg_panel_a_col_3"
-	di "$srg_panel_a_col_4"
-	di "$srg_panel_a_col_5"
-	di "$srg_panel_a_col_6"
 
 /////////////////////////////////////////////////
 ///--- B2. Define Regressions Panel B
 /////////////////////////////////////////////////
 
-	foreach it_regre of numlist 1(1)6 {
+	/*
+		di "$srg_panel_b_col_1"
+		di "$srg_panel_b_col_2"
+		di "$srg_panel_b_col_6"
+	*/
+	foreach it_regre of numlist 1(1)$it_reg_n {
 		#delimit;
 		global srg_panel_b_col_`it_regre' "
-		  $stc_regc $svr_outcome $svr_rhs_panel_b if $sif_col_`it_regre' $stc_opts
+		  $stc_regc $svr_outcome $svr_rhs_panel_b if ${sif_col_`it_regre'} $stc_opts
 		  ";
 		#delimit cr
+		di "${srg_panel_b_col_`it_regre'}"
 	}
-	
-	di "$srg_panel_b_col_1"
-	di "$srg_panel_b_col_2"
-	di "$srg_panel_b_col_3"
-	di "$srg_panel_b_col_4"
-	di "$srg_panel_b_col_5"
-	di "$srg_panel_b_col_6"
 
 /////////////////////////////////////////////////
 ///--- B3. Define Regressions Panel C
 /////////////////////////////////////////////////
 
-	foreach it_regre of numlist 1(1)6 {
+	/*
+		di "$srg_panel_c_col_1"
+		di "$srg_panel_c_col_2"
+		di "$srg_panel_c_col_6"
+	*/
+
+	foreach it_regre of numlist 1(1)$it_reg_n {
 		#delimit;
 		global srg_panel_c_col_`it_regre' "
-		  $stc_regc $svr_outcome $svr_rhs_panel_c if $sif_col_`it_regre' $stc_opts
+		  $stc_regc $svr_outcome $svr_rhs_panel_c if ${sif_col_`it_regre'} $stc_opts
 		  ";
 		#delimit cr
+		di "${srg_panel_c_col_`it_regre'}"
 	}
-	
-	di "$srg_panel_c_col_1"
-	di "$srg_panel_c_col_2"
-	di "$srg_panel_c_col_3"
-	di "$srg_panel_c_col_4"
-	di "$srg_panel_c_col_5"
-	di "$srg_panel_c_col_6"
-	
-	
+
 /////////////////////////////////////////////////
 ///--- C. Run Regressions
 /////////////////////////////////////////////////
-		
-qui {
+
 	eststo clear
 	local it_reg_ctr = 0
-	foreach it_panel of numlist 1 2 3 {
-
-	  if (`it_panel' == 1) {
-		local st_panel "panel_a"
-	  }
-	  if (`it_panel' == 2) {
-		local st_panel "panel_b"
-	  }
-	  if (`it_panel' == 3) {
-		local st_panel "panel_c"
-	  }
+	foreach st_panel in panel_a panel_b panel_c {
 
 	  global st_cur_sm_stor "smd_`st_panel'_m"
 	  global ${st_cur_sm_stor} ""
 
-	  foreach it_regre of numlist 1(1)6 {
+	  foreach it_regre of numlist 1(1)$it_reg_n {
 
 		  local it_reg_ctr = `it_reg_ctr' + 1
 		  global st_cur_srg_name "srg_`st_panel'_col_`it_regre'"
+
+		  di "st_panel:`st_panel', it_reg_ctr:`it_reg_ctr', st_cur_srg_name:${st_cur_srg_name}"
 
 		  ///--- Regression
 		  eststo m`it_reg_ctr', title("${sif_col_`it_regre'}") : ${$st_cur_srg_name}
 
 		  ///--- Estadd Controls
-		  if (`it_regre' == 1) {
-			estadd local provage "No"
-			estadd local countfe "No"
-		  }
-		  if (`it_regre' == 2) {
-			estadd local provage "No"
-			estadd local countfe "No"
-		  }
-		  if (`it_regre' == 3) {
-			estadd local provage "Yes"
-			estadd local countfe "Yes"
-		  }
-		  if (`it_regre' == 4) {
-			estadd local provage "Yes"
-			estadd local countfe "Yes"
-		  }
-		  if (`it_regre' == 5) {
-			estadd local provage "No"
-			estadd local countfe "No"
-		  }
-		  if (`it_regre' == 6) {
-			estadd local provage "Yes"
-			estadd local countfe "Yes"
-		  }
+			foreach st_estd_name in $st_estd_rownames {
+				scalar bl_estad = el(mt_bl_estd, rownumb(mt_bl_estd, "`st_estd_name'"), `it_regre')
+				if (bl_estad) {
+					estadd local `st_estd_name' "Yes"
+				}
+				else {
+					estadd local `st_estd_name' "No"
+				}
+			}
 
 		  ///--- Track Regression Store
 		  global $st_cur_sm_stor "${${st_cur_sm_stor}} m`it_reg_ctr'"
@@ -179,7 +177,8 @@ qui {
 	  di "${${st_cur_sm_stor}}"
 
 	}
-}
+
+
 	di "$smd_panel_a_m"
 	di "$smd_panel_b_m"
 	di "$smd_panel_c_m"
@@ -193,6 +192,7 @@ qui {
 	global slb_panel_a "Group A: Coefficients for Distance to Elementary School Variables"
 	global slb_panel_b "Group B: Coefficients for Elementary School Physical Quality Variables"
 	global slb_panel_c "Group C: More Coefficientss"
+	global slb_bottom "Controls for each panel:"
 	global slb_note "${slb_starLvl}. Standard Errors clustered at village level. Each Column is a spearate regression."
 
 ///--- Show which coefficients to keep
@@ -210,7 +210,7 @@ qui {
 	  ";
 	global svr_coef_keep_panel_c "
 	  turn
-	  ";	  
+	  ";
 	#delimit cr
 
 ///--- Labeling for for Coefficients to Show
@@ -224,7 +224,7 @@ qui {
 	  5.rep78 "rep78 is 5"
 	  ";
 	#delimit cr
-	
+
 	#delimit;
 	global svr_starts_var_panel_b "headroom";
 	global slb_coef_label_panel_b "
@@ -241,49 +241,51 @@ qui {
 	  turn "variable is turn"
 	  ";
 	#delimit cr
-	
+
 /////////////////////////////////////////////////
 ///--- D2. Regression Display Controls
 /////////////////////////////////////////////////
 
+	global slb_reg_stats "N ${st_estd_rownames}"
+
 	global slb_starLvl "* 0.10 ** 0.05 *** 0.01"
 	global slb_starComm "nostar"
 
-	global slb_sd `"se(fmt(a2) par("\vspace*{-2mm}{\footnotesize (" ") }"))"'
-	global slb_cells `"cells(b(star fmt(a2)) $slb_sd)"'
+	global slb_sd_tex `"se(fmt(a2) par("\vspace*{-2mm}{\footnotesize (" ") }"))"'
+	global slb_cells_tex `"cells(b(star fmt(a2)) $slb_sd_tex)"'
+	global slb_esttab_opt_tex "booktabs label collabels(none) nomtitles nonumbers star(${slb_starLvl})"
 
-	global slb_sd_local `"se(fmt(a2) par("(" ")"))"'
-	global slb_cells_local `"cells(b(star fmt(a2)) $slb_sd_local)"'
+	global slb_sd_txt `"se(fmt(a2) par("(" ")"))"'
+	global slb_cells_txt `"cells(b(star fmt(a2)) $slb_sd_txt)"'
+	global slb_esttab_opt_txt "stats(${slb_reg_stats}) collabels(none) mtitle nonumbers varwidth(30) modelwidth(15) star(${slb_starLvl}) addnotes(${slb_note})"
 
-	global slb_esttab_local_opt "collabels(none) mtitle nonumbers varwidth(30) modelwidth(15)"
+	#delimit ;
+	global slb_panel_a_main "
+		title("${slb_panel_a}")
+		keep(${svr_coef_keep_panel_a}) order(${svr_coef_keep_panel_a})
+		coeflabels($slb_coef_label_panel_a)
+		";
+
+	global slb_panel_b_main "
+		title("${slb_panel_b}")
+		keep(${svr_coef_keep_panel_b}) order(${svr_coef_keep_panel_b})
+		coeflabels($slb_coef_label_panel_b)
+		";
+
+	global slb_panel_c_main "
+		title("${slb_panel_c}")
+		keep(${svr_coef_keep_panel_c}) order(${svr_coef_keep_panel_c})
+		coeflabels($slb_coef_label_panel_c)
+		";
+	#delimit cr
 
 /////////////////////////////////////////////////
 ///--- E. Regression Shows
 /////////////////////////////////////////////////
 
-	esttab $smd_panel_a_m , ///
-		title("${slb_panel_a}") ///
-		keep(${svr_coef_keep_panel_a}) order(${svr_coef_keep_panel_a}) ///
-		coeflabels($slb_coef_label_panel_a) ///
-		stats(N provage countfe) ///
-		star($starLvl) $slb_cells_local ///		
-		${slb_esttab_local_opt} addnotes(${slb_note})
-			
-	esttab $smd_panel_b_m , ///
-		title("${slb_panel_b}") ///
-		keep(${svr_coef_keep_panel_b}) order(${svr_coef_keep_panel_b}) ///
-		coeflabels($slb_coef_label_panel_b) ///
-		stats(N provage countfe) ///
-		star($starLvl) $slb_cells_local ///		
-		${slb_esttab_local_opt} addnotes(${slb_note})
-
-	esttab $smd_panel_c_m , ///
-		title("${slb_panel_c}") ///
-		keep(${svr_coef_keep_panel_c}) order(${svr_coef_keep_panel_c}) ///
-		coeflabels($slb_coef_label_panel_c) ///
-		stats(N provage countfe) ///
-		star($starLvl) $slb_cells_local ///		
-		${slb_esttab_local_opt} addnotes(${slb_note})		
+	esttab ${smd_panel_a_m}, ${slb_panel_a_main} ${slb_esttab_opt_txt}
+	esttab ${smd_panel_b_m}, ${slb_panel_b_main} ${slb_esttab_opt_txt}
+	esttab ${smd_panel_c_m}, ${slb_panel_c_main} ${slb_esttab_opt_txt}
 
 /////////////////////////////////////////////////
 ///--- F1. Define Latex Column Groups and Column Sub-Groups
@@ -335,52 +337,58 @@ qui {
 	di "totCoefColWid:$totCoefColWid"
 	di "totCoefColWid:$totCoefColWid"
 
-/////////////////////////////////////////////////
-///--- G1. Tex Sectioning
-/////////////////////////////////////////////////
-	
-	global rcSpaceInit "\vspace*{-5mm}\hspace*{-3mm}"
-	
-	#delimit ;	
-	global slb_titling_panel_a "
-		${slb_coef_label_panel_a} "\multicolumn{$totColCnt}{L{${totColWidLegendthin}cm}}{${rcSpaceInit}\textbf{${slb_panel_a}}} \\"
-		";
-	global slb_refcat_panel_a `"refcat(${slb_titling_panel_a}, nolabel)"';
-	#delimit cr
-	
-	#delimit ;
-	global slb_titling_panel_b "
-		${slb_coef_label_panel_b} "\multicolumn{$totColCnt}{L{${totColWidLegendthin}cm}}{${rcSpaceInit}\textbf{${slb_panel_b}}} \\"
-		";
-	global slb_refcat_panel_b `"refcat(${slb_titling_panel_b}, nolabel)"';
-	#delimit cr
-
-	#delimit ;
-	global slb_titling_panel_c "
-		${slb_coef_label_panel_c} "\multicolumn{$totColCnt}{L{${totColWidLegendthin}cm}}{${rcSpaceInit}\textbf{${slb_panel_c}}} \\"
-		";
-	global slb_refcat_panel_c `"refcat(${slb_titling_panel_c}, nolabel)"';
-	#delimit cr
-	
-/////////////////////////////////////////////////
-///--- G2. Tex Align
-/////////////////////////////////////////////////
-
 	global ampersand ""
 	foreach curLoop of numlist 1(1)$totCoefColCnt {
 	  global ampersand "$ampersand &"
 	}
-	di "$ampersand"
+	di "ampersand:$ampersand"
 
 	global alignCenter "m{${labColWid}cm}"
 	local eB1 ">{\centering\arraybackslash}m{${perCoefColWid}cm}"
 	foreach curLoop of numlist 1(1)$totCoefColCnt {
 	  global alignCenter "$alignCenter `eB1'"
 	}
-	di "$alignCenter"
+	di "alignCenter:$alignCenter"
 
 /////////////////////////////////////////////////
-///--- G3. Tex Headline
+///--- G1. Tex Sectioning
+/////////////////////////////////////////////////
+
+	global rcSpaceInit "\vspace*{-5mm}\hspace*{-3mm}"
+
+	#delimit ;
+	global slb_titling_panel_a "
+		${svr_starts_var_panel_a} "\multicolumn{$totColCnt}{L{${totColWidLegend}cm}}{${rcSpaceInit}\textbf{${slb_panel_a}}} \\"
+		";
+	global slb_refcat_panel_a `"refcat(${slb_titling_panel_a}, nolabel)"';
+	#delimit cr
+
+	#delimit ;
+	global slb_titling_panel_b "
+		${svr_starts_var_panel_b} "\multicolumn{$totColCnt}{L{${totColWidLegend}cm}}{${rcSpaceInit}\textbf{${slb_panel_b}}} \\"
+		";
+	global slb_refcat_panel_b `"refcat(${slb_titling_panel_b}, nolabel)"';
+	#delimit cr
+
+	#delimit ;
+	global slb_titling_panel_c "
+		${svr_starts_var_panel_c} "\multicolumn{$totColCnt}{L{${totColWidLegend}cm}}{${rcSpaceInit}\textbf{${slb_panel_c}}} \\"
+		";
+	global slb_refcat_panel_c `"refcat(${slb_titling_panel_c}, nolabel)"';
+	#delimit cr
+
+	#delimit ;
+	global slb_titling_bottom `"
+	stats(N $st_estd_rownames,
+			labels(Observations
+			"\midrule \multicolumn{${totColCnt}}{L{${totColWid}cm}}{\vspace*{-5mm}\hspace*{0.0mm}\textbf{\textit{\normalsize ${slb_bottom}}}} \\ $ampersand \\ ${slb_estd_1}"
+			"${slb_estd_2}"
+			"${slb_estd_3}"
+			"${slb_estd_4}"))"';
+	#delimit cr
+
+/////////////////////////////////////////////////
+///--- G2. Tex Headline
 /////////////////////////////////////////////////
 
 	///--- C.3.A. Initialize
@@ -501,55 +509,55 @@ qui {
 	#delimit cr
 
 /////////////////////////////////////////////////
-///--- H1. Latex Controls
+///--- H1. Output Results to HTML
 /////////////////////////////////////////////////
 
-	global slb_starLvl "* 0.10 ** 0.05 *** 0.01"
-	global slb_starComm "nostar"
+	esttab ${smd_panel_a_m} using "${curlogfile}.html", ${slb_panel_a_main} ${slb_esttab_opt_txt} replace
+	esttab ${smd_panel_b_m} using "${curlogfile}.html", ${slb_panel_b_main} ${slb_esttab_opt_txt} append
+	esttab ${smd_panel_c_m} using "${curlogfile}.html", ${slb_panel_c_main} ${slb_esttab_opt_txt} append
 
-	global slb_esttab_tex_opt "collabels(none) nomtitles nonumbers booktabs"
-	global slb_esttab_tex_opt "stats(N provage countfe) star($starLvl) $slb_cells ${slb_esttab_tex_opt} "
-		
 /////////////////////////////////////////////////
-///--- H2. Output Results to Tex
+///--- H2. Output Results to RTF
+/////////////////////////////////////////////////
+
+	esttab ${smd_panel_a_m} using "${curlogfile}.rtf", ${slb_panel_a_main} ${slb_esttab_opt_txt} replace
+	esttab ${smd_panel_b_m} using "${curlogfile}.rtf", ${slb_panel_b_main} ${slb_esttab_opt_txt} append
+	esttab ${smd_panel_c_m} using "${curlogfile}.rtf", ${slb_panel_c_main} ${slb_esttab_opt_txt} append
+
+/////////////////////////////////////////////////
+///--- H3. Output Results to Tex
 /////////////////////////////////////////////////
 
 	esttab $smd_panel_a_m using "${curlogfile}.tex", ///
-		title("${slb_panel_a}") ///
-		keep(${svr_coef_keep_panel_a}) order(${svr_coef_keep_panel_a}) ///
-		coeflabels($slb_coef_label_panel_a) ///
-		$slb_refcat_panel_a ///
-		$slb_esttab_tex_opt ///		
-		fragment ///
-		$headlineAll postfoot("") replace
-			
+		${slb_panel_a_main} ///
+ 		${slb_refcat_panel_a} ///
+		${slb_esttab_opt_tex} ///
+		fragment $headlineAll postfoot("") replace
+
 	esttab $smd_panel_b_m using "${curlogfile}.tex", ///
-		title("${slb_panel_b}") ///
-		keep(${svr_coef_keep_panel_b}) order(${svr_coef_keep_panel_b}) ///
-		coeflabels($slb_coef_label_panel_b) ///
-		$slb_refcat_panel_b ///
-		$slb_esttab_tex_opt ///		
-		fragment ///
-		prehead("") postfoot("") append
+		${slb_panel_b_main} ///
+ 		${slb_refcat_panel_b} ///
+		${slb_esttab_opt_tex} ///
+		fragment prehead("") postfoot("") append
 
 	esttab $smd_panel_c_m using "${curlogfile}.tex", ///
-		title("${slb_panel_c}") ///
-		keep(${svr_coef_keep_panel_c}) order(${svr_coef_keep_panel_c}) ///
-		coeflabels($slb_coef_label_panel_c) ///
-		$slb_refcat_panel_c ///
-		$slb_esttab_tex_opt ///
-		addnotes(${slb_note}) ///		
-		prehead("") $postAll append
+		${slb_panel_c_main} ///
+ 		${slb_refcat_panel_c} ///
+		${slb_esttab_opt_tex} ///
+		${slb_titling_bottom} ///
+		addnotes(${slb_note}) ///
+		fragment prehead("") $postAll append
 
-		
+
+
 /////////////////////////////////////////////////
 ///--- I. Out Logs
 /////////////////////////////////////////////////
-		
+
 ///--- End Log and to HTML
 log close
 capture noisily {
-  log2html "${curlogfile}", replace
+	log2html "${curlogfile}_log", replace
 }
 
 ///--- to PDF
@@ -566,6 +574,5 @@ capture noisily {
 	translate @Results "${curlogfile}.pdf", replace translator(Results2pdf)
 }
 capture noisily {
-  erase "${curlogfile}.smcl"
+  erase "${curlogfile}_log.smcl"
 }
-		

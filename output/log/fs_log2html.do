@@ -85,7 +85,7 @@ capture noisily {
 	translator set smcl2pdf rmargin 0.4
 	translator set smcl2pdf tmargin 0.4
 	translator set smcl2pdf bmargin 0.4
-	translate "${curlogfile}.smcl" "${curlogfile}.pdf", replace translator(smcl2pdf)
+	translate "${curlogfile}.smcl" "${curlogfile}_smcllog.pdf", replace translator(smcl2pdf)
 
 	// translator query Results2pdf
 	translator set Results2pdf logo off
@@ -101,7 +101,7 @@ capture noisily {
 	translator set Results2pdf rmargin 0.2
 	translator set Results2pdf tmargin 0.2
 	translator set Results2pdf bmargin 0.2
-	translate @Results "${curlogfile}_res.pdf", replace translator(Results2pdf)
+	translate @Results "${curlogfile}_results.pdf", replace translator(Results2pdf)
 }
 capture noisily {
   erase "${curlogfile}.smcl"

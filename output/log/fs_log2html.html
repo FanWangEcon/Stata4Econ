@@ -14,210 +14,32 @@ BODY{background-color: ffffff;
 </head>
 <body>
 <pre>
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <span class=result>&lt;unnamed&gt;</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\output\log\fs_log2html.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>opened on:  <span class=result>11 Aug 2019, 21:38:41</span>
+<span class=result> </span>opened on:  <span class=result>12 Aug 2019, 16:01:13</span>
 <br><br>
 <span class=input>. log on</span>
 (log already on)
 <br><br>
 <span class=input>. </span>
-<span class=input>. ///--- log Contents</span>
-<span class=input>&gt; set more off</span>
+<span class=input>. ///--- Generate</span>
+<span class=input>&gt; local rowCnt = 3</span>
 <br><br>
-<span class=input>. sysuse auto, clear</span>
-(1978 Automobile Data)
+<span class=input>. local colCnt = 4</span>
 <br><br>
-<span class=input>. </span>
-<span class=input>. ///--- Vars to Show</span>
-<span class=input>&gt; </span>
-<span class=input>. #delimit ;</span>
-delimiter now ;
-<span class=input>. global st_ids_etc "</span>
-<span class=input>&gt;                         make</span>
-<span class=input>&gt;                         foreign</span>
-<span class=input>&gt;                         ";</span>
+<span class=input>. local fillVal = 1</span>
 <br><br>
-<span class=input>. global st_outcomes "</span>
-<span class=input>&gt;                         displacement</span>
-<span class=input>&gt;                         weight length</span>
-<span class=input>&gt;                         ";</span>
+<span class=input>. matrix coeffSave = J(`rowCnt', `colCnt', `fillVal')</span>
 <br><br>
-<span class=input>. global st_inputs "</span>
-<span class=input>&gt;                         trunk headroom</span>
-<span class=input>&gt;                         price</span>
-<span class=input>&gt;                         turn</span>
-<span class=input>&gt;                         ";</span>
+<span class=input>. matrix list coeffSave</span>
 <br><br>
-<span class=input>. #delimit cr</span>
-delimiter now cr
-<span class=input>. </span>
-<span class=input>. ///--- Describe Vars</span>
-<span class=input>&gt; d $st_ids_etc</span>
-<br><br>
-<span class=result>              </span>storage   display    value
-variable name   type    format     label      variable label
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<span class=result>make           </span> str18   %-18s                 <span class=result>Make and Model</span>
-<span class=result>foreign        </span> byte    %8.0g      origin     <span class=result>Car type</span>
-<br><br>
-<span class=input>. d $st_outcomes</span>
-<br><br>
-<span class=result>              </span>storage   display    value
-variable name   type    format     label      variable label
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<span class=result>displacement   </span> int     %8.0g                 <span class=result>Displacement (cu. in.)</span>
-<span class=result>weight         </span> int     %8.0gc                <span class=result>Weight (lbs.)</span>
-<span class=result>length         </span> int     %8.0g                 <span class=result>Length (in.)</span>
-<br><br>
-<span class=input>. d $st_inputs</span>
-<br><br>
-<span class=result>              </span>storage   display    value
-variable name   type    format     label      variable label
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<span class=result>trunk          </span> int     %8.0g                 <span class=result>Trunk space (cu. ft.)</span>
-<span class=result>headroom       </span> float   %6.1f                 <span class=result>Headroom (in.)</span>
-<span class=result>price          </span> int     %8.0gc                <span class=result>Price</span>
-<span class=result>turn           </span> int     %8.0g                 <span class=result>Turn Circle (ft.)</span>
-<br><br>
-<span class=input>. </span>
-<span class=input>. ///--- Summ Vars</span>
-<span class=input>&gt; summ $st_ids_etc</span>
-<br><br>
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-        make |<span class=result>          0</span>
-     foreign |<span class=result>         74    .2972973    .4601885          0          1</span>
-<br><br>
-<span class=input>. summ $st_outcomes</span>
-<br><br>
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-displacement |<span class=result>         74    197.2973    91.83722         79        425</span>
-      weight |<span class=result>         74    3019.459    777.1936       1760       4840</span>
-      length |<span class=result>         74    187.9324    22.26634        142        233</span>
-<br><br>
-<span class=input>. summ $st_inputs</span>
-<br><br>
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-       trunk |<span class=result>         74    13.75676    4.277404          5         23</span>
-    headroom |<span class=result>         74    2.993243    .8459948        1.5          5</span>
-       price |<span class=result>         74    6165.257    2949.496       3291      15906</span>
-        turn |<span class=result>         74    39.64865    4.399354         31         51</span>
-<br><br>
-<span class=input>. </span>
-<span class=input>. bys foreign (price): list ///</span>
-<span class=input>&gt;         $st_ids_etc ///</span>
-<span class=input>&gt;         $st_outcomes ///</span>
-<span class=input>&gt;         $st_inputs</span>
-<br><br>
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--&gt; foreign = Domestic
-<br><br>
-     +----------------------------------------------------------------------------------------------+
-     | <span class=result>make                 foreign   displa~t   weight   length   trunk   headroom    price   turn </span>|
-     |----------------------------------------------------------------------------------------------|
-  1. | <span class=result>Merc. Zephyr        Domestic        140    2,830      195      17        3.5    3,291     43 </span>|
-  2. | <span class=result>Chev. Chevette      Domestic        231    2,110      163       9        2.5    3,299     34 </span>|
-  3. | <span class=result>Chev. Monza         Domestic        151    2,750      179       7        2.0    3,667     40 </span>|
-  4. | <span class=result>AMC Spirit          Domestic        121    2,640      168      12        3.0    3,799     35 </span>|
-  5. | <span class=result>Merc. Bobcat        Domestic        140    2,580      169       9        3.0    3,829     39 </span>|
-     |----------------------------------------------------------------------------------------------|
-  6. | <span class=result>Chev. Nova          Domestic        250    3,430      197      13        3.5    3,955     43 </span>|
-  7. | <span class=result>Dodge Colt          Domestic         98    2,120      163       8        2.0    3,984     35 </span>|
-  8. | <span class=result>Dodge Diplomat      Domestic        318    3,600      206      17        4.0    4,010     46 </span>|
-  9. | <span class=result>Plym. Volare        Domestic        225    3,330      201      16        5.0    4,060     44 </span>|
- 10. | <span class=result>Buick Skylark       Domestic        231    3,400      200      13        3.5    4,082     42 </span>|
-     |----------------------------------------------------------------------------------------------|
- 11. | <span class=result>AMC Concord         Domestic        121    2,930      186      11        2.5    4,099     40 </span>|
- 12. | <span class=result>Pont. Sunbird       Domestic        151    2,690      179       7        2.0    4,172     41 </span>|
- 13. | <span class=result>Olds Omega          Domestic        231    3,370      200      14        4.5    4,181     43 </span>|
- 14. | <span class=result>Ford Mustang        Domestic        140    2,650      179      10        2.0    4,187     43 </span>|
- 15. | <span class=result>Olds Starfire       Domestic        151    2,730      180      10        2.0    4,195     40 </span>|
-     |----------------------------------------------------------------------------------------------|
- 16. | <span class=result>Ford Fiesta         Domestic         98    1,800      147       9        1.5    4,389     33 </span>|
- 17. | <span class=result>Pont. Phoenix       Domestic        231    3,420      203      13        3.5    4,424     43 </span>|
- 18. | <span class=result>Plym. Champ         Domestic         86    1,800      157      11        2.5    4,425     37 </span>|
- 19. | <span class=result>Buick Opel          Domestic        304    2,230      170      10        3.0    4,453     34 </span>|
- 20. | <span class=result>Plym. Horizon       Domestic        105    2,200      165      17        4.0    4,482     36 </span>|
-     |----------------------------------------------------------------------------------------------|
- 21. | <span class=result>Chev. Malibu        Domestic        200    3,180      193      17        3.5    4,504     31 </span>|
- 22. | <span class=result>Merc. Monarch       Domestic        250    3,370      198      15        3.0    4,516     41 </span>|
- 23. | <span class=result>Plym. Arrow         Domestic        156    3,260      170      11        2.0    4,647     37 </span>|
- 24. | <span class=result>Pont. Le Mans       Domestic        231    3,200      199      17        3.5    4,723     40 </span>|
- 25. | <span class=result>Olds Cutlass        Domestic        231    3,300      198      16        4.5    4,733     42 </span>|
-     |----------------------------------------------------------------------------------------------|
- 26. | <span class=result>AMC Pacer           Domestic        258    3,350      173      11        3.0    4,749     40 </span>|
- 27. | <span class=result>Buick Century       Domestic        196    3,250      196      16        4.5    4,816     40 </span>|
- 28. | <span class=result>Olds Delta 88       Domestic        231    3,690      218      20        4.0    4,890     42 </span>|
- 29. | <span class=result>Pont. Firebird      Domestic        231    3,470      198       7        1.5    4,934     42 </span>|
- 30. | <span class=result>Chev. Monte Carlo   Domestic        200    3,220      200      16        2.0    5,104     41 </span>|
-     |----------------------------------------------------------------------------------------------|
- 31. | <span class=result>Olds Cutl Supr      Domestic        231    3,310      198      16        2.0    5,172     42 </span>|
- 32. | <span class=result>Buick Regal         Domestic        196    3,280      200      16        2.0    5,189     42 </span>|
- 33. | <span class=result>Pont. Grand Prix    Domestic        231    3,210      201      16        2.0    5,222     45 </span>|
- 34. | <span class=result>Merc. Cougar        Domestic        302    4,060      221      16        3.5    5,379     48 </span>|
- 35. | <span class=result>Chev. Impala        Domestic        250    3,690      212      20        4.0    5,705     43 </span>|
-     |----------------------------------------------------------------------------------------------|
- 36. | <span class=result>Buick LeSabre       Domestic        231    3,670      218      21        4.0    5,788     43 </span>|
- 37. | <span class=result>Pont. Catalina      Domestic        231    3,700      214      20        4.0    5,798     42 </span>|
- 38. | <span class=result>Dodge Magnum        Domestic        318    3,600      206      17        4.0    5,886     46 </span>|
- 39. | <span class=result>Merc. Marquis       Domestic        302    3,720      212      23        3.5    6,165     44 </span>|
- 40. | <span class=result>Merc. XR-7          Domestic        302    4,130      217      16        3.0    6,303     45 </span>|
-     |----------------------------------------------------------------------------------------------|
- 41. | <span class=result>Dodge St. Regis     Domestic        225    3,740      220      21        4.5    6,342     46 </span>|
- 42. | <span class=result>Plym. Sapporo       Domestic        119    2,520      182       8        1.5    6,486     38 </span>|
- 43. | <span class=result>Buick Electra       Domestic        350    4,080      222      20        4.0    7,827     43 </span>|
- 44. | <span class=result>Olds 98             Domestic        350    4,060      220      20        4.0    8,814     43 </span>|
- 45. | <span class=result>Olds Toronado       Domestic        350    4,030      206      17        3.5   10,371     43 </span>|
-     |----------------------------------------------------------------------------------------------|
- 46. | <span class=result>Buick Riviera       Domestic        231    3,880      207      17        3.5   10,372     43 </span>|
- 47. | <span class=result>Cad. Deville        Domestic        425    4,330      221      20        4.0   11,385     44 </span>|
- 48. | <span class=result>Linc. Continental   Domestic        400    4,840      233      22        3.5   11,497     51 </span>|
- 49. | <span class=result>Linc. Versailles    Domestic        302    3,830      201      15        3.5   13,466     41 </span>|
- 50. | <span class=result>Linc. Mark V        Domestic        400    4,720      230      18        2.5   13,594     48 </span>|
-     |----------------------------------------------------------------------------------------------|
- 51. | <span class=result>Cad. Eldorado       Domestic        350    3,900      204      16        3.5   14,500     43 </span>|
- 52. | <span class=result>Cad. Seville        Domestic        350    4,290      204      13        3.0   15,906     45 </span>|
-     +----------------------------------------------------------------------------------------------+
-<br><br>
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--&gt; foreign = Foreign
-<br><br>
-     +------------------------------------------------------------------------------------------+
-     | <span class=result>make             foreign   displa~t   weight   length   trunk   headroom    price   turn </span>|
-     |------------------------------------------------------------------------------------------|
-  1. | <span class=result>Toyota Corolla   Foreign         97    2,200      165       9        3.0    3,748     35 </span>|
-  2. | <span class=result>Subaru           Foreign         97    2,050      164      11        2.5    3,798     36 </span>|
-  3. | <span class=result>Renault Le Car   Foreign         79    1,830      142      10        3.0    3,895     34 </span>|
-  4. | <span class=result>Mazda GLC        Foreign         86    1,980      154      11        3.5    3,995     33 </span>|
-  5. | <span class=result>Fiat Strada      Foreign        105    2,130      161      16        2.5    4,296     36 </span>|
-     |------------------------------------------------------------------------------------------|
-  6. | <span class=result>Honda Civic      Foreign         91    1,760      149       5        2.5    4,499     34 </span>|
-  7. | <span class=result>Datsun 210       Foreign         85    2,020      165       8        2.0    4,589     32 </span>|
-  8. | <span class=result>VW Rabbit        Foreign         89    1,930      155      15        3.0    4,697     35 </span>|
-  9. | <span class=result>Datsun 510       Foreign        119    2,280      170       8        2.5    5,079     34 </span>|
- 10. | <span class=result>VW Diesel        Foreign         90    2,040      155      15        3.0    5,397     35 </span>|
-     |------------------------------------------------------------------------------------------|
- 11. | <span class=result>Toyota Corona    Foreign        134    2,670      175      11        2.0    5,719     36 </span>|
- 12. | <span class=result>Honda Accord     Foreign        107    2,240      172      10        3.0    5,799     36 </span>|
- 13. | <span class=result>Toyota Celica    Foreign        134    2,410      174      14        2.5    5,899     36 </span>|
- 14. | <span class=result>Datsun 200       Foreign        119    2,370      170       6        1.5    6,229     35 </span>|
- 15. | <span class=result>Audi Fox         Foreign         97    2,070      174      11        2.5    6,295     36 </span>|
-     |------------------------------------------------------------------------------------------|
- 16. | <span class=result>VW Scirocco      Foreign         97    1,990      156      16        2.0    6,850     36 </span>|
- 17. | <span class=result>VW Dasher        Foreign         97    2,160      172      12        2.5    7,140     36 </span>|
- 18. | <span class=result>Datsun 810       Foreign        146    2,750      184       8        2.5    8,129     38 </span>|
- 19. | <span class=result>Audi 5000        Foreign        131    2,830      189      15        3.0    9,690     37 </span>|
- 20. | <span class=result>BMW 320i         Foreign        121    2,650      177      12        2.5    9,735     34 </span>|
-     |------------------------------------------------------------------------------------------|
- 21. | <span class=result>Volvo 260        Foreign        163    3,170      193      14        2.5   11,995     37 </span>|
- 22. | <span class=result>Peugeot 604      Foreign        163    3,420      192      14        3.5   12,990     38 </span>|
-     +------------------------------------------------------------------------------------------+
-<br><br>
+coeffSave[3,4]
+    c1  c2  c3  c4
+r1 <span class=result>  1   1   1   1</span>
+r2 <span class=result>  1   1   1   1</span>
+r3 <span class=result>  1   1   1   1</span>
 <br><br>
 <span class=input>. </span>
 <span class=input>. ///--- End Log and to HTML</span>
@@ -225,8 +47,8 @@ displacement |<span class=result>         74    197.2973    91.83722         79 
 <span class=result>      </span>name:  <span class=result>&lt;unnamed&gt;</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\output\log\fs_log2html.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>closed on:  <span class=result>11 Aug 2019, 21:38:41</span>
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<span class=result> </span>closed on:  <span class=result>12 Aug 2019, 16:01:13</span>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </pre>
 </body>
 </html>

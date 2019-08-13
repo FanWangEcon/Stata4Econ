@@ -1,0 +1,1214 @@
+
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css">
+BODY{background-color: ffffff;
+    font-family: monaco, "courier new", monospace;
+     color: #000000}
+.input {color: #CC6600}
+.result{color: #000099}
+.error{color: #dd0000}
+</style>
+</head>
+<body>
+<pre>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\table\multipanel\tab_6col_2panels_log.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>opened on:  <span class=result>12 Aug 2019, 21:35:40</span>
+<br><br>
+<span class=input>. log on</span>
+(log already on)
+<br><br>
+<span class=input>. </span>
+<span class=input>. set trace off</span>
+<br><br>
+<span class=input>. set tracedepth 1</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- Load Data</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>. set more off</span>
+<br><br>
+<span class=input>. sysuse auto, clear</span>
+(1978 Automobile Data)
+<br><br>
+<span class=input>. tab rep78</span>
+<br><br>
+<span class=result>     </span>Repair |
+Record 1978 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |<span class=result>          2        2.90        2.90</span>
+          2 |<span class=result>          8       11.59       14.49</span>
+          3 |<span class=result>         30       43.48       57.97</span>
+          4 |<span class=result>         18       26.09       84.06</span>
+          5 |<span class=result>         11       15.94      100.00</span>
+------------+-----------------------------------
+      Total |<span class=result>         69      100.00</span>
+<br><br>
+<span class=input>. tab foreign</span>
+<br><br>
+<span class=result>   </span>Car type |      Freq.     Percent        Cum.
+------------+-----------------------------------
+   Domestic |<span class=result>         52       70.27       70.27</span>
+    Foreign |<span class=result>         22       29.73      100.00</span>
+------------+-----------------------------------
+      Total |<span class=result>         74      100.00</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- A1. Define Regression Variables</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         * shared regression outcome lhs variable</span>
+<span class=input>.         global svr_outcome "price"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         * for each panel, rhs variables differ</span>
+<span class=input>.         global svr_rhs_panel_a "mpg ib1.rep78 displacement gear_ratio"</span>
+<br><br>
+<span class=input>.         global svr_rhs_panel_b "headroom mpg trunk weight displacement gear_ratio"</span>
+<br><br>
+<span class=input>.         global svr_rhs_panel_c "headroom turn length weight trunk"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         * for each column, conditioning differs</span>
+<span class=input>.         global it_reg_n = 6</span>
+<br><br>
+<span class=input>.         global sif_col_1 "weight &lt;= 4700"</span>
+<br><br>
+<span class=input>.         global sif_col_2 "weight &lt;= 4500"</span>
+<br><br>
+<span class=input>.         global sif_col_3 "weight &lt;= 4300"</span>
+<br><br>
+<span class=input>.         global sif_col_4 "weight &lt;= 4100"</span>
+<br><br>
+<span class=input>.         global sif_col_5 "weight &lt;= 3900"</span>
+<br><br>
+<span class=input>.         global sif_col_6 "weight &lt;= 3700"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         * esttad strings for conditioning what were included</span>
+<span class=input>.         scalar it_esttad_n = 4</span>
+<br><br>
+<span class=input>.         matrix mt_bl_estd = J(it_esttad_n, $it_reg_n, 0)</span>
+<br><br>
+<span class=input>.         matrix rownames mt_bl_estd = incdgr4500 incdgr4000 incdgr3500 incdgr3000</span>
+<br><br>
+<span class=input>.         matrix colnames mt_bl_estd = reg1 reg2 reg3 reg4 reg5 reg6</span>
+<br><br>
+<span class=input>.         matrix mt_bl_estd[1, 1] = (1\1\1\1)</span>
+<br><br>
+<span class=input>.         matrix mt_bl_estd[1, 2] = (1\1\1\1)</span>
+<br><br>
+<span class=input>.         matrix mt_bl_estd[1, 3] = (0\1\1\1)</span>
+<br><br>
+<span class=input>.         matrix mt_bl_estd[1, 4] = (0\1\1\1)</span>
+<br><br>
+<span class=input>.         matrix mt_bl_estd[1, 5] = (0\0\1\1)</span>
+<br><br>
+<span class=input>.         matrix mt_bl_estd[1, 6] = (0\0\1\1)</span>
+<br><br>
+<span class=input>.         global st_estd_rownames : rownames mt_bl_estd</span>
+<br><br>
+<span class=input>.         global slb_estd_1 "the weight &lt;= 4700"</span>
+<br><br>
+<span class=input>.         global slb_estd_2 "the weight &lt;= 4500"</span>
+<br><br>
+<span class=input>.         global slb_estd_3 "the weight &lt;= 4300"</span>
+<br><br>
+<span class=input>.         global slb_estd_4 "the weight &lt;= 4100"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- A2. Define Regression Technical Strings</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>. ///--- Technical Controls</span>
+<span class=input>&gt;         global stc_regc "regress"</span>
+<br><br>
+<span class=input>.         global stc_opts ", noc"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- B1. Define Regressions Panel A</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         /*</span>
+<span class=input>&gt;                 di "$srg_panel_a_col_1"</span>
+<span class=input>&gt;                 di "$srg_panel_a_col_2"</span>
+<span class=input>&gt;                 di "$srg_panel_a_col_6"</span>
+<span class=input>&gt;         */</span>
+<span class=input>.         foreach it_regre of numlist 1(1)$it_reg_n {</span>
+  2<span class=input>.                 #delimit;</span>
+delimiter now ;
+<span class=input>.                 global srg_panel_a_col_`it_regre' "</span>
+<span class=input>&gt;                   $stc_regc $svr_outcome $svr_rhs_panel_a if ${sif_col_`it_regre'} $stc_opts</span>
+<span class=input>&gt;                   ";</span>
+  3<span class=input>.                 #delimit cr</span>
+delimiter now cr
+<span class=input>.                 di "${srg_panel_a_col_`it_regre'}"</span>
+  4<span class=input>.         }</span>
+<span class=result>                   regress price mpg ib1.rep78 displacement gear_ratio if weight &lt;= 4700 , noc                   </span>
+<span class=result>                   regress price mpg ib1.rep78 displacement gear_ratio if weight &lt;= 4500 , noc                   </span>
+<span class=result>                   regress price mpg ib1.rep78 displacement gear_ratio if weight &lt;= 4300 , noc                   </span>
+<span class=result>                   regress price mpg ib1.rep78 displacement gear_ratio if weight &lt;= 4100 , noc                   </span>
+<span class=result>                   regress price mpg ib1.rep78 displacement gear_ratio if weight &lt;= 3900 , noc                   </span>
+<span class=result>                   regress price mpg ib1.rep78 displacement gear_ratio if weight &lt;= 3700 , noc                   </span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- B2. Define Regressions Panel B</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         /*</span>
+<span class=input>&gt;                 di "$srg_panel_b_col_1"</span>
+<span class=input>&gt;                 di "$srg_panel_b_col_2"</span>
+<span class=input>&gt;                 di "$srg_panel_b_col_6"</span>
+<span class=input>&gt;         */</span>
+<span class=input>.         foreach it_regre of numlist 1(1)$it_reg_n {</span>
+  2<span class=input>.                 #delimit;</span>
+delimiter now ;
+<span class=input>.                 global srg_panel_b_col_`it_regre' "</span>
+<span class=input>&gt;                   $stc_regc $svr_outcome $svr_rhs_panel_b if ${sif_col_`it_regre'} $stc_opts</span>
+<span class=input>&gt;                   ";</span>
+  3<span class=input>.                 #delimit cr</span>
+delimiter now cr
+<span class=input>.                 di "${srg_panel_b_col_`it_regre'}"</span>
+  4<span class=input>.         }</span>
+<span class=result>                   regress price headroom mpg trunk weight displacement gear_ratio if weight &lt;= 4700 , noc                   </span>
+<span class=result>                   regress price headroom mpg trunk weight displacement gear_ratio if weight &lt;= 4500 , noc                   </span>
+<span class=result>                   regress price headroom mpg trunk weight displacement gear_ratio if weight &lt;= 4300 , noc                   </span>
+<span class=result>                   regress price headroom mpg trunk weight displacement gear_ratio if weight &lt;= 4100 , noc                   </span>
+<span class=result>                   regress price headroom mpg trunk weight displacement gear_ratio if weight &lt;= 3900 , noc                   </span>
+<span class=result>                   regress price headroom mpg trunk weight displacement gear_ratio if weight &lt;= 3700 , noc                   </span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- B3. Define Regressions Panel C</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         /*</span>
+<span class=input>&gt;                 di "$srg_panel_c_col_1"</span>
+<span class=input>&gt;                 di "$srg_panel_c_col_2"</span>
+<span class=input>&gt;                 di "$srg_panel_c_col_6"</span>
+<span class=input>&gt;         */</span>
+<span class=input>. </span>
+<span class=input>.         foreach it_regre of numlist 1(1)$it_reg_n {</span>
+  2<span class=input>.                 #delimit;</span>
+delimiter now ;
+<span class=input>.                 global srg_panel_c_col_`it_regre' "</span>
+<span class=input>&gt;                   $stc_regc $svr_outcome $svr_rhs_panel_c if ${sif_col_`it_regre'} $stc_opts</span>
+<span class=input>&gt;                   ";</span>
+  3<span class=input>.                 #delimit cr</span>
+delimiter now cr
+<span class=input>.                 di "${srg_panel_c_col_`it_regre'}"</span>
+  4<span class=input>.         }</span>
+<span class=result>                   regress price headroom turn length weight trunk if weight &lt;= 4700 , noc                   </span>
+<span class=result>                   regress price headroom turn length weight trunk if weight &lt;= 4500 , noc                   </span>
+<span class=result>                   regress price headroom turn length weight trunk if weight &lt;= 4300 , noc                   </span>
+<span class=result>                   regress price headroom turn length weight trunk if weight &lt;= 4100 , noc                   </span>
+<span class=result>                   regress price headroom turn length weight trunk if weight &lt;= 3900 , noc                   </span>
+<span class=result>                   regress price headroom turn length weight trunk if weight &lt;= 3700 , noc                   </span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- C. Run Regressions</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         eststo clear</span>
+<br><br>
+<span class=input>.         local it_reg_ctr = 0</span>
+<br><br>
+<span class=input>.         foreach st_panel in panel_a panel_b panel_c {</span>
+  2<span class=input>. </span>
+<span class=input>.           global st_cur_sm_stor "smd_`st_panel'_m"</span>
+  3<span class=input>.           global ${st_cur_sm_stor} ""</span>
+  4<span class=input>. </span>
+<span class=input>.           foreach it_regre of numlist 1(1)$it_reg_n {</span>
+  5<span class=input>. </span>
+<span class=input>.                   local it_reg_ctr = `it_reg_ctr' + 1</span>
+  6<span class=input>.                   global st_cur_srg_name "srg_`st_panel'_col_`it_regre'"</span>
+  7<span class=input>. </span>
+<span class=input>.                   di "st_panel:`st_panel', it_reg_ctr:`it_reg_ctr', st_cur_srg_name:${st_cur_srg_name}"</span>
+  8<span class=input>. </span>
+<span class=input>.                   ///--- Regression</span>
+<span class=input>&gt;                   eststo m`it_reg_ctr', title("${sif_col_`it_regre'}") : ${$st_cur_srg_name}</span>
+  9<span class=input>. </span>
+<span class=input>.                   ///--- Estadd Controls</span>
+<span class=input>&gt;                         foreach st_estd_name in $st_estd_rownames {</span>
+ 10<span class=input>.                                 scalar bl_estad = el(mt_bl_estd, rownumb(mt_bl_estd, "`st_estd_name'"), `it_regre')</span>
+ 11<span class=input>.                                 if (bl_estad) {</span>
+ 12<span class=input>.                                         estadd local `st_estd_name' "Yes"</span>
+ 13<span class=input>.                                 }</span>
+ 14<span class=input>.                                 else {</span>
+ 15<span class=input>.                                         estadd local `st_estd_name' "No"</span>
+ 16<span class=input>.                                 }</span>
+ 17<span class=input>.                         }</span>
+ 18<span class=input>. </span>
+<span class=input>.                   ///--- Track Regression Store</span>
+<span class=input>&gt;                   global $st_cur_sm_stor "${${st_cur_sm_stor}} m`it_reg_ctr'"</span>
+ 19<span class=input>.           }</span>
+ 20<span class=input>. </span>
+<span class=input>.           di "${${st_cur_sm_stor}}"</span>
+ 21<span class=input>. </span>
+<span class=input>.         }</span>
+<span class=result>st_panel:panel_a, it_reg_ctr:1, st_cur_srg_name:srg_panel_a_col_1</span>
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        67</span>
+-------------+----------------------------------   F(7, 60)        = <span class=result>    65.79</span>
+       Model | <span class=result> 2.5358e+09         7   362259949   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  330395149        60  5506585.81   </span>R-squared       =<span class=result>    0.8847</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8713</span>
+       Total | <span class=result> 2.8662e+09        67  42779325.3   </span>Root MSE        =   <span class=result> 2346.6</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         mpg |<span class=result>  -112.7079   71.93646    -1.57   0.122    -256.6022    31.18647</span>
+             |
+       rep78 |
+          2  |<span class=result>   342.7005   1798.007     0.19   0.849    -3253.849     3939.25</span>
+          3  |<span class=result>   680.0882   1677.941     0.41   0.687    -2676.294     4036.47</span>
+          4  |<span class=result>     1377.5    1741.11     0.79   0.432    -2105.239    4860.239</span>
+          5  |<span class=result>   3010.294   1784.391     1.69   0.097    -559.0194    6579.607</span>
+             |
+displacement |<span class=result>   19.17683   3.550156     5.40   0.000     12.07546     26.2782</span>
+  gear_ratio |<span class=result>   1167.008   673.6362     1.73   0.088    -180.4646    2514.482</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_a, it_reg_ctr:2, st_cur_srg_name:srg_panel_a_col_2
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        67</span>
+-------------+----------------------------------   F(7, 60)        = <span class=result>    65.79</span>
+       Model | <span class=result> 2.5358e+09         7   362259949   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  330395149        60  5506585.81   </span>R-squared       =<span class=result>    0.8847</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8713</span>
+       Total | <span class=result> 2.8662e+09        67  42779325.3   </span>Root MSE        =   <span class=result> 2346.6</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         mpg |<span class=result>  -112.7079   71.93646    -1.57   0.122    -256.6022    31.18647</span>
+             |
+       rep78 |
+          2  |<span class=result>   342.7005   1798.007     0.19   0.849    -3253.849     3939.25</span>
+          3  |<span class=result>   680.0882   1677.941     0.41   0.687    -2676.294     4036.47</span>
+          4  |<span class=result>     1377.5    1741.11     0.79   0.432    -2105.239    4860.239</span>
+          5  |<span class=result>   3010.294   1784.391     1.69   0.097    -559.0194    6579.607</span>
+             |
+displacement |<span class=result>   19.17683   3.550156     5.40   0.000     12.07546     26.2782</span>
+  gear_ratio |<span class=result>   1167.008   673.6362     1.73   0.088    -180.4646    2514.482</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_a, it_reg_ctr:3, st_cur_srg_name:srg_panel_a_col_3
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        66</span>
+-------------+----------------------------------   F(7, 59)        = <span class=result>    61.92</span>
+       Model | <span class=result> 2.4087e+09         7   344099784   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  327898083        59  5557594.62   </span>R-squared       =<span class=result>    0.8802</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8660</span>
+       Total | <span class=result> 2.7366e+09        66  41463584.4   </span>Root MSE        =   <span class=result> 2357.5</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         mpg |<span class=result>  -113.0257   72.27043    -1.56   0.123    -257.6385     31.5871</span>
+             |
+       rep78 |
+          2  |<span class=result>   462.2319   1815.097     0.25   0.800    -3169.768    4094.232</span>
+          3  |<span class=result>   716.4632   1686.568     0.42   0.673    -2658.352    4091.278</span>
+          4  |<span class=result>   1439.942   1751.635     0.82   0.414    -2065.071    4944.955</span>
+          5  |<span class=result>   3022.032   1792.722     1.69   0.097    -565.1962    6609.261</span>
+             |
+displacement |<span class=result>   18.44643   3.729304     4.95   0.000      10.9841    25.90875</span>
+  gear_ratio |<span class=result>   1190.642   677.6669     1.76   0.084     -165.366    2546.651</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_a, it_reg_ctr:4, st_cur_srg_name:srg_panel_a_col_4
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        64</span>
+-------------+----------------------------------   F(7, 57)        = <span class=result>    74.76</span>
+       Model | <span class=result> 2.2038e+09         7   314833270   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  240035036        57  4211140.97   </span>R-squared       =<span class=result>    0.9018</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8897</span>
+       Total | <span class=result> 2.4439e+09        64  38185436.3   </span>Root MSE        =   <span class=result> 2052.1</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         mpg |<span class=result>  -183.6805    64.8647    -2.83   0.006    -313.5699   -53.79123</span>
+             |
+       rep78 |
+          2  |<span class=result>   773.1875   1584.038     0.49   0.627    -2398.794    3945.169</span>
+          3  |<span class=result>   492.5474   1469.429     0.34   0.739    -2449.934    3435.028</span>
+          4  |<span class=result>    1556.61   1527.489     1.02   0.312    -1502.134    4615.355</span>
+          5  |<span class=result>   3120.989   1561.218     2.00   0.050    -5.296074    6247.273</span>
+             |
+displacement |<span class=result>   15.47909   3.394229     4.56   0.000     8.682263    22.27592</span>
+  gear_ratio |<span class=result>   1845.516   607.1606     3.04   0.004     629.6983    3061.334</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_a, it_reg_ctr:5, st_cur_srg_name:srg_panel_a_col_5
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        60</span>
+-------------+----------------------------------   F(7, 53)        = <span class=result>    68.34</span>
+       Model | <span class=result> 1.9521e+09         7   278877516   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  216285507        53  4080858.63   </span>R-squared       =<span class=result>    0.9003</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8871</span>
+       Total | <span class=result> 2.1684e+09        60  36140468.6   </span>Root MSE        =   <span class=result> 2020.1</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         mpg |<span class=result>  -207.5621   65.85323    -3.15   0.003     -339.647   -75.47728</span>
+             |
+       rep78 |
+          2  |<span class=result>   820.7647   1581.649     0.52   0.606    -2351.622    3993.151</span>
+          3  |<span class=result>   389.6197   1451.225     0.27   0.789     -2521.17    3300.409</span>
+          4  |<span class=result>   1771.064   1523.029     1.16   0.250    -1283.745    4825.874</span>
+          5  |<span class=result>   3223.121   1539.493     2.09   0.041     135.2881    6310.953</span>
+             |
+displacement |<span class=result>   15.22218   4.045155     3.76   0.000     7.108627    23.33573</span>
+  gear_ratio |<span class=result>   2021.001    628.596     3.22   0.002     760.1967    3281.804</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_a, it_reg_ctr:6, st_cur_srg_name:srg_panel_a_col_6
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        55</span>
+-------------+----------------------------------   F(7, 48)        = <span class=result>   123.11</span>
+       Model | <span class=result> 1.5071e+09         7   215298770   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result> 83946999.6        48  1748895.82   </span>R-squared       =<span class=result>    0.9472</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.9395</span>
+       Total | <span class=result> 1.5910e+09        55  28927970.7   </span>Root MSE        =   <span class=result> 1322.5</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         mpg |<span class=result>  -177.5317   43.99357    -4.04   0.000    -265.9867   -89.07671</span>
+             |
+       rep78 |
+          2  |<span class=result>    306.726   1062.756     0.29   0.774    -1830.088     2443.54</span>
+          3  |<span class=result>   116.4011   955.0769     0.12   0.904     -1803.91    2036.712</span>
+          4  |<span class=result>   1412.837   1000.885     1.41   0.165    -599.5775    3425.252</span>
+          5  |<span class=result>   2550.712   1013.512     2.52   0.015     512.9105    4588.514</span>
+             |
+displacement |<span class=result>   7.406126   2.877911     2.57   0.013     1.619698    13.19255</span>
+  gear_ratio |<span class=result>   2238.567   423.3569     5.29   0.000     1387.351    3089.784</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+ m1 m2 m3 m4 m5 m6
+st_panel:panel_b, it_reg_ctr:7, st_cur_srg_name:srg_panel_b_col_1
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        72</span>
+-------------+----------------------------------   F(6, 66)        = <span class=result>    75.33</span>
+       Model | <span class=result> 2.7319e+09         6   455324185   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  398911365        66  6044111.59   </span>R-squared       =<span class=result>    0.8726</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8610</span>
+       Total | <span class=result> 3.1309e+09        72  43484117.7   </span>Root MSE        =   <span class=result> 2458.5</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    headroom |<span class=result>  -652.0306     478.54    -1.36   0.178    -1607.467    303.4053</span>
+         mpg |<span class=result>  -99.34869   70.33473    -1.41   0.162    -239.7765    41.07913</span>
+       trunk |<span class=result>   9.905523   107.6401     0.09   0.927    -205.0049    224.8159</span>
+      weight |<span class=result>   1.207756   .8948371     1.35   0.182    -.5788436    2.994356</span>
+displacement |<span class=result>   9.423848   8.196024     1.15   0.254    -6.940042    25.78774</span>
+  gear_ratio |<span class=result>   1505.469   756.9894     1.99   0.051    -5.909535    3016.847</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_b, it_reg_ctr:8, st_cur_srg_name:srg_panel_b_col_2
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        72</span>
+-------------+----------------------------------   F(6, 66)        = <span class=result>    75.33</span>
+       Model | <span class=result> 2.7319e+09         6   455324185   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  398911365        66  6044111.59   </span>R-squared       =<span class=result>    0.8726</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8610</span>
+       Total | <span class=result> 3.1309e+09        72  43484117.7   </span>Root MSE        =   <span class=result> 2458.5</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    headroom |<span class=result>  -652.0306     478.54    -1.36   0.178    -1607.467    303.4053</span>
+         mpg |<span class=result>  -99.34869   70.33473    -1.41   0.162    -239.7765    41.07913</span>
+       trunk |<span class=result>   9.905523   107.6401     0.09   0.927    -205.0049    224.8159</span>
+      weight |<span class=result>   1.207756   .8948371     1.35   0.182    -.5788436    2.994356</span>
+displacement |<span class=result>   9.423848   8.196024     1.15   0.254    -6.940042    25.78774</span>
+  gear_ratio |<span class=result>   1505.469   756.9894     1.99   0.051    -5.909535    3016.847</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_b, it_reg_ctr:9, st_cur_srg_name:srg_panel_b_col_3
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        71</span>
+-------------+----------------------------------   F(6, 65)        = <span class=result>    72.21</span>
+       Model | <span class=result> 2.6097e+09         6   434949124   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  391543506        65  6023746.24   </span>R-squared       =<span class=result>    0.8695</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8575</span>
+       Total | <span class=result> 3.0012e+09        71  42270961.3   </span>Root MSE        =   <span class=result> 2454.3</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    headroom |<span class=result>  -625.3786   478.3405    -1.31   0.196    -1580.691    329.9334</span>
+         mpg |<span class=result>  -94.98241   70.32704    -1.35   0.182    -235.4352    45.47039</span>
+       trunk |<span class=result>   2.950985   107.6424     0.03   0.978    -212.0258    217.9278</span>
+      weight |<span class=result>   1.392629   .9088335     1.53   0.130    -.4224365    3.207695</span>
+displacement |<span class=result>   6.820807   8.513999     0.80   0.426    -10.18282    23.82444</span>
+  gear_ratio |<span class=result>   1448.712   757.4535     1.91   0.060     -64.0275    2961.451</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_b, it_reg_ctr:10, st_cur_srg_name:srg_panel_b_col_4
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        69</span>
+-------------+----------------------------------   F(6, 63)        = <span class=result>    81.33</span>
+       Model | <span class=result> 2.3988e+09         6   399799546   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  309712328        63   4916068.7   </span>R-squared       =<span class=result>    0.8857</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8748</span>
+       Total | <span class=result> 2.7085e+09        69  39253762.4   </span>Root MSE        =   <span class=result> 2217.2</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    headroom |<span class=result>  -594.3755   435.0891    -1.37   0.177    -1463.832    275.0806</span>
+         mpg |<span class=result>  -155.5964   65.30818    -2.38   0.020    -286.1043   -25.08836</span>
+       trunk |<span class=result>    60.2579   98.39622     0.61   0.542    -136.3713     256.887</span>
+      weight |<span class=result>   .8368868   .8367661     1.00   0.321    -.8352568     2.50903</span>
+displacement |<span class=result>   6.831866   7.698593     0.89   0.378    -8.552544    22.21628</span>
+  gear_ratio |<span class=result>   2097.867   702.5348     2.99   0.004     693.9636    3501.771</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_b, it_reg_ctr:11, st_cur_srg_name:srg_panel_b_col_5
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        65</span>
+-------------+----------------------------------   F(6, 59)        = <span class=result>    74.12</span>
+       Model | <span class=result> 2.1481e+09         6   358013380   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  284989517        59   4830330.8   </span>R-squared       =<span class=result>    0.8829</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8710</span>
+       Total | <span class=result> 2.4331e+09        65  37431843.1   </span>Root MSE        =   <span class=result> 2197.8</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    headroom |<span class=result>  -547.5349    432.391    -1.27   0.210    -1412.747    317.6775</span>
+         mpg |<span class=result>   -176.275    65.9394    -2.67   0.010    -308.2195    -44.3306</span>
+       trunk |<span class=result>   42.04996   98.30492     0.43   0.670    -154.6577    238.7576</span>
+      weight |<span class=result>   .9717719   .8334796     1.17   0.248    -.6960168    2.639561</span>
+displacement |<span class=result>   3.944808   7.893179     0.50   0.619    -11.84941    19.73902</span>
+  gear_ratio |<span class=result>   2299.919    707.136     3.25   0.002      884.943    3714.895</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_b, it_reg_ctr:12, st_cur_srg_name:srg_panel_b_col_6
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        60</span>
+-------------+----------------------------------   F(6, 54)        = <span class=result>   112.30</span>
+       Model | <span class=result> 1.7180e+09         6   286333469   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  137679258        54  2549615.89   </span>R-squared       =<span class=result>    0.9258</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.9176</span>
+       Total | <span class=result> 1.8557e+09        60  30928001.2   </span>Root MSE        =   <span class=result> 1596.8</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    headroom |<span class=result>  -474.7401   320.6296    -1.48   0.145    -1117.564    168.0835</span>
+         mpg |<span class=result>  -155.9702   48.11763    -3.24   0.002    -252.4403   -59.50019</span>
+       trunk |<span class=result>     68.336   75.59457     0.90   0.370    -83.22199     219.894</span>
+      weight |<span class=result>    .962296   .6180536     1.56   0.125    -.2768269    2.201419</span>
+displacement |<span class=result>  -5.350443   6.038923    -0.89   0.380    -17.45776    6.756868</span>
+  gear_ratio |<span class=result>   2390.098   516.8475     4.62   0.000     1353.881    3426.315</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+ m7 m8 m9 m10 m11 m12
+st_panel:panel_c, it_reg_ctr:13, st_cur_srg_name:srg_panel_c_col_1
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        72</span>
+-------------+----------------------------------   F(5, 67)        = <span class=result>    88.44</span>
+       Model | <span class=result> 2.7189e+09         5   543778778   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  411962584        67  6148695.29   </span>R-squared       =<span class=result>    0.8684</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8586</span>
+       Total | <span class=result> 3.1309e+09        72  43484117.7   </span>Root MSE        =   <span class=result> 2479.7</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    headroom |<span class=result>  -409.7759   473.7833    -0.86   0.390    -1355.451    535.8994</span>
+        turn |<span class=result>  -185.6608   128.1199    -1.45   0.152    -441.3891    70.06757</span>
+      length |<span class=result>   47.43888   32.47436     1.46   0.149    -17.38022     112.258</span>
+      weight |<span class=result>   1.995721   .7382763     2.70   0.009     .5221158    3.469327</span>
+       trunk |<span class=result>  -23.20077   110.7411    -0.21   0.835     -244.241    197.8395</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_c, it_reg_ctr:14, st_cur_srg_name:srg_panel_c_col_2
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        72</span>
+-------------+----------------------------------   F(5, 67)        = <span class=result>    88.44</span>
+       Model | <span class=result> 2.7189e+09         5   543778778   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  411962584        67  6148695.29   </span>R-squared       =<span class=result>    0.8684</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8586</span>
+       Total | <span class=result> 3.1309e+09        72  43484117.7   </span>Root MSE        =   <span class=result> 2479.7</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    headroom |<span class=result>  -409.7759   473.7833    -0.86   0.390    -1355.451    535.8994</span>
+        turn |<span class=result>  -185.6608   128.1199    -1.45   0.152    -441.3891    70.06757</span>
+      length |<span class=result>   47.43888   32.47436     1.46   0.149    -17.38022     112.258</span>
+      weight |<span class=result>   1.995721   .7382763     2.70   0.009     .5221158    3.469327</span>
+       trunk |<span class=result>  -23.20077   110.7411    -0.21   0.835     -244.241    197.8395</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_c, it_reg_ctr:15, st_cur_srg_name:srg_panel_c_col_3
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        71</span>
+-------------+----------------------------------   F(5, 66)        = <span class=result>    84.61</span>
+       Model | <span class=result> 2.5962e+09         5   519240555   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  405035478        66  6136901.18   </span>R-squared       =<span class=result>    0.8650</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8548</span>
+       Total | <span class=result> 3.0012e+09        71  42270961.3   </span>Root MSE        =   <span class=result> 2477.3</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    headroom |<span class=result>  -413.0973    473.339    -0.87   0.386    -1358.149    531.9544</span>
+        turn |<span class=result>  -176.7491   128.2715    -1.38   0.173    -432.8513    79.35322</span>
+      length |<span class=result>   48.04357   32.44819     1.48   0.143    -16.74133    112.8285</span>
+      weight |<span class=result>   1.857177   .7490069     2.48   0.016     .3617365    3.352618</span>
+       trunk |<span class=result>  -29.04889   110.7717    -0.26   0.794    -250.2118     192.114</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_c, it_reg_ctr:16, st_cur_srg_name:srg_panel_c_col_4
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        69</span>
+-------------+----------------------------------   F(5, 64)        = <span class=result>    91.22</span>
+       Model | <span class=result> 2.3752e+09         5   475042197   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  333298619        64  5207790.93   </span>R-squared       =<span class=result>    0.8769</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8673</span>
+       Total | <span class=result> 2.7085e+09        69  39253762.4   </span>Root MSE        =   <span class=result> 2282.1</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    headroom |<span class=result>  -412.2206   438.2684    -0.94   0.350    -1287.762    463.3212</span>
+        turn |<span class=result>   -239.701   119.4543    -2.01   0.049    -478.3385   -1.063584</span>
+      length |<span class=result>   70.90427     30.663     2.31   0.024     9.647889    132.1607</span>
+      weight |<span class=result>   1.026267   .7527494     1.36   0.178    -.4775231    2.530057</span>
+       trunk |<span class=result>   13.46853   102.7254     0.13   0.896    -191.7491    218.6862</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_c, it_reg_ctr:17, st_cur_srg_name:srg_panel_c_col_5
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        65</span>
+-------------+----------------------------------   F(5, 60)        = <span class=result>    79.44</span>
+       Model | <span class=result> 2.1138e+09         5   422755965   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  319289972        60  5321499.53   </span>R-squared       =<span class=result>    0.8688</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8578</span>
+       Total | <span class=result> 2.4331e+09        65  37431843.1   </span>Root MSE        =   <span class=result> 2306.8</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    headroom |<span class=result>  -409.3815   443.1589    -0.92   0.359    -1295.831    477.0682</span>
+        turn |<span class=result>  -233.7946   123.6707    -1.89   0.064    -481.1728    13.58356</span>
+      length |<span class=result>   72.44917   31.67156     2.29   0.026      9.09661    135.8017</span>
+      weight |<span class=result>    .859031   .8127611     1.06   0.295    -.7667334    2.484795</span>
+       trunk |<span class=result>   8.383304   104.2561     0.08   0.936      -200.16    216.9266</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+st_panel:panel_c, it_reg_ctr:18, st_cur_srg_name:srg_panel_c_col_6
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        60</span>
+-------------+----------------------------------   F(5, 55)        = <span class=result>   103.87</span>
+       Model | <span class=result> 1.6780e+09         5   335596279   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result>  177698677        55  3230885.04   </span>R-squared       =<span class=result>    0.9042</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.8955</span>
+       Total | <span class=result> 1.8557e+09        60  30928001.2   </span>Root MSE        =   <span class=result> 1797.5</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    headroom |<span class=result>  -477.6258   350.7688    -1.36   0.179    -1180.582    225.3306</span>
+        turn |<span class=result>   -245.228   96.63589    -2.54   0.014    -438.8907   -51.56539</span>
+      length |<span class=result>   99.62594   25.28752     3.94   0.000     48.94862    150.3033</span>
+      weight |<span class=result>  -.9024213   .6935562    -1.30   0.199    -2.292339    .4874964</span>
+       trunk |<span class=result>   33.28869   86.27455     0.39   0.701    -139.6094    206.1868</span>
+------------------------------------------------------------------------------
+<br><br>
+added macro:
+         e(incdgr4500) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr4000) : "<span class=result>No</span>"
+<br><br>
+added macro:
+         e(incdgr3500) : "<span class=result>Yes</span>"
+<br><br>
+added macro:
+         e(incdgr3000) : "<span class=result>Yes</span>"
+ m13 m14 m15 m16 m17 m18
+<br><br>
+<span class=input>. </span>
+<span class=input>. </span>
+<span class=input>.         di "$smd_panel_a_m"</span>
+<span class=result> m1 m2 m3 m4 m5 m6</span>
+<br><br>
+<span class=input>.         di "$smd_panel_b_m"</span>
+<span class=result> m7 m8 m9 m10 m11 m12</span>
+<br><br>
+<span class=input>.         di "$smd_panel_c_m"</span>
+<span class=result> m13 m14 m15 m16 m17 m18</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- D1. Labeling</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>. ///--- Title overall</span>
+<span class=input>&gt;         global slb_title "Outcome: Attending School or Not"</span>
+<br><br>
+<span class=input>.         global slb_panel_a "Group A: Coefficients for Distance to Elementary School Variables"</span>
+<br><br>
+<span class=input>.         global slb_panel_b "Group B: Coefficients for Elementary School Physical Quality Variables"</span>
+<br><br>
+<span class=input>.         global slb_panel_c "Group C: More Coefficientss"</span>
+<br><br>
+<span class=input>.         global slb_bottom "Controls for each panel:"</span>
+<br><br>
+<span class=input>.         global slb_note "${slb_starLvl}. Standard Errors clustered at village level. Each Column is a spearate regression."</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Show which coefficients to keep</span>
+<span class=input>&gt;         #delimit;</span>
+delimiter now ;
+<span class=input>.         global svr_coef_keep_panel_a "</span>
+<span class=input>&gt;           mpg</span>
+<span class=input>&gt;           2.rep78 3.rep78</span>
+<span class=input>&gt;           4.rep78 5.rep78</span>
+<span class=input>&gt;           ";</span>
+<br><br>
+<span class=input>.         global svr_coef_keep_panel_b "</span>
+<span class=input>&gt;           headroom</span>
+<span class=input>&gt;           mpg</span>
+<span class=input>&gt;           trunk</span>
+<span class=input>&gt;           weight</span>
+<span class=input>&gt;           ";</span>
+<br><br>
+<span class=input>.         global svr_coef_keep_panel_c "</span>
+<span class=input>&gt;           turn</span>
+<span class=input>&gt;           ";</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>. ///--- Labeling for for Coefficients to Show</span>
+<span class=input>&gt;         #delimit;</span>
+delimiter now ;
+<span class=input>.         global svr_starts_var_panel_a "mpg";</span>
+<br><br>
+<span class=input>.         global slb_coef_label_panel_a "</span>
+<span class=input>&gt;           mpg "miles per gallon"</span>
+<span class=input>&gt;           2.rep78 "rep78 is 2"</span>
+<span class=input>&gt;           3.rep78 "rep78 is 3"</span>
+<span class=input>&gt;           4.rep78 "rep78 is 4"</span>
+<span class=input>&gt;           5.rep78 "rep78 is 5"</span>
+<span class=input>&gt;           ";</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>.         #delimit;</span>
+delimiter now ;
+<span class=input>.         global svr_starts_var_panel_b "headroom";</span>
+<br><br>
+<span class=input>.         global slb_coef_label_panel_b "</span>
+<span class=input>&gt;           headroom "headroom variable"</span>
+<span class=input>&gt;           mpg "miles per gallon"</span>
+<span class=input>&gt;           trunk "this is the trunk variable"</span>
+<span class=input>&gt;           weight "and here the weight variable"</span>
+<span class=input>&gt;           ";</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>.         #delimit;</span>
+delimiter now ;
+<span class=input>.         global svr_starts_var_panel_c "turn";</span>
+<br><br>
+<span class=input>.         global slb_coef_label_panel_c "</span>
+<span class=input>&gt;           turn "variable is turn"</span>
+<span class=input>&gt;           ";</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- D2. Regression Display Controls</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         global slb_reg_stats "N ${st_estd_rownames}"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         global slb_starLvl "* 0.10 ** 0.05 *** 0.01"</span>
+<br><br>
+<span class=input>.         global slb_starComm "nostar"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         global slb_sd_tex `"se(fmt(a2) par("\vspace*{-2mm}{\footnotesize (" ") }"))"'</span>
+<br><br>
+<span class=input>.         global slb_cells_tex `"cells(b(star fmt(a2)) $slb_sd_tex)"'</span>
+<br><br>
+<span class=input>.         global slb_esttab_opt_tex "booktabs label collabels(none) nomtitles nonumbers star(${slb_starLvl})"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         global slb_sd_txt `"se(fmt(a2) par("(" ")"))"'</span>
+<br><br>
+<span class=input>.         global slb_cells_txt `"cells(b(star fmt(a2)) $slb_sd_txt)"'</span>
+<br><br>
+<span class=input>.         global slb_esttab_opt_txt "stats(${slb_reg_stats}) collabels(none) mtitle nonumbers varwidth(30) modelwidth(15) star(${slb_starLvl}) addnotes(${slb_note})"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         #delimit ;</span>
+delimiter now ;
+<span class=input>.         global slb_panel_a_main "</span>
+<span class=input>&gt;                 title("${slb_panel_a}")</span>
+<span class=input>&gt;                 keep(${svr_coef_keep_panel_a}) order(${svr_coef_keep_panel_a})</span>
+<span class=input>&gt;                 coeflabels($slb_coef_label_panel_a)</span>
+<span class=input>&gt;                 ";</span>
+<br><br>
+<span class=input>.         global slb_panel_b_main "</span>
+<span class=input>&gt;                 title("${slb_panel_b}")</span>
+<span class=input>&gt;                 keep(${svr_coef_keep_panel_b}) order(${svr_coef_keep_panel_b})</span>
+<span class=input>&gt;                 coeflabels($slb_coef_label_panel_b)</span>
+<span class=input>&gt;                 ";</span>
+<br><br>
+<span class=input>.         global slb_panel_c_main "</span>
+<span class=input>&gt;                 title("${slb_panel_c}")</span>
+<span class=input>&gt;                 keep(${svr_coef_keep_panel_c}) order(${svr_coef_keep_panel_c})</span>
+<span class=input>&gt;                 coeflabels($slb_coef_label_panel_c)</span>
+<span class=input>&gt;                 ";</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- E. Regression Shows</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         esttab ${smd_panel_a_m}, ${slb_panel_a_main} ${slb_esttab_opt_txt}</span>
+<br><br>
+Group A: Coefficients for Distance to Elementary School Variables
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                weight &lt;= 4700     weight &lt;= 4500     weight &lt;= 4300     weight &lt;= 4100     weight &lt;= 3900     weight &lt;= 3700   
+------------------------------------------------------------------------------------------------------------------------------------------------
+miles per gallon              <span class=result>          -112.7             -112.7             -113.0             -183.7***          -207.6***          -177.5***</span>
+                              <span class=result>         </span>(<span class=result>-1.57</span>)<span class=result>            </span>(<span class=result>-1.57</span>)<span class=result>            </span>(<span class=result>-1.56</span>)<span class=result>            </span>(<span class=result>-2.83</span>)<span class=result>            </span>(<span class=result>-3.15</span>)<span class=result>            </span>(<span class=result>-4.04</span>)<span class=result>   </span>
+<br><br>
+rep78 is 2                    <span class=result>           342.7              342.7              462.2              773.2              820.8              306.7   </span>
+                              <span class=result>          </span>(<span class=result>0.19</span>)<span class=result>             </span>(<span class=result>0.19</span>)<span class=result>             </span>(<span class=result>0.25</span>)<span class=result>             </span>(<span class=result>0.49</span>)<span class=result>             </span>(<span class=result>0.52</span>)<span class=result>             </span>(<span class=result>0.29</span>)<span class=result>   </span>
+<br><br>
+rep78 is 3                    <span class=result>           680.1              680.1              716.5              492.5              389.6              116.4   </span>
+                              <span class=result>          </span>(<span class=result>0.41</span>)<span class=result>             </span>(<span class=result>0.41</span>)<span class=result>             </span>(<span class=result>0.42</span>)<span class=result>             </span>(<span class=result>0.34</span>)<span class=result>             </span>(<span class=result>0.27</span>)<span class=result>             </span>(<span class=result>0.12</span>)<span class=result>   </span>
+<br><br>
+rep78 is 4                    <span class=result>          1377.5             1377.5             1439.9             1556.6             1771.1             1412.8   </span>
+                              <span class=result>          </span>(<span class=result>0.79</span>)<span class=result>             </span>(<span class=result>0.79</span>)<span class=result>             </span>(<span class=result>0.82</span>)<span class=result>             </span>(<span class=result>1.02</span>)<span class=result>             </span>(<span class=result>1.16</span>)<span class=result>             </span>(<span class=result>1.41</span>)<span class=result>   </span>
+<br><br>
+rep78 is 5                    <span class=result>          3010.3*            3010.3*            3022.0*            3121.0*            3223.1**           2550.7** </span>
+                              <span class=result>          </span>(<span class=result>1.69</span>)<span class=result>             </span>(<span class=result>1.69</span>)<span class=result>             </span>(<span class=result>1.69</span>)<span class=result>             </span>(<span class=result>2.00</span>)<span class=result>             </span>(<span class=result>2.09</span>)<span class=result>             </span>(<span class=result>2.52</span>)<span class=result>   </span>
+------------------------------------------------------------------------------------------------------------------------------------------------
+N                             <span class=result>              67                 67                 66                 64                 60                 55   </span>
+incdgr4500                    <span class=result>             Yes                Yes                 No                 No                 No                 No   </span>
+incdgr4000                    <span class=result>             Yes                Yes                Yes                Yes                 No                 No   </span>
+incdgr3500                    <span class=result>             Yes                Yes                Yes                Yes                Yes                Yes   </span>
+incdgr3000                    <span class=result>             Yes                Yes                Yes                Yes                Yes                Yes   </span>
+------------------------------------------------------------------------------------------------------------------------------------------------
+t statistics in parentheses
+* 0.10 ** 0.05 *** 0.01. Standard Errors clustered at village level. Each Column is a spearate regression.
+* p&lt;0.10, ** p&lt;0.05, *** p&lt;0.01
+<br><br>
+<span class=input>.         esttab ${smd_panel_b_m}, ${slb_panel_b_main} ${slb_esttab_opt_txt}</span>
+<br><br>
+Group B: Coefficients for Elementary School Physical Quality Variables
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                weight &lt;= 4700     weight &lt;= 4500     weight &lt;= 4300     weight &lt;= 4100     weight &lt;= 3900     weight &lt;= 3700   
+------------------------------------------------------------------------------------------------------------------------------------------------
+headroom variable             <span class=result>          -652.0             -652.0             -625.4             -594.4             -547.5             -474.7   </span>
+                              <span class=result>         </span>(<span class=result>-1.36</span>)<span class=result>            </span>(<span class=result>-1.36</span>)<span class=result>            </span>(<span class=result>-1.31</span>)<span class=result>            </span>(<span class=result>-1.37</span>)<span class=result>            </span>(<span class=result>-1.27</span>)<span class=result>            </span>(<span class=result>-1.48</span>)<span class=result>   </span>
+<br><br>
+miles per gallon              <span class=result>          -99.35             -99.35             -94.98             -155.6**           -176.3***          -156.0***</span>
+                              <span class=result>         </span>(<span class=result>-1.41</span>)<span class=result>            </span>(<span class=result>-1.41</span>)<span class=result>            </span>(<span class=result>-1.35</span>)<span class=result>            </span>(<span class=result>-2.38</span>)<span class=result>            </span>(<span class=result>-2.67</span>)<span class=result>            </span>(<span class=result>-3.24</span>)<span class=result>   </span>
+<br><br>
+this is the trunk variable    <span class=result>           9.906              9.906              2.951              60.26              42.05              68.34   </span>
+                              <span class=result>          </span>(<span class=result>0.09</span>)<span class=result>             </span>(<span class=result>0.09</span>)<span class=result>             </span>(<span class=result>0.03</span>)<span class=result>             </span>(<span class=result>0.61</span>)<span class=result>             </span>(<span class=result>0.43</span>)<span class=result>             </span>(<span class=result>0.90</span>)<span class=result>   </span>
+<br><br>
+and here the weight variable  <span class=result>           1.208              1.208              1.393              0.837              0.972              0.962   </span>
+                              <span class=result>          </span>(<span class=result>1.35</span>)<span class=result>             </span>(<span class=result>1.35</span>)<span class=result>             </span>(<span class=result>1.53</span>)<span class=result>             </span>(<span class=result>1.00</span>)<span class=result>             </span>(<span class=result>1.17</span>)<span class=result>             </span>(<span class=result>1.56</span>)<span class=result>   </span>
+------------------------------------------------------------------------------------------------------------------------------------------------
+N                             <span class=result>              72                 72                 71                 69                 65                 60   </span>
+incdgr4500                    <span class=result>             Yes                Yes                 No                 No                 No                 No   </span>
+incdgr4000                    <span class=result>             Yes                Yes                Yes                Yes                 No                 No   </span>
+incdgr3500                    <span class=result>             Yes                Yes                Yes                Yes                Yes                Yes   </span>
+incdgr3000                    <span class=result>             Yes                Yes                Yes                Yes                Yes                Yes   </span>
+------------------------------------------------------------------------------------------------------------------------------------------------
+t statistics in parentheses
+* 0.10 ** 0.05 *** 0.01. Standard Errors clustered at village level. Each Column is a spearate regression.
+* p&lt;0.10, ** p&lt;0.05, *** p&lt;0.01
+<br><br>
+<span class=input>.         esttab ${smd_panel_c_m}, ${slb_panel_c_main} ${slb_esttab_opt_txt}</span>
+<br><br>
+Group C: More Coefficientss
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                weight &lt;= 4700     weight &lt;= 4500     weight &lt;= 4300     weight &lt;= 4100     weight &lt;= 3900     weight &lt;= 3700   
+------------------------------------------------------------------------------------------------------------------------------------------------
+variable is turn              <span class=result>          -185.7             -185.7             -176.7             -239.7**           -233.8*            -245.2** </span>
+                              <span class=result>         </span>(<span class=result>-1.45</span>)<span class=result>            </span>(<span class=result>-1.45</span>)<span class=result>            </span>(<span class=result>-1.38</span>)<span class=result>            </span>(<span class=result>-2.01</span>)<span class=result>            </span>(<span class=result>-1.89</span>)<span class=result>            </span>(<span class=result>-2.54</span>)<span class=result>   </span>
+------------------------------------------------------------------------------------------------------------------------------------------------
+N                             <span class=result>              72                 72                 71                 69                 65                 60   </span>
+incdgr4500                    <span class=result>             Yes                Yes                 No                 No                 No                 No   </span>
+incdgr4000                    <span class=result>             Yes                Yes                Yes                Yes                 No                 No   </span>
+incdgr3500                    <span class=result>             Yes                Yes                Yes                Yes                Yes                Yes   </span>
+incdgr3000                    <span class=result>             Yes                Yes                Yes                Yes                Yes                Yes   </span>
+------------------------------------------------------------------------------------------------------------------------------------------------
+t statistics in parentheses
+* 0.10 ** 0.05 *** 0.01. Standard Errors clustered at village level. Each Column is a spearate regression.
+* p&lt;0.10, ** p&lt;0.05, *** p&lt;0.01
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- F1. Define Latex Column Groups and Column Sub-Groups</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         ///--- Column Groups</span>
+<span class=input>&gt;         global it_max_col = 8</span>
+<br><br>
+<span class=input>.         global it_min_col = 2</span>
+<br><br>
+<span class=input>.         global colSeq "2 4 6 8"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- Group 1, columns 1 and 2</span>
+<span class=input>&gt;         global labG1 "All Age 5 to 12"</span>
+<br><br>
+<span class=input>.         global labC1 "{\small All Villages}"</span>
+<br><br>
+<span class=input>.         global labC2 "{\small No Teachng Points}"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- Group 2, columns 3 and 4</span>
+<span class=input>&gt;         global labG2 "Girls Age 5 to 12"</span>
+<br><br>
+<span class=input>.         global labC3 "{\small All Villages}"</span>
+<br><br>
+<span class=input>.         global labC4 "{\small No Teachng Points}"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- Group 3, columns 5 and 6</span>
+<span class=input>&gt;         global labG3 "Boys Age 5 to 12"</span>
+<br><br>
+<span class=input>.         global labC5 "{\small All Villages}"</span>
+<br><br>
+<span class=input>.         global labC6 "{\small No Teachng Points}"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- Column Widths</span>
+<span class=input>&gt;         global perCoefColWid = 1.85</span>
+<br><br>
+<span class=input>.         global labColWid = 6.75</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         ///--- Column Fractional Adjustment, 1 = 100%</span>
+<span class=input>&gt;         global tableAdjustBoxWidth = 1.0</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- F2. Tabling Calculations</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         ///--- Width Calculation</span>
+<span class=input>&gt;         global totCoefColWid = ${perCoefColWid}*${totCoefColCnt}</span>
+<br><br>
+<span class=input>.         global totColCnt = $totCoefColCnt + 1</span>
+<br><br>
+<span class=input>.         global totColWid = ${labColWid} + ${totCoefColWid} + ${perCoefColWid}</span>
+<br><br>
+<span class=input>.         global totColWidFootnote = ${labColWid} + ${totCoefColWid} + ${perCoefColWid} + ${perCoefColWid}/2</span>
+<br><br>
+<span class=input>.         global totColWidLegend = ${labColWid} + ${totCoefColWid} + ${perCoefColWid}</span>
+<br><br>
+<span class=input>.         global totColWidLegendthin = ${totCoefColWid} + ${perCoefColWid}</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         di "totCoefColCnt:$totCoefColCnt"</span>
+<span class=result>totCoefColCnt:6</span>
+<br><br>
+<span class=input>.         di "totCoefColWid:$totCoefColWid"</span>
+<span class=result>totCoefColWid:11.1</span>
+<br><br>
+<span class=input>.         di "totCoefColWid:$totCoefColWid"</span>
+<span class=result>totCoefColWid:11.1</span>
+<br><br>
+<span class=input>.         di "totCoefColWid:$totCoefColWid"</span>
+<span class=result>totCoefColWid:11.1</span>
+<br><br>
+<span class=input>.         di "totCoefColWid:$totCoefColWid"</span>
+<span class=result>totCoefColWid:11.1</span>
+<br><br>
+<span class=input>.         di "totCoefColWid:$totCoefColWid"</span>
+<span class=result>totCoefColWid:11.1</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         global ampersand ""</span>
+<br><br>
+<span class=input>.         foreach curLoop of numlist 1(1)$totCoefColCnt {</span>
+  2<span class=input>.           global ampersand "$ampersand &amp;"</span>
+  3<span class=input>.         }</span>
+<br><br>
+<span class=input>.         di "ampersand:$ampersand"</span>
+<span class=result>ampersand: &amp; &amp; &amp; &amp; &amp; &amp;</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         global alignCenter "m{${labColWid}cm}"</span>
+<br><br>
+<span class=input>.         local eB1 "&gt;{\centering\arraybackslash}m{${perCoefColWid}cm}"</span>
+<br><br>
+<span class=input>.         foreach curLoop of numlist 1(1)$totCoefColCnt {</span>
+  2<span class=input>.           global alignCenter "$alignCenter `eB1'"</span>
+  3<span class=input>.         }</span>
+<br><br>
+<span class=input>.         di "alignCenter:$alignCenter"</span>
+<span class=result>alignCenter:m{6.75cm} &gt;{\centering\arraybackslash}m{1.85cm} &gt;{\centering\arraybackslash}m{1.85cm} &gt;{\centering\arraybackslash}m{1.85cm} &gt;{\centering\arraybackslash}m{1.85cm} &gt;{\centering\arrayb</span>
+<span class=result>&gt; ackslash}m{1.85cm} &gt;{\centering\arraybackslash}m{1.85cm}</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- G1. Tex Sectioning</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.         global rcSpaceInit "\vspace*{-5mm}\hspace*{-3mm}"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.         #delimit ;</span>
+delimiter now ;
+<span class=input>.         global slb_titling_panel_a "</span>
+<span class=input>&gt;                 ${svr_starts_var_panel_a} "\multicolumn{$totColCnt}{L{${totColWidLegend}cm}}{${rcSpaceInit}\textbf{${slb_panel_a}}} \\"</span>
+<span class=input>&gt;                 ";</span>
+<br><br>
+<span class=input>.         global slb_refcat_panel_a `"refcat(${slb_titling_panel_a}, nolabel)"';</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>.         #delimit ;</span>
+delimiter now ;
+<span class=input>.         global slb_titling_panel_b "</span>
+<span class=input>&gt;                 ${svr_starts_var_panel_b} "\multicolumn{$totColCnt}{L{${totColWidLegend}cm}}{${rcSpaceInit}\textbf{${slb_panel_b}}} \\"</span>
+<span class=input>&gt;                 ";</span>
+<br><br>
+<span class=input>.         global slb_refcat_panel_b `"refcat(${slb_titling_panel_b}, nolabel)"';</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>.         #delimit ;</span>
+delimiter now ;
+<span class=input>.         global slb_titling_panel_c "</span>
+<span class=input>&gt;                 ${svr_starts_var_panel_c} "\multicolumn{$totColCnt}{L{${totColWidLegend}cm}}{${rcSpaceInit}\textbf{${slb_panel_c}}} \\"</span>
+<span class=input>&gt;                 ";</span>
+<br><br>
+<span class=input>.         global slb_refcat_panel_c `"refcat(${slb_titling_panel_c}, nolabel)"';</span>
+<br><br>
+<span class=input>.         #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>.         #delimit ;</span>
+delimiter now ;
