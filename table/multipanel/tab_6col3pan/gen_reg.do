@@ -18,11 +18,16 @@ clear
 	- for each column, conditioning differs, but rhs vars the same
 */
 
+///--- File Names
+global st_file_root "~\Stata4Econ\table\multipanel\tab_6col3pan\"
+global st_log_file "${st_file_root}gen_reg"
+global st_out_html "${st_file_root}tab_6col3pan.html"
+global st_out_rtf "${st_file_root}tab_6col3pan.rtf"
+global st_out_tex "${st_file_root}tab_6col3pan_texbody.tex"
+
 ///--- Start log
 capture log close
-cd "${root_log}"
-global curlogfile "~\Stata4Econ\table\multipanel\tab_6col_2panels"
-log using "${curlogfile}_log" , replace
+log using "${st_log_file}" , replace
 log on
 
 set trace off
@@ -189,6 +194,7 @@ tab foreign
 
 ///--- Title overall
 	global slb_title "Outcome: Attending School or Not"
+	global slb_label_tex "tab:sctp"
 	global slb_panel_a "Group A: Coefficients for Distance to Elementary School Variables"
 	global slb_panel_b "Group B: Coefficients for Elementary School Physical Quality Variables"
 	global slb_panel_c "Group C: More Coefficientss"
@@ -294,6 +300,7 @@ tab foreign
 	///--- Column Groups
 	global it_max_col = 8
 	global it_min_col = 2
+	global it_col_cnt = 6
 	global colSeq "2 4 6 8"
 
 	///--- Group 1, columns 1 and 2
@@ -313,7 +320,7 @@ tab foreign
 
 	///--- Column Widths
 	global perCoefColWid = 1.85
-	global labColWid = 6.75
+	global labColWid = 5
 
 	///--- Column Fractional Adjustment, 1 = 100%
 	global tableAdjustBoxWidth = 1.0
@@ -323,14 +330,14 @@ tab foreign
 /////////////////////////////////////////////////
 
 	///--- Width Calculation
-	global totCoefColWid = ${perCoefColWid}*${totCoefColCnt}
-	global totColCnt = $totCoefColCnt + 1
+	global totCoefColWid = ${perCoefColWid}*${it_col_cnt}
+	global totColCnt = ${it_col_cnt} + 1
 	global totColWid = ${labColWid} + ${totCoefColWid} + ${perCoefColWid}
 	global totColWidFootnote = ${labColWid} + ${totCoefColWid} + ${perCoefColWid} + ${perCoefColWid}/2
 	global totColWidLegend = ${labColWid} + ${totCoefColWid} + ${perCoefColWid}
 	global totColWidLegendthin = ${totCoefColWid} + ${perCoefColWid}
 
-	di "totCoefColCnt:$totCoefColCnt"
+	di "it_col_cnt:$it_col_cnt"
 	di "totCoefColWid:$totCoefColWid"
 	di "totCoefColWid:$totCoefColWid"
 	di "totCoefColWid:$totCoefColWid"
@@ -338,14 +345,14 @@ tab foreign
 	di "totCoefColWid:$totCoefColWid"
 
 	global ampersand ""
-	foreach curLoop of numlist 1(1)$totCoefColCnt {
+	foreach curLoop of numlist 1(1)$it_col_cnt {
 	  global ampersand "$ampersand &"
 	}
 	di "ampersand:$ampersand"
 
 	global alignCenter "m{${labColWid}cm}"
 	local eB1 ">{\centering\arraybackslash}m{${perCoefColWid}cm}"
-	foreach curLoop of numlist 1(1)$totCoefColCnt {
+	foreach curLoop of numlist 1(1)$it_col_cnt {
 	  global alignCenter "$alignCenter `eB1'"
 	}
 	di "alignCenter:$alignCenter"
@@ -354,7 +361,7 @@ tab foreign
 ///--- G1. Tex Sectioning
 /////////////////////////////////////////////////
 
-	global rcSpaceInit "\vspace*{-5mm}\hspace*{-3mm}"
+	global rcSpaceInit "\vspace*{-5mm}\hspace*{-8mm}"
 
 	#delimit ;
 	global slb_titling_panel_a "
@@ -381,7 +388,7 @@ tab foreign
 	global slb_titling_bottom `"
 	stats(N $st_estd_rownames,
 			labels(Observations
-			"\midrule \multicolumn{${totColCnt}}{L{${totColWid}cm}}{\vspace*{-5mm}\hspace*{0.0mm}\textbf{\textit{\normalsize ${slb_bottom}}}} \\ $ampersand \\ ${slb_estd_1}"
+			"\midrule \multicolumn{${totColCnt}}{L{${totColWid}cm}}{${rcSpaceInit}\textbf{\textit{\normalsize ${slb_bottom}}}} \\ $ampersand \\ ${slb_estd_1}"
 			"${slb_estd_2}"
 			"${slb_estd_3}"
 			"${slb_estd_4}"))"';
@@ -431,7 +438,7 @@ tab foreign
 
 	///--- C. Row 3
 	* Initial & for label column
-	foreach curLoop of numlist 1(1)$totCoefColCnt {
+	foreach curLoop of numlist 1(1)$it_col_cnt {
 		global curText "${labC`curLoop'}"
 		global textUse "(`curLoop')"
 		if ("$curText" != "") {
@@ -442,7 +449,7 @@ tab foreign
 	}
 
 	///--- D. Row 1 and midline:
-	global row1 "${row1} \multicolumn{${totCoefColCnt}}{C{${totCoefColWid}cm}}{${allCoefRowHeading}}"
+	global row1 "${row1} \multicolumn{${it_col_cnt}}{C{${totCoefColWid}cm}}{${allCoefRowHeading}}"
 	global row1MidLine "\cmidrule(l{5pt}r{5pt}){${minCoefCol}-${curCol1Min}}"
 
 	///--- C.3.E Print lines
@@ -454,9 +461,6 @@ tab foreign
 
 	///--- C.4 Together
 	#delimit ;
-
-	local fileTitle "${MainCaption}";
-	local tableLabelName "${labelName}";
 
 	///--- 1. Section
 	* local section "
@@ -487,18 +491,12 @@ tab foreign
 
 	global notewrap "
 			\addlinespace[-0.5em]
-			\multicolumn{${totColCnt}}{L{${totColWidFootnote}cm}}{
-				\footnotesize
-				\justify
-				$notelong} \\
+			\multicolumn{${totColCnt}}{L{${totColWidFootnote}cm}}{\footnotesize\justify$notelong}\\
 		";
 
 	global startTable "\begin{table}[htbp]
 			\centering
-			\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
-			\caption{`fileTitle'\label{`tableLabelName'}}
-			${adjustBoxStart}
-			\begin{tabular}{`centering'}
+			\caption{${slb_title}\label{${slb_label_tex}}}${adjustBoxStart}\begin{tabular}{`centering'}
 			\toprule
 			";
 
@@ -512,35 +510,35 @@ tab foreign
 ///--- H1. Output Results to HTML
 /////////////////////////////////////////////////
 
-	esttab ${smd_panel_a_m} using "${curlogfile}.html", ${slb_panel_a_main} ${slb_esttab_opt_txt} replace
-	esttab ${smd_panel_b_m} using "${curlogfile}.html", ${slb_panel_b_main} ${slb_esttab_opt_txt} append
-	esttab ${smd_panel_c_m} using "${curlogfile}.html", ${slb_panel_c_main} ${slb_esttab_opt_txt} append
+	esttab ${smd_panel_a_m} using "${st_out_html}", ${slb_panel_a_main} ${slb_esttab_opt_txt} replace
+	esttab ${smd_panel_b_m} using "${st_out_html}", ${slb_panel_b_main} ${slb_esttab_opt_txt} append
+	esttab ${smd_panel_c_m} using "${st_out_html}", ${slb_panel_c_main} ${slb_esttab_opt_txt} append
 
 /////////////////////////////////////////////////
 ///--- H2. Output Results to RTF
 /////////////////////////////////////////////////
 
-	esttab ${smd_panel_a_m} using "${curlogfile}.rtf", ${slb_panel_a_main} ${slb_esttab_opt_txt} replace
-	esttab ${smd_panel_b_m} using "${curlogfile}.rtf", ${slb_panel_b_main} ${slb_esttab_opt_txt} append
-	esttab ${smd_panel_c_m} using "${curlogfile}.rtf", ${slb_panel_c_main} ${slb_esttab_opt_txt} append
+	esttab ${smd_panel_a_m} using "${st_out_rtf}", ${slb_panel_a_main} ${slb_esttab_opt_txt} replace
+	esttab ${smd_panel_b_m} using "${st_out_rtf}", ${slb_panel_b_main} ${slb_esttab_opt_txt} append
+	esttab ${smd_panel_c_m} using "${st_out_rtf}", ${slb_panel_c_main} ${slb_esttab_opt_txt} append
 
 /////////////////////////////////////////////////
 ///--- H3. Output Results to Tex
 /////////////////////////////////////////////////
 
-	esttab $smd_panel_a_m using "${curlogfile}.tex", ///
+	esttab $smd_panel_a_m using "${st_out_tex}", ///
 		${slb_panel_a_main} ///
  		${slb_refcat_panel_a} ///
 		${slb_esttab_opt_tex} ///
 		fragment $headlineAll postfoot("") replace
 
-	esttab $smd_panel_b_m using "${curlogfile}.tex", ///
+	esttab $smd_panel_b_m using "${st_out_tex}", ///
 		${slb_panel_b_main} ///
  		${slb_refcat_panel_b} ///
 		${slb_esttab_opt_tex} ///
 		fragment prehead("") postfoot("") append
 
-	esttab $smd_panel_c_m using "${curlogfile}.tex", ///
+	esttab $smd_panel_c_m using "${st_out_tex}", ///
 		${slb_panel_c_main} ///
  		${slb_refcat_panel_c} ///
 		${slb_esttab_opt_tex} ///
@@ -548,17 +546,12 @@ tab foreign
 		addnotes(${slb_note}) ///
 		fragment prehead("") $postAll append
 
-
-
 /////////////////////////////////////////////////
 ///--- I. Out Logs
 /////////////////////////////////////////////////
 
 ///--- End Log and to HTML
 log close
-capture noisily {
-	log2html "${curlogfile}_log", replace
-}
 
 ///--- to PDF
 capture noisily {
@@ -571,8 +564,8 @@ capture noisily {
 	translator set Results2pdf rmargin 0.2
 	translator set Results2pdf tmargin 0.2
 	translator set Results2pdf bmargin 0.2
-	translate @Results "${curlogfile}.pdf", replace translator(Results2pdf)
+	translate @Results "${st_log_file}.pdf", replace translator(Results2pdf)
 }
 capture noisily {
-  erase "${curlogfile}_log.smcl"
+  erase "${st_log_file}.smcl"
 }
