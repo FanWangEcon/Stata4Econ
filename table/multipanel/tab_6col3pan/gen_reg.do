@@ -194,6 +194,7 @@ tab foreign
 
 ///--- Title overall
 	global slb_title "Outcome: Attending School or Not"
+	global slb_title_inner "\textbf{Male}: Subregression for All Males"
 	global slb_label_tex "tab:sctp"
 	global slb_panel_a "Group A: Coefficients for Distance to Elementary School Variables"
 	global slb_panel_b "Group B: Coefficients for Elementary School Physical Quality Variables"
@@ -428,7 +429,7 @@ tab foreign
 			global curRow2MidLine "\cmidrule(l{5pt}r{5pt}){`lastCol'-$curCol1Min}"
 			global row2MidLine "$row2MidLine $curRow2MidLine"
 
-			global curRow2 "\multicolumn{$gapCnt}{C{${gapWidth}cm}}{\small ${labG${colCtr}}}"
+			global curRow2 "\multicolumn{$gapCnt}{L{${gapWidth}cm}}{\small ${labG${colCtr}}}"
 			global row2 "$row2 & $curRow2"
 
 		}
@@ -449,7 +450,7 @@ tab foreign
 	}
 
 	///--- D. Row 1 and midline:
-	global row1 "${row1} \multicolumn{${it_col_cnt}}{C{${totCoefColWid}cm}}{${allCoefRowHeading}}"
+	global row1 "${row1} \multicolumn{${it_col_cnt}}{L{${totCoefColWid}cm}}{${slb_title_inner}}"
 	global row1MidLine "\cmidrule(l{5pt}r{5pt}){${minCoefCol}-${curCol1Min}}"
 
 	///--- C.3.E Print lines
