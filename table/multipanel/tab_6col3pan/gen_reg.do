@@ -221,31 +221,35 @@ tab foreign
 	#delimit cr
 
 ///--- Labeling for for Coefficients to Show
+	global slb_1st_ele_spc "\vspace*{0mm}\hspace*{2mm}"
+	global slb_fot_lst_spc "\vspace*{0mm}\hspace*{2mm}"
+	global rcSpaceInit "\vspace*{-5mm}\hspace*{-8mm}"
+
 	#delimit;
 	global svr_starts_var_panel_a "mpg";
 	global slb_coef_label_panel_a "
-	  mpg "miles per gallon"
-	  2.rep78 "rep78 is 2"
-	  3.rep78 "rep78 is 3"
-	  4.rep78 "rep78 is 4"
-	  5.rep78 "rep78 is 5"
+	  mpg "${slb_1st_ele_spc}miles per gallon"
+	  2.rep78 "${slb_1st_ele_spc}rep78 is 2"
+	  3.rep78 "${slb_1st_ele_spc}rep78 is 3"
+	  4.rep78 "${slb_1st_ele_spc}rep78 is 4"
+	  5.rep78 "${slb_1st_ele_spc}rep78 is 5"
 	  ";
 	#delimit cr
 
 	#delimit;
 	global svr_starts_var_panel_b "headroom";
 	global slb_coef_label_panel_b "
-	  headroom "headroom variable"
-	  mpg "miles per gallon"
-	  trunk "this is the trunk variable"
-	  weight "and here the weight variable"
+	  headroom "${slb_1st_ele_spc}headroom variable"
+	  mpg "${slb_1st_ele_spc}miles per gallon"
+	  trunk "${slb_1st_ele_spc}this is the trunk variable"
+	  weight "${slb_1st_ele_spc}and here the weight variable"
 	  ";
 	#delimit cr
 
 	#delimit;
 	global svr_starts_var_panel_c "turn";
 	global slb_coef_label_panel_c "
-	  turn "variable is turn"
+	  turn "${slb_1st_ele_spc}variable is turn"
 	  ";
 	#delimit cr
 
@@ -321,7 +325,7 @@ tab foreign
 
 	///--- Column Widths
 	global perCoefColWid = 1.85
-	global labColWid = 5
+	global labColWid = 6
 
 	///--- Column Fractional Adjustment, 1 = 100%
 	global tableAdjustBoxWidth = 1.0
@@ -362,7 +366,6 @@ tab foreign
 ///--- G1. Tex Sectioning
 /////////////////////////////////////////////////
 
-	global rcSpaceInit "\vspace*{-5mm}\hspace*{-8mm}"
 
 	#delimit ;
 	global slb_titling_panel_a "
@@ -389,10 +392,10 @@ tab foreign
 	global slb_titling_bottom `"
 	stats(N $st_estd_rownames,
 			labels(Observations
-			"\midrule \multicolumn{${totColCnt}}{L{${totColWid}cm}}{${rcSpaceInit}\textbf{\textit{\normalsize ${slb_bottom}}}} \\ $ampersand \\ ${slb_estd_1}"
-			"${slb_estd_2}"
-			"${slb_estd_3}"
-			"${slb_estd_4}"))"';
+			"\midrule \multicolumn{${totColCnt}}{L{${totColWid}cm}}{${rcSpaceInit}\textbf{\textit{\normalsize ${slb_bottom}}}} \\ $ampersand \\ ${slb_fot_lst_spc}${slb_estd_1}"
+			"${slb_fot_lst_spc}${slb_estd_2}"
+			"${slb_fot_lst_spc}${slb_estd_3}"
+			"${slb_fot_lst_spc}${slb_estd_4}"))"';
 	#delimit cr
 
 /////////////////////////////////////////////////
@@ -492,7 +495,7 @@ tab foreign
 
 	global notewrap "
 			\addlinespace[-0.5em]
-			\multicolumn{${totColCnt}}{L{${totColWidFootnote}cm}}{\footnotesize\justify$notelong}\\
+			\multicolumn{${totColCnt}}{L{${totColWidFootnote}cm}}{\footnotesize\justify${slb_note}}\\
 		";
 
 	global startTable "\begin{table}[htbp]

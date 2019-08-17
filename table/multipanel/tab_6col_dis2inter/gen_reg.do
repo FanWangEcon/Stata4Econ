@@ -251,6 +251,7 @@ egen when_agegrp = group(when agegrp), label
 	global slb_dis_tlt_spc "\vspace*{-5mm}\hspace*{-8mm}"
 	global slb_dis_ele_spc "\vspace*{0mm}\hspace*{5mm}"
 	global slb_1st_ele_spc "\vspace*{0mm}\hspace*{5mm}"
+	global slb_fot_lst_spc "\vspace*{0mm}\hspace*{2mm}"
 
 	#delimit;
 	global svr_starts_var_panel_a "agegrp";
@@ -509,10 +510,10 @@ else {
 	global slb_titling_bottom `"
 	stats(N $st_estd_rownames,
 			labels(Observations
-			"\midrule \multicolumn{${totColCnt}}{L{${totColWid}cm}}{${slb_title_spc}\textbf{\textit{\normalsize ${slb_bottom}}}} \\ $ampersand \\ ${slb_estd_1}"
-			"${slb_estd_2}"
-			"${slb_estd_3}"
-			"${slb_estd_4}"))"';
+			"\midrule \multicolumn{${totColCnt}}{L{${totColWid}cm}}{${slb_title_spc}\textbf{\textit{\normalsize ${slb_bottom}}}} \\ $ampersand \\ ${slb_fot_lst_spc}${slb_estd_1}"
+			"${slb_fot_lst_spc}${slb_estd_2}"
+			"${slb_fot_lst_spc}${slb_estd_3}"
+			"${slb_fot_lst_spc}${slb_estd_4}"))"';
 	#delimit cr
 
 /////////////////////////////////////////////////
@@ -612,7 +613,7 @@ else {
 
 	global notewrap "
 			\addlinespace[-0.5em]
-			\multicolumn{${totColCnt}}{L{${totColWidFootnote}cm}}{\footnotesize\justify$notelong}\\
+			\multicolumn{${totColCnt}}{L{${totColWidFootnote}cm}}{\footnotesize\justify${slb_note}}\\
 		";
 
 	global startTable "\begin{table}[htbp]
@@ -664,7 +665,6 @@ else {
  		${slb_refcat_panel_c} ///
 		${slb_esttab_opt_tex} ///
 		${slb_titling_bottom} ///
-		addnotes(${slb_note}) ///
 		fragment prehead("") $postAll append
 
 /////////////////////////////////////////////////
