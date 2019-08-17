@@ -14,11 +14,11 @@ BODY{background-color: ffffff;
 </head>
 <body>
 <pre>
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <span class=result>&lt;unnamed&gt;</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\reglin\discrete\fs_reg_d_interact.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>opened on:  <span class=result>10 Aug 2019, 12:34:53</span>
+<span class=result> </span>opened on:  <span class=result>16 Aug 2019, 19:02:11</span>
 <br><br>
 <span class=input>. log on</span>
 (log already on)
@@ -250,6 +250,187 @@ t statistics in parentheses
 * p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
 <br><br>
 <span class=input>. </span>
+<span class=input>. * Streamlined</span>
+<span class=input>. eststo clear</span>
+<br><br>
+<span class=input>. regress ///</span>
+<span class=input>&gt;     weight ///</span>
+<span class=input>&gt;     ib0.foreign ib0.domestic ///</span>
+<span class=input>&gt;     ib3.rep78#ib0.foreign ///</span>
+<span class=input>&gt;     , noc</span>
+note: 1.rep78#1.foreign identifies no observations in the sample
+note: 2.rep78#1.foreign identifies no observations in the sample
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        69</span>
+-------------+----------------------------------   F(8, 61)        = <span class=result>   250.38</span>
+       Model | <span class=result>  657066735         8  82133341.8   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result> 20009765.3        61  328028.939   </span>R-squared       =<span class=result>    0.9704</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.9666</span>
+       Total | <span class=result>  677076500        69   9812702.9   </span>Root MSE        =   <span class=result> 572.74</span>
+<br><br>
+-------------------------------------------------------------------------------
+       weight |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+      foreign |
+     Foreign  |<span class=result>       2010   330.6705     6.08   0.000     1348.783    2671.217</span>
+              |
+     domestic |
+    domestic  |<span class=result>   3442.222   110.2235    31.23   0.000     3221.817    3662.628</span>
+              |
+rep78#foreign |
+  1#Domestic  |<span class=result>  -342.2222   419.7186    -0.82   0.418    -1181.501     497.057</span>
+   1#Foreign  |<span class=result>          0</span>  (empty)
+  2#Domestic  |<span class=result>  -88.47222    230.549    -0.38   0.703    -549.4834     372.539</span>
+   2#Foreign  |<span class=result>          0</span>  (empty)
+  4#Domestic  |<span class=result>         90    220.447     0.41   0.685     -350.811     530.811</span>
+   4#Foreign  |<span class=result>   197.7778   381.8254     0.52   0.606    -565.7293    961.2849</span>
+  5#Domestic  |<span class=result>  -1482.222   419.7186    -3.53   0.001    -2321.501    -642.943</span>
+   5#Foreign  |<span class=result>   393.3333   381.8254     1.03   0.307    -370.1738     1156.84</span>
+-------------------------------------------------------------------------------
+<br><br>
+<span class=input>. esttab, mtitle title("Foreign or Domestic")</span>
+<br><br>
+Foreign or Domestic
+----------------------------
+                      (1)   
+                        .   
+----------------------------
+0.foreign   <span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+1.foreign   <span class=result>       2010.0***</span>
+            <span class=result>       </span>(<span class=result>6.08</span>)<span class=result>   </span>
+<br><br>
+0.domestic  <span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+1.domestic  <span class=result>       3442.2***</span>
+            <span class=result>      </span>(<span class=result>31.23</span>)<span class=result>   </span>
+<br><br>
+1.rep78#0.~n<span class=result>       -342.2   </span>
+            <span class=result>      </span>(<span class=result>-0.82</span>)<span class=result>   </span>
+<br><br>
+1.rep78#1.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+2.rep78#0.~n<span class=result>       -88.47   </span>
+            <span class=result>      </span>(<span class=result>-0.38</span>)<span class=result>   </span>
+<br><br>
+2.rep78#1.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+3.rep78#0.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+3.rep78#1.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+4.rep78#0.~n<span class=result>        90.00   </span>
+            <span class=result>       </span>(<span class=result>0.41</span>)<span class=result>   </span>
+<br><br>
+4.rep78#1.~n<span class=result>        197.8   </span>
+            <span class=result>       </span>(<span class=result>0.52</span>)<span class=result>   </span>
+<br><br>
+5.rep78#0.~n<span class=result>      -1482.2***</span>
+            <span class=result>      </span>(<span class=result>-3.53</span>)<span class=result>   </span>
+<br><br>
+5.rep78#1.~n<span class=result>        393.3   </span>
+            <span class=result>       </span>(<span class=result>1.03</span>)<span class=result>   </span>
+----------------------------
+N           <span class=result>           69   </span>
+----------------------------
+t statistics in parentheses
+* p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
+<br><br>
+<span class=input>. </span>
+<span class=input>. * Streamlined 2</span>
+<span class=input>. eststo clear</span>
+<br><br>
+<span class=input>. regress ///</span>
+<span class=input>&gt;     weight ///</span>
+<span class=input>&gt;     ib0.foreign ///</span>
+<span class=input>&gt;     ib3.rep78#ib0.foreign </span>
+note: 1.rep78#1.foreign identifies no observations in the sample
+note: 2.rep78#1.foreign identifies no observations in the sample
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        69</span>
+-------------+----------------------------------   F(7, 61)        = <span class=result>     9.90</span>
+       Model | <span class=result> 22735950.7         7  3247992.95   </span>Prob &gt; F        =<span class=result>    0.0000</span>
+    Residual | <span class=result> 20009765.3        61  328028.939   </span>R-squared       =<span class=result>    0.5319</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.4782</span>
+       Total | <span class=result> 42745715.9        68   628613.47   </span>Root MSE        =   <span class=result> 572.74</span>
+<br><br>
+-------------------------------------------------------------------------------
+       weight |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+      foreign |
+     Foreign  |<span class=result>  -1432.222   348.5573    -4.11   0.000    -2129.206   -735.2388</span>
+              |
+rep78#foreign |
+  1#Domestic  |<span class=result>  -342.2222   419.7186    -0.82   0.418    -1181.501     497.057</span>
+   1#Foreign  |<span class=result>          0</span>  (empty)
+  2#Domestic  |<span class=result>  -88.47222    230.549    -0.38   0.703    -549.4834     372.539</span>
+   2#Foreign  |<span class=result>          0</span>  (empty)
+  4#Domestic  |<span class=result>         90    220.447     0.41   0.685     -350.811     530.811</span>
+   4#Foreign  |<span class=result>   197.7778   381.8254     0.52   0.606    -565.7293    961.2849</span>
+  5#Domestic  |<span class=result>  -1482.222   419.7186    -3.53   0.001    -2321.501    -642.943</span>
+   5#Foreign  |<span class=result>   393.3333   381.8254     1.03   0.307    -370.1738     1156.84</span>
+              |
+        _cons |<span class=result>   3442.222   110.2235    31.23   0.000     3221.817    3662.628</span>
+-------------------------------------------------------------------------------
+<br><br>
+<span class=input>. esttab, mtitle title("Foreign or Domestic")</span>
+<br><br>
+Foreign or Domestic
+----------------------------
+                      (1)   
+                        .   
+----------------------------
+0.foreign   <span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+1.foreign   <span class=result>      -1432.2***</span>
+            <span class=result>      </span>(<span class=result>-4.11</span>)<span class=result>   </span>
+<br><br>
+1.rep78#0.~n<span class=result>       -342.2   </span>
+            <span class=result>      </span>(<span class=result>-0.82</span>)<span class=result>   </span>
+<br><br>
+1.rep78#1.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+2.rep78#0.~n<span class=result>       -88.47   </span>
+            <span class=result>      </span>(<span class=result>-0.38</span>)<span class=result>   </span>
+<br><br>
+2.rep78#1.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+3.rep78#0.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+3.rep78#1.~n<span class=result>            0   </span>
+            <span class=result>          </span>(<span class=result>.</span>)<span class=result>   </span>
+<br><br>
+4.rep78#0.~n<span class=result>        90.00   </span>
+            <span class=result>       </span>(<span class=result>0.41</span>)<span class=result>   </span>
+<br><br>
+4.rep78#1.~n<span class=result>        197.8   </span>
+            <span class=result>       </span>(<span class=result>0.52</span>)<span class=result>   </span>
+<br><br>
+5.rep78#0.~n<span class=result>      -1482.2***</span>
+            <span class=result>      </span>(<span class=result>-3.53</span>)<span class=result>   </span>
+<br><br>
+5.rep78#1.~n<span class=result>        393.3   </span>
+            <span class=result>       </span>(<span class=result>1.03</span>)<span class=result>   </span>
+<br><br>
+_cons       <span class=result>       3442.2***</span>
+            <span class=result>      </span>(<span class=result>31.23</span>)<span class=result>   </span>
+----------------------------
+N           <span class=result>           69   </span>
+----------------------------
+t statistics in parentheses
+* p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
+<br><br>
+<span class=input>. </span>
 <span class=input>. * using cts for binary</span>
 <span class=input>. eststo clear</span>
 <br><br>
@@ -310,14 +491,13 @@ t statistics in parentheses
 * p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
 <br><br>
 <span class=input>. </span>
-<span class=input>. </span>
 <span class=input>. ///--- End Log and to HTML</span>
 <span class=input>&gt; log close</span>
 <span class=result>      </span>name:  <span class=result>&lt;unnamed&gt;</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\reglin\discrete\fs_reg_d_interact.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>closed on:  <span class=result>10 Aug 2019, 12:34:53</span>
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<span class=result> </span>closed on:  <span class=result>16 Aug 2019, 19:02:11</span>
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </pre>
 </body>
 </html>

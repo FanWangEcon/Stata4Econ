@@ -57,6 +57,23 @@ eststo, title(both): quietly regress ///
     , noc
 esttab, mtitle title("Foreign or Domestic")
 
+* Streamlined
+eststo clear
+regress ///
+    weight ///
+    ib0.foreign ib0.domestic ///
+    ib3.rep78#ib0.foreign ///
+    , noc
+esttab, mtitle title("Foreign or Domestic")
+
+* Streamlined 2
+eststo clear
+regress ///
+    weight ///
+    ib0.foreign ///
+    ib3.rep78#ib0.foreign 
+esttab, mtitle title("Foreign or Domestic")
+
 * using cts for binary
 eststo clear
 eststo, title(both): quietly regress ///
@@ -66,7 +83,6 @@ eststo, title(both): quietly regress ///
     ib3.rep78#c.domestic ///
     , noc
 esttab, mtitle title("Foreign or Domestic")
-
 
 ///--- End Log and to HTML
 log close
