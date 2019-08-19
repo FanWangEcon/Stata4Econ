@@ -1,0 +1,66 @@
+\documentclass[12pt,english]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{color}
+% \usepackage[monochrome]{xcolor}
+\usepackage{babel}
+\usepackage{csquotes}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{booktabs,dcolumn}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[font=singlespacing, skip=3pt]{caption}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{float}
+\usepackage[export]{adjustbox}[2011/08/13]
+\usepackage{subfig}
+\usepackage{float}
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, plainpages=false, pdfpagelabels=true, urlcolor=blue]{hyperref}
+\usepackage{geometry}
+\usepackage{ragged2e}
+
+\geometry{
+	a4paper,
+	noheadfoot=true,
+	left=1.0in,
+	right=1.0in,
+	top=0.0in,
+	bottom=0.0in,
+}
+\setlength{\parindent}{0pt}
+\makeatletter
+%\doublespacing
+\onehalfspacing
+\date{January 16, 2019}
+\newcommand{\rowgroup}[1]{\hspace{-0.5em}#1}
+\newcommand*\samethanks[1][\value{footnote}]{\footnotemark[#1]}
+\newcommand{\sym}[1]{\ifmmode^{#1}\else\(^{#1}\)\fi}
+
+\usepackage{array}
+\usepackage{makecell}
+\renewcommand\theadalign{bc}
+\renewcommand\theadfont{\bfseries}
+\renewcommand\theadgape{\Gape[4pt]}
+\renewcommand\cellgape{\Gape[4pt]}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+
+% Titling and Author
+\title{Table Six Columns and Three Panel with Continuous Interactions with One Discrete}
+\author{\href{fanwangecon.github.io}{Fan Wang}}
+\date{\today}
+\begin{document}
+
+\maketitle
+
+Regression with multiple continuous variables and one discrete variable.
+
+Interact the continuous variables with the discrete variable.
+
+\input{tab_6col_cts_inter_texbody}
+
+\end{document}
