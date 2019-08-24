@@ -12,14 +12,14 @@ clear
   - http://fanwangecon.github.io/Stat4Econ/
   - http://fanwangecon.github.io/Tex4Econ
 
-  Stata matrix basic generation and matrix slicing 
-  
+  Stata matrix basic generation and matrix slicing
+
   1. Generate Matrix
   2. Replace single cell values from matrix
   3. Replace subset of matrix by row or column array
   4. Row and Column Names
   5. Retrieve matrix row and column values
-  
+
 */
 
 ///--- Start log
@@ -76,16 +76,6 @@ capture noisily {
 }
 ///--- to PDF
 capture noisily {
-	// translator query smcl2pdf
-	translator set smcl2pdf logo off
-	translator set smcl2pdf fontsize 8
-	translator set Results2pdf pagesize letter
-	translator set smcl2pdf lmargin 0.4
-	translator set smcl2pdf rmargin 0.4
-	translator set smcl2pdf tmargin 0.4
-	translator set smcl2pdf bmargin 0.4
-	translate "${curlogfile}.smcl" "${curlogfile}_smcllog.pdf", replace translator(smcl2pdf)
-
 	// translator query Results2pdf
 	translator set Results2pdf logo off
 	translator set Results2pdf fontsize 8
@@ -94,7 +84,7 @@ capture noisily {
 	translator set Results2pdf rmargin 0.2
 	translator set Results2pdf tmargin 0.2
 	translator set Results2pdf bmargin 0.2
-	translate @Results "${curlogfile}_results.pdf", replace translator(Results2pdf)
+	translate @Results "${curlogfile}.pdf", replace translator(Results2pdf)
 }
 capture noisily {
   erase "${curlogfile}.smcl"
