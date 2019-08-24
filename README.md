@@ -1,3 +1,8 @@
+This is a work-in-progress [website](https://fanwangecon.github.io/Stata4Econ/) of sample Stata files, produced by [Fan](https://fanwangecon.github.io/). Materials gathered from various [projects](https://fanwangecon.github.io/research) in which STATA code is used. The goal of this repository is to make it easier to find/re-use codes produced for various projects.
+
+STATA files are linked below by section. Various functions are stored in corresponding .do files. To use the files, clone the repository. Some files have examples/instructions created using Jupyter notebooks or STATA translator and are shown as HTML and PDF files. See [here](docs/gitsetup.md) for Github set up.
+
+Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or problems.
 
 # 1. Regressions
 
