@@ -12,7 +12,7 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 
 # 2. Table Generation
 
-## 2.1 Multiple Panels with Interactions
+## 2.1 Multiple Panels
 
 1. [Multiple Panels](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/multipanel/tab_6col3pan/tab_6col3pan.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/multipanel/tab_6col3pan/gen_reg.do) \| [**Gen Table Log**](https://fanwangecon.github.io/Stata4Econ/table/multipanel/tab_6col3pan/gen_reg.pdf) \| [**PDF Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/multipanel/tab_6col3pan/tab_6col3pan.pdf) \| [**TEX Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/multipanel/tab_6col3pan/tab_6col3pan_texbody.tex)
     + Three panels, different regressors for each panel, different conditionings each column.
@@ -26,7 +26,7 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 
 # 3. Programming
 
-# 3.1 Matrix
+## 3.1 Matrix
 
 1. [Define and Slice Matrix](https://github.com/FanWangEcon/Stata4Econ/blob/master/matrix/define/basic.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/matrix/define/basic.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/matrix/define/basic.html) \| [**PDF**](https://fanwangecon.github.io/Stata4Econ/matrix/define/basic.pdf)
     + matrix definition and slicing, get column and row names, replace matrix subset.
@@ -34,7 +34,7 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 
 # 4. Support
 
-# 4.1 Logging
+## 4.1 Logging
 
 1. [LOG2HTML and Translator](https://github.com/FanWangEcon/Stata4Econ/blob/master/output/log/fs_log2html_results.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/output/log/fs_log2html.do) \| [**Translator PDF**](https://fanwangecon.github.io/Stata4Econ/output/log/fs_log2html_results.pdf) \| [**SMCL Log PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/output/log/fs_log2html_results.pdf)
     + translator to export console buffer to PDF, or to export log file to pdf; log2html to convert to html.

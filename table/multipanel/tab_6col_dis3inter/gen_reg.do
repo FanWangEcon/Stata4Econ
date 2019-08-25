@@ -153,7 +153,7 @@ egen female_when_agegrp = group(female when agegrp), label
 	di "${${st_cur_sm_stor}}"
 
 	di "$smd_panel_a_m"
-	
+
 /////////////////////////////////////////////////
 ///--- D1. Labeling
 /////////////////////////////////////////////////
@@ -182,7 +182,7 @@ egen female_when_agegrp = group(female when agegrp), label
 	#delimit;
 	global svr_coef_keep_panel_a "
 	  1.female
-	  
+
 	  2.when_agegrp#0.female
 	  3.when_agegrp#0.female
 	  4.when_agegrp#0.female
@@ -196,14 +196,14 @@ egen female_when_agegrp = group(female when agegrp), label
 	  6.when_agegrp#1.female
 	  ";
 	#delimit cr
-	
+
 ///--- Labeling for for Coefficients to Show
 	global slb_title_spc "\vspace*{-5mm}\hspace*{-8mm}"
 	global slb_dis_tlt_spc "\vspace*{-5mm}\hspace*{-8mm}"
 	global slb_dis_ele_spc "\vspace*{0mm}\hspace*{5mm}"
 	global slb_1st_ele_spc "\vspace*{0mm}\hspace*{5mm}"
 	global slb_fot_lst_spc "\vspace*{0mm}\hspace*{2mm}"
-	
+
 	#delimit;
 	global svr_starts_var_panel_a "1.female";
 	global svr_starts_var_panel_a_sa "2.when_agegrp#0.female";
@@ -217,7 +217,7 @@ egen female_when_agegrp = group(female when agegrp), label
 	global slb_coef_label_panel_a "
 
 	  1.female "${slb_dis_ele_spc} female intercept"
-	  
+
 	  2.when_agegrp#0.female "${slb_dis_ele_spc} x female x after"
 	  3.when_agegrp#0.female "${slb_dis_ele_spc} x female x before"
 	  4.when_agegrp#0.female "${slb_dis_ele_spc} x female x after"
@@ -244,11 +244,11 @@ egen female_when_agegrp = group(female when agegrp), label
 
 	global slb_sd_tex `"se(fmt(a2) par("\vspace*{-2mm}{\footnotesize (" ") }"))"'
 	global slb_cells_tex `"cells(b(star fmt(a2)) $slb_sd_tex)"'
-	global slb_esttab_opt_tex "booktabs label collabels(none) nomtitles nonumbers star(${slb_starLvl})"
+	global slb_esttab_opt_tex "${slb_cells_tex} booktabs label collabels(none) nomtitles nonumbers star(${slb_starLvl})"
 
 	global slb_sd_txt `"se(fmt(a2) par("(" ")"))"'
 	global slb_cells_txt `"cells(b(star fmt(a2)) $slb_sd_txt)"'
-	global slb_esttab_opt_txt "stats(${slb_reg_stats}) collabels(none) mtitle nonumbers varwidth(30) modelwidth(15) star(${slb_starLvl}) addnotes(${slb_note})"
+	global slb_esttab_opt_txt "${slb_cells_txt} stats(${slb_reg_stats}) collabels(none) mtitle nonumbers varwidth(30) modelwidth(15) star(${slb_starLvl}) addnotes(${slb_note})"
 
 	#delimit ;
 	global slb_panel_a_main "
@@ -258,7 +258,7 @@ egen female_when_agegrp = group(female when agegrp), label
 		";
 	#delimit cr
 
-	
+
 /////////////////////////////////////////////////
 ///--- E. Regression Shows
 /////////////////////////////////////////////////
@@ -536,7 +536,7 @@ else {
 		${slb_panel_a_main} ///
  		${slb_refcat_panel_a} ///
 		${slb_esttab_opt_tex} ///
-		${slb_titling_bottom} ///		
+		${slb_titling_bottom} ///
 		fragment $headlineAll $postAll replace
 
 /////////////////////////////////////////////////

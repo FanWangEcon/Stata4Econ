@@ -201,12 +201,12 @@ egen when_agegrp = group(when agegrp), label
 		sex patient bp
 	  ";
 	global svr_coef_keep_panel_b "
-		sex 
-		
+		sex
+
 		0.sex#patient
 		0.sex#bp
-		
-		1.sex#patient		
+
+		1.sex#patient
 		1.sex#bp
 	  ";
 	#delimit cr
@@ -233,10 +233,10 @@ egen when_agegrp = group(when agegrp), label
 	global svr_starts_var_panel_b_gb "1.sex#c.patient";
 	global slb_coef_label_panel_b "
 		sex "${slb_1st_ele_spc}sex variable (discrete)"
-		
+
 		0.sex#c.patient "${slb_1st_ele_spc} $\times$ patient ID"
 		0.sex#c.bp "${slb_1st_ele_spc} $\times$ blood pressure"
-		
+
 		1.sex#c.patient "${slb_1st_ele_spc} $\times$ patient ID"
 		1.sex#c.bp "${slb_1st_ele_spc} $\times$ blood pressure"
 	  ";
@@ -253,11 +253,11 @@ egen when_agegrp = group(when agegrp), label
 
 	global slb_sd_tex `"se(fmt(a2) par("\vspace*{-2mm}{\footnotesize (" ") }"))"'
 	global slb_cells_tex `"cells(b(star fmt(a2)) $slb_sd_tex)"'
-	global slb_esttab_opt_tex "booktabs label collabels(none) nomtitles nonumbers star(${slb_starLvl})"
+	global slb_esttab_opt_tex "${slb_cells_tex} booktabs label collabels(none) nomtitles nonumbers star(${slb_starLvl})"
 
 	global slb_sd_txt `"se(fmt(a2) par("(" ")"))"'
 	global slb_cells_txt `"cells(b(star fmt(a2)) $slb_sd_txt)"'
-	global slb_esttab_opt_txt "stats(${slb_reg_stats}) collabels(none) mtitle nonumbers varwidth(30) modelwidth(15) star(${slb_starLvl}) addnotes(${slb_note})"
+	global slb_esttab_opt_txt "${slb_cells_txt} stats(${slb_reg_stats}) collabels(none) mtitle nonumbers varwidth(30) modelwidth(15) star(${slb_starLvl}) addnotes(${slb_note})"
 
 	#delimit ;
 	global slb_panel_a_main "
@@ -270,7 +270,7 @@ egen when_agegrp = group(when agegrp), label
 		title("${slb_panel_b}")
 		keep(${svr_coef_keep_panel_b}) order(${svr_coef_keep_panel_b})
 		coeflabels($slb_coef_label_panel_b)
-		";		
+		";
 	#delimit cr
 
 /////////////////////////////////////////////////

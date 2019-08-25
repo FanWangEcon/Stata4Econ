@@ -308,11 +308,11 @@ egen when_agegrp = group(when agegrp), label
 
 	global slb_sd_tex `"se(fmt(a2) par("\vspace*{-2mm}{\footnotesize (" ") }"))"'
 	global slb_cells_tex `"cells(b(star fmt(a2)) $slb_sd_tex)"'
-	global slb_esttab_opt_tex "booktabs label collabels(none) nomtitles nonumbers star(${slb_starLvl})"
+	global slb_esttab_opt_tex "${slb_cells_tex} booktabs label collabels(none) nomtitles nonumbers star(${slb_starLvl})"
 
 	global slb_sd_txt `"se(fmt(a2) par("(" ")"))"'
 	global slb_cells_txt `"cells(b(star fmt(a2)) $slb_sd_txt)"'
-	global slb_esttab_opt_txt "stats(${slb_reg_stats}) collabels(none) mtitle nonumbers varwidth(30) modelwidth(15) star(${slb_starLvl}) addnotes(${slb_note})"
+	global slb_esttab_opt_txt "${slb_cells_txt} stats(${slb_reg_stats}) collabels(none) mtitle nonumbers varwidth(30) modelwidth(15) star(${slb_starLvl}) addnotes(${slb_note})"
 
 	#delimit ;
 	global slb_panel_a_main "
