@@ -10,19 +10,25 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
     + Regression with interacted discrete regressors
     + **core**: *regres + esttab*
 
-# 2. Table Generation
+# 2. Regression Table Generation
 
-## 2.1 Multiple Panels
+## 2.1 Multiple Regression Panels
 
 1. [Multiple Panels](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/multipanel/tab_6col3pan/tab_6col3pan.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/multipanel/tab_6col3pan/gen_reg.do) \| [**Gen Table Log**](https://fanwangecon.github.io/Stata4Econ/table/multipanel/tab_6col3pan/gen_reg.pdf) \| [**PDF Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/multipanel/tab_6col3pan/tab_6col3pan.pdf) \| [**TEX Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/multipanel/tab_6col3pan/tab_6col3pan_texbody.tex)
     + Three panels, different regressors for each panel, different conditionings each column.
     + **core**: *regres + esttab*
 
-## 2.2 Multiple Panels with Interactions
+## 2.2 Multiple Regression Panels with Interactions
 
 1. [Continuous and Discrete Interactions](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/multipanel/tab_6col_cts_dis2inter/tab_6col_cts_dis2inter.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/multipanel/tab_6col_cts_dis2inter/gen_reg.do) \| [**Gen Table Log**](https://fanwangecon.github.io/Stata4Econ/table/multipanel/tab_6col_cts_dis2inter/gen_reg.pdf) \| [**PDF Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/multipanel/tab_6col_cts_dis2inter/tab_6col_cts_dis2inter.pdf) \| [**TEX Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/multipanel/tab_6col_cts_dis2inter/tab_6col_cts_dis2inter_texbody.tex)
     + Three panels, different regressors for each panel, different conditionings each column.
     + **core**: *regres + esttab*
+
+## 2.3 Cross Tabulation
+
+1. [Continuous and Discrete Interactions](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/tabsumm/tab_mcol_npanel/tab_mcol_npanel.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/tabsumm/tab_mcol_npanel/gen_reg.do) \| [**Gen Table Log**](https://fanwangecon.github.io/Stata4Econ/table/tabsumm/tab_mcol_npanel/gen_reg.pdf) \| [**PDF Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/tabsumm/tab_mcol_npanel/tab_mcol_npanel.pdf) \| [**TEX Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/tabsumm/tab_mcol_npanel/tab_mcol_npanel_texbody.tex)
+    + Three row categories, two interacting column categories, mean and sd and obs for multiple variables
+    + **core**: *regres + estpost tabstat*
 
 # 3. Programming
 
