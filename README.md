@@ -10,7 +10,7 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
     + Regression with interacted discrete regressors
     + **core**: *regres + esttab*
 
-# 2. Regression Table Generation
+# 2. Generate Table
 
 ## 2.1 Multiple Regression Panels
 

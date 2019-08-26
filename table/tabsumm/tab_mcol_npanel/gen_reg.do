@@ -130,6 +130,7 @@ gen rand3 = floor(runiform()*3000)
 	///--- Column Widths
 	global perCoefColWid = 1.75
 	global labColWid = 7
+	global footExtraWidth = 1.1
 	global slb_title_spc "\vspace*{-3mm}"
 	global slb_foot_spc "\vspace*{-3mm}"
 
@@ -255,7 +256,7 @@ gen rand3 = floor(runiform()*3000)
 	global totCoefColWid = ${perCoefColWid}*${it_colcate_n}
 	global totColCnt = ${it_colcate_n} + 1
 	global totColWid = ${labColWid} + ${totCoefColWid}
-	global totColWidFootnote = ${labColWid} + ${totCoefColWid}
+	global totColWidFootnote = ${labColWid} + ${totCoefColWid} + ${footExtraWidth}
 	global totColWidLegend = ${labColWid} + ${totCoefColWid}
 	global totColWidLegendthin = ${totCoefColWid} 
 
