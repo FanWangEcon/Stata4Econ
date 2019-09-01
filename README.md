@@ -9,14 +9,8 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 ## 1.1 All Purpose Regression Tool
 
 1. [All Purpose N Column M Panels Regression Structure](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose.html) \| [**PDF**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose.pdf)
-    + A regression has these ingredients:
-        * regression method
-        * LHS
-        * RHS (to keep)
-        * RHS (controls not to show in table)
-        * Conditions
-        * regression options
-    + Freely specify regression table column and panel specific ingredients for each of the six elements of regression above
+    + A regression has these ingredients: **(1)** regression method **(2)** LHS **(3)** RHS (to keep) **(4)** RHS (controls not to show in table) **(5)** Conditions **(6)** regression options
+    + Specify regression table column and panel specific ingredients for each
     + Versatile structure that can test large sets of regression specifications
 
 ## 1.2 Various Examples
