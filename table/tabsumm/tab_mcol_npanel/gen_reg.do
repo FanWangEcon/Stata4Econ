@@ -1,5 +1,6 @@
 cls
 clear
+macro drop _all
 
 /*
   Back to Fan's Stata4Econ or other repositories:
@@ -87,12 +88,12 @@ gen rand3 = floor(runiform()*3000)
 ///--- A3. Row Labeling
 /////////////////////////////////////////////////
 
-///--- Row Tab Names	
+///--- Row Tab Names
 	global slb_rowcate_1 "Group 1: Age 30 to 45"
 	global slb_rowcate_2 "Group 2: Age 46 to 59"
 	global slb_rowcate_3 "Group 3: Age >60"
 
-///--- Var Subgroup Subtitling	
+///--- Var Subgroup Subtitling
 	global slb_subvargrp_1 "Summ Group One (cts)"
 	global slb_subvargrp_2 "Summ Group Two (discrete)"
 
@@ -104,11 +105,11 @@ gen rand3 = floor(runiform()*3000)
 	label variable rand2 "${slb_var_spc}Random Three Cates \textbf{after}"
 	label variable rand3 "${slb_var_spc}Random Thousands"
 
-///--- Labeling Head Tag	
+///--- Labeling Head Tag
 	global svr_first "bp"
 	global svr_first_subvargrp_1 "bp"
 	global svr_first_subvargrp_2 "rand1"
-	
+
 /////////////////////////////////////////////////
 ///--- A4. Column Labeling
 /////////////////////////////////////////////////
@@ -154,7 +155,7 @@ gen rand3 = floor(runiform()*3000)
 	global stc_opts ", statistics(mean sd p10 p50 p90) c(s)"
 	global stc_stats_main "mean"
 	global stc_stats_paren "sd"
-	
+
 /////////////////////////////////////////////////
 ///--- B1. Define Stats Summary for Each Tabulate Category
 /////////////////////////////////////////////////
@@ -197,7 +198,7 @@ gen rand3 = floor(runiform()*3000)
 			///--- Summ Stats
 			count if ${sif_colcate_`it_colcate'} & ${sif_rowcate_`it_rowcate'}
 			global curcount = r(N)
-			if ($curcount>1) {		  
+			if ($curcount>1) {
 				eststo m`it_tabcell_ctr', title("${sif_colcate_`it_colcate'}") : ${$st_cur_srg_name} ${stc_opts}
 			}
 			else {
@@ -209,10 +210,10 @@ gen rand3 = floor(runiform()*3000)
 				eststo m`it_tabcell_ctr', title("${sif_colcate_`it_colcate'}") : estpost tabstat aaa , statistics(n) c(s)
 				estadd scalar N = 0, replace
 			}
-			
+
 			///--- Track Regression Store
 			global $st_cur_sm_store "${${st_cur_sm_store}} m`it_tabcell_ctr'"
-			
+
 		}
 
 		di "${${st_cur_sm_store}}"
@@ -229,7 +230,7 @@ gen rand3 = floor(runiform()*3000)
 
 	global slb_reg_stats "N"
 
-	global sd `""'	
+	global sd `""'
 	global keepcellstats "cells(mean(fmt(a2)) $sd) wide"
 
 	global slb_sd_tex `"${stc_stats_paren}(fmt(a2) par("\vspace*{-2mm}{\footnotesize (" ") }"))"'
@@ -243,11 +244,11 @@ gen rand3 = floor(runiform()*3000)
 /////////////////////////////////////////////////
 ///--- E. Summ Stats Shows
 /////////////////////////////////////////////////
-	
+
 	foreach it_rowcate of numlist 1(1)$it_rowcate_n {
 		esttab ${smd_`it_rowcate'_m}, title("${slb_rowcate_`it_rowcate'}") ${slb_esttab_opt_txt}
 	}
-	
+
 /////////////////////////////////////////////////
 ///--- F2. Tabling Calculations
 /////////////////////////////////////////////////
@@ -258,7 +259,7 @@ gen rand3 = floor(runiform()*3000)
 	global totColWid = ${labColWid} + ${totCoefColWid}
 	global totColWidFootnote = ${labColWid} + ${totCoefColWid} + ${footExtraWidth}
 	global totColWidLegend = ${labColWid} + ${totCoefColWid}
-	global totColWidLegendthin = ${totCoefColWid} 
+	global totColWidLegendthin = ${totCoefColWid}
 
 	di "it_colcate_n:$it_colcate_n"
 	di "totCoefColWid:$totCoefColWid"
@@ -279,9 +280,9 @@ gen rand3 = floor(runiform()*3000)
 /////////////////////////////////////////////////
 ///--- G1a. Tex Sectioning each panel
 /////////////////////////////////////////////////
-	
+
 	foreach it_rowcate of numlist 1(1)$it_rowcate_n {
-	
+
 		#delimit ;
 		global slb_titling_panel_`it_rowcate' "
 			${svr_first} "\multicolumn{$totColCnt}{p{${totColWidLegend}cm}}{${slb_title_spc}\textbf{${slb_rowcate_`it_rowcate'}}} \\"
@@ -289,7 +290,7 @@ gen rand3 = floor(runiform()*3000)
 		global slb_refcat_panel_`it_rowcate' `"refcat(${slb_titling_panel_`it_rowcate'}, nolabel)"';
 		#delimit cr
 	}
-	
+
 /////////////////////////////////////////////////
 ///--- G1d. Bottom
 /////////////////////////////////////////////////
@@ -422,7 +423,7 @@ gen rand3 = floor(runiform()*3000)
 		esttab ${smd_`it_rowcate'_m} using "${st_out_html}", title("${slb_rowcate_`it_rowcate'}") ${slb_esttab_opt_txt} append
 		esttab ${smd_`it_rowcate'_m} using "${st_out_rtf}", title("${slb_rowcate_`it_rowcate'}") ${slb_esttab_opt_txt} append
 	}
-	
+
 /////////////////////////////////////////////////
 ///--- H2. Output Results to Tex
 /////////////////////////////////////////////////
@@ -432,25 +433,25 @@ gen rand3 = floor(runiform()*3000)
 		${slb_refcat_panel_1} ///
 		${slb_esttab_opt_tex} ///
 		fragment $headlineAll postfoot("") replace
-		
-	global it_rowcate_n_mins_1 = $it_rowcate_n - 1	
+
+	global it_rowcate_n_mins_1 = $it_rowcate_n - 1
 	foreach it_rowcate of numlist 2(1)$it_rowcate_n_mins_1 {
-	
+
 		esttab ${smd_`it_rowcate'_m} using "${st_out_tex}", ///
 			title("${slb_rowcate_`it_rowcate'}") ///
 			${slb_refcat_panel_`it_rowcate'} ///
 			${slb_esttab_opt_tex} ///
 			fragment prehead("") postfoot("") append
-			
+
 	}
-	
+
 	esttab ${smd_${it_rowcate_n}_m} using "${st_out_tex}", ///
 		title("${slb_rowcate_${it_rowcate_n}}") ///
 		${slb_refcat_panel_${it_rowcate_n}} ///
 		${slb_esttab_opt_tex} ///
 		${slb_titling_bottom} ///
 		fragment prehead("") $postAll append
-	
+
 
 /////////////////////////////////////////////////
 ///--- I. Out Logs

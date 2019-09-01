@@ -6,9 +6,24 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 
 # 1. Regressions
 
+## 1.1 All Purpose Regression Tool
+
+1. [All Purpose N Column M Panels Regression Structure](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose.html) \| [**PDF**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose.pdf)
+    + A regression has these ingredients:
+        * regression method
+        * LHS
+        * RHS (to keep)
+        * RHS (controls not to show in table)
+        * Conditions
+        * regression options
+    + Freely specify regression table column and panel specific ingredients for each of the six elements of regression above
+    + Versatile structure that can test large sets of regression specifications
+
+## 1.2 Various Examples
+
 1. [Discrete Interactions](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/discrete/fs_reg_d_interact.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/discrete/fs_reg_d_interact.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/reglin/discrete/fs_reg_d_interact.html) \| [**PDF**](https://fanwangecon.github.io/Stata4Econ/reglin/discrete/fs_reg_d_interact.pdf)
     + Regression with interacted discrete regressors
-    + **core**: *regres + esttab*
+    + **core**: *regress + esttab*
 
 # 2. Generate Table
 
