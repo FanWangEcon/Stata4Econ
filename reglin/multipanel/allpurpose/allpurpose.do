@@ -28,12 +28,13 @@ macro drop _all
 
 */
 
-
 ///--- File Names
 global st_file_root "~\Stata4Econ\reglin\multipanel\allpurpose\"
 global st_log_file "${st_file_root}allpurpose"
-global st_log_html "${st_file_root}allpurpose.html"
-global st_log_pdf "${st_file_root}allpurpose.pdf"
+
+global st_tab_rtf  "${st_file_root}allpurpose_tab.rtf"
+global st_tab_html "${st_file_root}allpurpose_tab.html"
+global st_tab_tex  "${st_file_root}allpurpose_tab_texbody.tex"
 
 ///--- Start log
 capture log close
@@ -90,51 +91,90 @@ sysuse auto, clear
   /////////////////////////////////////////////////
 
   * column count, and panel count
-  global it_col_cnt = 5
+  * can specify any numbers here, code will run for any col and row count
+  global it_col_cnt = 7
   global it_pan_cnt = 6
 
   /////////////////////////////////////////////////
   ///--- A3. Labeling
   /////////////////////////////////////////////////
-
+  
+  * column title, panel title, and slb_pan_nte = panel notes
   global slb_col "price"
   global slb_pan "current panel results"
+  global slb_pan_nte "general notes"
 
   * eso = esttab options
-  global slb_eso "label stats(N ${stc_sca})"
+  global slb_eso "label mtitles p stats(N ${stc_sca}) star(* 0.10 ** 0.05 *** 0.01)"
+  global slb_tex_eso "booktabs ${slb_eso}"
 
 /////////////////////////////////////////////////
 ///--- B1. Column Specific Strings
 /////////////////////////////////////////////////
 
+  * Column titling, some columns get column specific titles
+  global slb_col_3 "wgt"
+  global slb_col_4 "areg"
+  global slb_col_5 "gear <= 3"
+  global slb_col_6 "reg"
+  global slb_col_7 "areg"
+
+  * change regression method for column 4
+  global stc_rgc_col_4 "areg"
+  global stc_opt_col_4 ", absorb(foreign)"
+  global stc_rgc_col_7 "areg"
+  global stc_opt_col_7 ", absorb(foreign)"
+
+  * this means the third column's lhs var will be weight
   global svr_lhs_col_3 "weight"
 
+  * below changing condition for 5th and 3rd column, append to existing conditions
   global sif_cdn_col_5 "& gear_ratio <= 3"
   global sif_cdn_col_3 `"& trunk != 5 & ~strpos(make, "Ford")"'
 
+  * append these variables to column 4 and 5 estimations
   global svr_rhs_col_4 "weight"
   global svr_rhs_col_5 "turn"
-
-  global svr_kep_pan_1 "${svr_rhs_pan_1}"
-  global svr_kep_pan_4 "${svr_rhs_pan_4}"
 
 /////////////////////////////////////////////////
 ///--- B2. Panel Specific Strings
 /////////////////////////////////////////////////
 
+  * Panel titling, 1 2 3 get panel specific titles, other use base
+  global slb_pan_1 "Panel A, foreign == 0"  
+  global slb_pan_2 "Panel B, foreign == 1"  
+  global slb_pan_3 "Panel C, length >= 190"
+  
+  * Panel Specific Notes
+  global slb_pan_nte_1 `""This panel only includes foreign == 0. Absorb no effects.""'
+  global slb_pan_nte_2 `""This panel then focuses only on foreign == 1""'
+  global slb_pan_nte_2 `"${slb_pan_nte_2} "Hi there, more notes next line""'
+  global slb_pan_nte_5 `""This panel is the 5th" "Yes it is the 5th, so what""'
+  
+  * the 3rd panel and 6 panel lhs variable is mpg, note column override panel lhs
   global svr_lhs_pan_3 "mpg"
   global svr_lhs_pan_6 "mpg"
 
+  * panel specific conditioning, appending to column and base conditioning
   global sif_cdn_pan_1 "& foreign == 0"
   global sif_cdn_pan_2 "& foreign == 1"
   global sif_cdn_pan_3 "& length >= 190"
 
-  global svr_rhs_pan_1 "mpg headroom trunk"
+  * panel specific rhs variables, append to column and base
+  global svr_rhs_pan_1 "mpg headroom"
   global svr_rhs_pan_4 "mpg"
 
+  * keeping
   global svr_kep_pan_1 "${svr_rhs_pan_1} ${svr_rhs_col_1} ${svr_rhs_col_5}"
   global svr_kep_pan_4 "${svr_rhs_pan_4} ${svr_rhs_col_1} ${svr_rhs_col_5}"
 
+/////////////////////////////////////////////////
+///--- B3. Panel and Column Specific Strings
+/////////////////////////////////////////////////
+
+  * RHS for panel 5 and column 4 will have two more covariates
+  global svr_rhs_pan_5_col_4 "length turn"
+  global svr_kep_pan_4 "${svr_kep_pan_4} ${svr_rhs_pan_5_col_4}"
 
 /////////////////////////////////////////////////
 ///--- C. Define Regression Strings
@@ -153,26 +193,26 @@ sysuse auto, clear
       * generates: stc_rgc_u and stc_opt_u
       global stc_rgc_u "${stc_rgc}"
       global stc_opt_u "${stc_opt}"
-	  global svr_lhs_u "${svr_lhs}"
-	  global st_ls_rep "stc_rgc stc_opt svr_lhs"
-      foreach st_seg in $st_ls_rep {
-        global st_seg "`st_seg'"
+  	  global svr_lhs_u "${svr_lhs}"
+  	  global st_ls_rep "stc_rgc stc_opt svr_lhs"
+        foreach st_seg in $st_ls_rep {
+          global st_seg "`st_seg'"
 
-		* di `"${st_seg}_pan_${it_pan_ctr}: ${${st_seg}_pan_${it_pan_ctr}}"'
-		* di `"${st_seg}_col_${it_col_ctr}: ${${st_seg}_col_${it_col_ctr}}"'
-		* di `"${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}: ${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'
+      		* di `"${st_seg}_pan_${it_pan_ctr}: ${${st_seg}_pan_${it_pan_ctr}}"'
+      		* di `"${st_seg}_col_${it_col_ctr}: ${${st_seg}_col_${it_col_ctr}}"'
+      		* di `"${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}: ${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'
 
-        if ("${${st_seg}_pan_${it_pan_ctr}}" != "") {
-          global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}}"'
+          if (`"${${st_seg}_pan_${it_pan_ctr}}"' != "") {
+            global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}}"'
+          }
+          else if (`"${${st_seg}_col_${it_col_ctr}}"' != "") {
+            global ${st_seg}_u `"${${st_seg}_col_${it_col_ctr}}"'
+          }
+          else if (`"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"' != "") {
+            global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'
+          }
+  		* di `"${st_seg}_u: ${${st_seg}_u}"'
         }
-        else if ("${${st_seg}_col_${it_col_ctr}}" != "") {
-          global ${st_seg}_u `"${${st_seg}_col_${it_col_ctr}}"'
-        }
-        else if ("${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}" != "") {
-          global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'
-        }
-		* di `"${st_seg}_u: ${${st_seg}_u}"'
-      }
 
       * if there are panel or column specific values, append
       global svr_rhs_u "${svr_rhs} ${svr_rhs_pan_${it_pan_ctr}} ${svr_rhs_col_${it_col_ctr}}"
@@ -221,6 +261,13 @@ sysuse auto, clear
 
 			///--- Reset Strings to Default Always
 			global slb_col_u "${slb_col}"
+			global st_ls_rep "slb_col"
+			foreach st_seg in $st_ls_rep {
+				global st_seg "`st_seg'"
+				if ("${${st_seg}_${it_col_ctr}}" != "") {
+					global ${st_seg}_u `"${${st_seg}_${it_col_ctr}}"'
+				}
+			}
 
 			///--- Regress
 			capture $quiornot {
@@ -237,9 +284,9 @@ sysuse auto, clear
 			}
 
 			///--- Estadd Controls
-// 			foreach st_scalar_name in $stc_sca {
-// 				estadd local ${st_scalar_name} e(${st_scalar_name})
-// 			}
+ 			* foreach st_scalar_name in $stc_sca {
+ 			* 	estadd local ${st_scalar_name} e(${st_scalar_name})
+ 			* }
 
 			///--- Track Regression Store
 			global $st_cur_sm_stor "${${st_cur_sm_stor}} m${it_reg_ctr}"
@@ -260,16 +307,44 @@ sysuse auto, clear
 /////////////////////////////////////////////////
 
 	foreach it_pan_ctr of numlist 1(1)$it_pan_cnt {
-
+	
 		global it_pan_ctr "`it_pan_ctr'"
 
-		global slb_pan_u "${slb_pan}"
 		global slb_eso_u "${slb_eso}"
+		global slb_tex_eso_u "${slb_tex_eso}"
+		
+		global slb_pan_u "${slb_pan}"
+		global slb_pan_nte_u "${slb_pan_nte}"
+
+		global st_ls_rep "slb_pan slb_pan_nte"
+		foreach st_seg in $st_ls_rep {
+			global st_seg "`st_seg'"
+			if (`"${${st_seg}_${it_pan_ctr}}"' != "") {
+				global ${st_seg}_u `"${${st_seg}_${it_pan_ctr}}"'
+			}
+		}
 
 		global svr_kep_u "${svr_kep} ${svr_kep_pan_${it_pan_ctr}}"
-
-		di `"esttab ${smd_${it_pan_ctr}_m}, title("${slb_pan_u}") keep(${svr_kep_u}) order(${svr_kep_u}) ${slb_eso_u}"'
-		esttab ${smd_${it_pan_ctr}_m}, title("${slb_pan_u}") keep(${svr_kep_u}) order(${svr_kep_u}) ${slb_eso_u}
+		global st_esttab_opts_main `"addnotes(${slb_pan_nte_u}) title("${slb_pan_u}") keep(${svr_kep_u}) order(${svr_kep_u})"'
+		global st_esttab_opts_tex `"${st_esttab_opts_main} ${slb_tex_eso_u}"'
+		global st_esttab_opts_oth `"${st_esttab_opts_main} ${slb_eso_u}"'
+		
+		di "MODELS: ${smd_${it_pan_ctr}_m}"
+		di `"st_esttab_opts_main: ${st_esttab_opts_main}"'
+		
+		///--- output to log
+		esttab ${smd_${it_pan_ctr}_m}, ${st_esttab_opts_oth}
+				
+		///--- save results to html, rtf, as well as tex
+		if ($it_pan_ctr == 1) {
+			global st_replace "replace"
+		}
+		else {
+			global st_replace "append"
+		}		
+		esttab ${smd_${it_pan_ctr}_m} using "${st_tab_html}", ${st_esttab_opts_oth} $st_replace
+		esttab ${smd_${it_pan_ctr}_m} using "${st_tab_rtf}",  ${st_esttab_opts_oth} $st_replace
+		esttab ${smd_${it_pan_ctr}_m} using "${st_tab_tex}",  ${st_esttab_opts_tex} $st_replace
 
 	}
 

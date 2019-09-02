@@ -18,7 +18,7 @@ BODY{background-color: ffffff;
       name:  <span class=result>&lt;unnamed&gt;</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\reglin\multipanel\allpurpose\allpurpose.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>opened on:  <span class=result> 1 Sep 2019, 16:17:23</span>
+<span class=result> </span>opened on:  <span class=result> 2 Sep 2019, 15:22:41</span>
 <br><br>
 <span class=input>. log on</span>
 (log already on)
@@ -89,7 +89,8 @@ BODY{background-color: ffffff;
 <span class=input>&gt;   /////////////////////////////////////////////////</span>
 <span class=input>&gt; </span>
 <span class=input>.   * column count, and panel count</span>
-<span class=input>.   global it_col_cnt = 5</span>
+<span class=input>.   * can specify any numbers here, code will run for any col and row count</span>
+<span class=input>.   global it_col_cnt = 7</span>
 <br><br>
 <span class=input>.   global it_pan_cnt = 6</span>
 <br><br>
@@ -97,47 +98,92 @@ BODY{background-color: ffffff;
 <span class=input>.   /////////////////////////////////////////////////</span>
 <span class=input>&gt;   ///--- A3. Labeling</span>
 <span class=input>&gt;   /////////////////////////////////////////////////</span>
-<span class=input>&gt; </span>
+<span class=input>&gt;   </span>
+<span class=input>.   * column title, panel title, and slb_pan_nte = panel notes</span>
 <span class=input>.   global slb_col "price"</span>
 <br><br>
 <span class=input>.   global slb_pan "current panel results"</span>
 <br><br>
+<span class=input>.   global slb_pan_nte "general notes"</span>
+<br><br>
 <span class=input>. </span>
 <span class=input>.   * eso = esttab options</span>
-<span class=input>.   global slb_eso "label stats(N ${stc_sca})"</span>
+<span class=input>.   global slb_eso "label mtitles p stats(N ${stc_sca}) star(* 0.10 ** 0.05 *** 0.01)"</span>
+<br><br>
+<span class=input>.   global slb_tex_eso "booktabs ${slb_eso}"</span>
 <br><br>
 <span class=input>. </span>
 <span class=input>. /////////////////////////////////////////////////</span>
 <span class=input>&gt; ///--- B1. Column Specific Strings</span>
 <span class=input>&gt; /////////////////////////////////////////////////</span>
 <span class=input>&gt; </span>
+<span class=input>.   * Column titling, some columns get column specific titles</span>
+<span class=input>.   global slb_col_3 "wgt"</span>
+<br><br>
+<span class=input>.   global slb_col_4 "areg"</span>
+<br><br>
+<span class=input>.   global slb_col_5 "gear &lt;= 3"</span>
+<br><br>
+<span class=input>.   global slb_col_6 "reg"</span>
+<br><br>
+<span class=input>.   global slb_col_7 "areg"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.   * change regression method for column 4</span>
+<span class=input>.   global stc_rgc_col_4 "areg"</span>
+<br><br>
+<span class=input>.   global stc_opt_col_4 ", absorb(foreign)"</span>
+<br><br>
+<span class=input>.   global stc_rgc_col_7 "areg"</span>
+<br><br>
+<span class=input>.   global stc_opt_col_7 ", absorb(foreign)"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>.   * this means the third column's lhs var will be weight</span>
 <span class=input>.   global svr_lhs_col_3 "weight"</span>
 <br><br>
 <span class=input>. </span>
+<span class=input>.   * below changing condition for 5th and 3rd column, append to existing conditions</span>
 <span class=input>.   global sif_cdn_col_5 "&amp; gear_ratio &lt;= 3"</span>
 <br><br>
 <span class=input>.   global sif_cdn_col_3 `"&amp; trunk != 5 &amp; ~strpos(make, "Ford")"'</span>
 <br><br>
 <span class=input>. </span>
+<span class=input>.   * append these variables to column 4 and 5 estimations</span>
 <span class=input>.   global svr_rhs_col_4 "weight"</span>
 <br><br>
 <span class=input>.   global svr_rhs_col_5 "turn"</span>
-<br><br>
-<span class=input>. </span>
-<span class=input>.   global svr_kep_pan_1 "${svr_rhs_pan_1}"</span>
-<br><br>
-<span class=input>.   global svr_kep_pan_4 "${svr_rhs_pan_4}"</span>
 <br><br>
 <span class=input>. </span>
 <span class=input>. /////////////////////////////////////////////////</span>
 <span class=input>&gt; ///--- B2. Panel Specific Strings</span>
 <span class=input>&gt; /////////////////////////////////////////////////</span>
 <span class=input>&gt; </span>
+<span class=input>.   * Panel titling, 1 2 3 get panel specific titles, other use base</span>
+<span class=input>.   global slb_pan_1 "Panel A, foreign == 0"  </span>
+<br><br>
+<span class=input>.   global slb_pan_2 "Panel B, foreign == 1"  </span>
+<br><br>
+<span class=input>.   global slb_pan_3 "Panel C, length &gt;= 190"</span>
+<br><br>
+<span class=input>.   </span>
+<span class=input>.   * Panel Specific Notes</span>
+<span class=input>.   global slb_pan_nte_1 `""This panel only includes foreign == 0. Absorb no effects.""'</span>
+<br><br>
+<span class=input>.   global slb_pan_nte_2 `""This panel then focuses only on foreign == 1""'</span>
+<br><br>
+<span class=input>.   global slb_pan_nte_2 `"${slb_pan_nte_2} "Hi there, more notes next line""'</span>
+<br><br>
+<span class=input>.   global slb_pan_nte_5 `""This panel is the 5th" "Yes it is the 5th, so what""'</span>
+<br><br>
+<span class=input>.   </span>
+<span class=input>.   * the 3rd panel and 6 panel lhs variable is mpg, note column override panel lhs</span>
 <span class=input>.   global svr_lhs_pan_3 "mpg"</span>
 <br><br>
 <span class=input>.   global svr_lhs_pan_6 "mpg"</span>
 <br><br>
 <span class=input>. </span>
+<span class=input>.   * panel specific conditioning, appending to column and base conditioning</span>
 <span class=input>.   global sif_cdn_pan_1 "&amp; foreign == 0"</span>
 <br><br>
 <span class=input>.   global sif_cdn_pan_2 "&amp; foreign == 1"</span>
@@ -145,16 +191,27 @@ BODY{background-color: ffffff;
 <span class=input>.   global sif_cdn_pan_3 "&amp; length &gt;= 190"</span>
 <br><br>
 <span class=input>. </span>
-<span class=input>.   global svr_rhs_pan_1 "mpg headroom trunk"</span>
+<span class=input>.   * panel specific rhs variables, append to column and base</span>
+<span class=input>.   global svr_rhs_pan_1 "mpg headroom"</span>
 <br><br>
 <span class=input>.   global svr_rhs_pan_4 "mpg"</span>
 <br><br>
 <span class=input>. </span>
+<span class=input>.   * keeping</span>
 <span class=input>.   global svr_kep_pan_1 "${svr_rhs_pan_1} ${svr_rhs_col_1} ${svr_rhs_col_5}"</span>
 <br><br>
 <span class=input>.   global svr_kep_pan_4 "${svr_rhs_pan_4} ${svr_rhs_col_1} ${svr_rhs_col_5}"</span>
 <br><br>
 <span class=input>. </span>
+<span class=input>. /////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- B3. Panel and Column Specific Strings</span>
+<span class=input>&gt; /////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>.   * RHS for panel 5 and column 4 will have two more covariates</span>
+<span class=input>.   global svr_rhs_pan_5_col_4 "length turn"</span>
+<br><br>
+<span class=input>.   global svr_kep_pan_4 "${svr_kep_pan_4} ${svr_rhs_pan_5_col_4}"</span>
+<br><br>
 <span class=input>. </span>
 <span class=input>. /////////////////////////////////////////////////</span>
 <span class=input>&gt; ///--- C. Define Regression Strings</span>
@@ -175,24 +232,24 @@ BODY{background-color: ffffff;
   6<span class=input>.       global stc_opt_u "${stc_opt}"</span>
   7<span class=input>.           global svr_lhs_u "${svr_lhs}"</span>
   8<span class=input>.           global st_ls_rep "stc_rgc stc_opt svr_lhs"</span>
-  9<span class=input>.       foreach st_seg in $st_ls_rep {</span>
- 10<span class=input>.         global st_seg "`st_seg'"</span>
+  9<span class=input>.         foreach st_seg in $st_ls_rep {</span>
+ 10<span class=input>.           global st_seg "`st_seg'"</span>
  11<span class=input>. </span>
 <span class=input>.                 * di `"${st_seg}_pan_${it_pan_ctr}: ${${st_seg}_pan_${it_pan_ctr}}"'</span>
 <span class=input>.                 * di `"${st_seg}_col_${it_col_ctr}: ${${st_seg}_col_${it_col_ctr}}"'</span>
 <span class=input>.                 * di `"${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}: ${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'</span>
 <span class=input>. </span>
-<span class=input>.         if ("${${st_seg}_pan_${it_pan_ctr}}" != "") {</span>
- 12<span class=input>.           global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}}"'</span>
- 13<span class=input>.         }</span>
- 14<span class=input>.         else if ("${${st_seg}_col_${it_col_ctr}}" != "") {</span>
- 15<span class=input>.           global ${st_seg}_u `"${${st_seg}_col_${it_col_ctr}}"'</span>
- 16<span class=input>.         }</span>
- 17<span class=input>.         else if ("${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}" != "") {</span>
- 18<span class=input>.           global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'</span>
- 19<span class=input>.         }</span>
+<span class=input>.           if (`"${${st_seg}_pan_${it_pan_ctr}}"' != "") {</span>
+ 12<span class=input>.             global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}}"'</span>
+ 13<span class=input>.           }</span>
+ 14<span class=input>.           else if (`"${${st_seg}_col_${it_col_ctr}}"' != "") {</span>
+ 15<span class=input>.             global ${st_seg}_u `"${${st_seg}_col_${it_col_ctr}}"'</span>
+ 16<span class=input>.           }</span>
+ 17<span class=input>.           else if (`"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"' != "") {</span>
+ 18<span class=input>.             global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'</span>
+ 19<span class=input>.           }</span>
  20<span class=input>.                 * di `"${st_seg}_u: ${${st_seg}_u}"'</span>
-<span class=input>.       }</span>
+<span class=input>.         }</span>
  21<span class=input>. </span>
 <span class=input>.       * if there are panel or column specific values, append</span>
 <span class=input>.       global svr_rhs_u "${svr_rhs} ${svr_rhs_pan_${it_pan_ctr}} ${svr_rhs_col_${it_col_ctr}}"</span>
@@ -209,15 +266,19 @@ BODY{background-color: ffffff;
 <span class=input>.         }</span>
  28<span class=input>.   }</span>
 <span class=result>PAN={1}, COL={1}</span>
-<span class=result>reg price rep78 mpg headroom trunk  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
+<span class=result>reg price rep78 mpg headroom  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
 <span class=result>PAN={1}, COL={2}</span>
-<span class=result>reg price rep78 mpg headroom trunk  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
+<span class=result>reg price rep78 mpg headroom  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
 <span class=result>PAN={1}, COL={3}</span>
-<span class=result>reg weight rep78 mpg headroom trunk  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0 &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
+<span class=result>reg weight rep78 mpg headroom  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0 &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
 <span class=result>PAN={1}, COL={4}</span>
-<span class=result>reg price rep78 mpg headroom trunk weight gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
+<span class=result>areg price rep78 mpg headroom weight gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , absorb(foreign)</span>
 <span class=result>PAN={1}, COL={5}</span>
-<span class=result>reg price rep78 mpg headroom trunk turn gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0 &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>reg price rep78 mpg headroom turn gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0 &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>PAN={1}, COL={6}</span>
+<span class=result>reg price rep78 mpg headroom  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
+<span class=result>PAN={1}, COL={7}</span>
+<span class=result>areg price rep78 mpg headroom  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , absorb(foreign)</span>
 <span class=result>PAN={2}, COL={1}</span>
 <span class=result>reg price rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1  , robust</span>
 <span class=result>PAN={2}, COL={2}</span>
@@ -225,9 +286,13 @@ BODY{background-color: ffffff;
 <span class=result>PAN={2}, COL={3}</span>
 <span class=result>reg weight rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1 &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
 <span class=result>PAN={2}, COL={4}</span>
-<span class=result>reg price rep78  weight gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1  , robust</span>
+<span class=result>areg price rep78  weight gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1  , absorb(foreign)</span>
 <span class=result>PAN={2}, COL={5}</span>
 <span class=result>reg price rep78  turn gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1 &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>PAN={2}, COL={6}</span>
+<span class=result>reg price rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1  , robust</span>
+<span class=result>PAN={2}, COL={7}</span>
+<span class=result>areg price rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1  , absorb(foreign)</span>
 <span class=result>PAN={3}, COL={1}</span>
 <span class=result>reg mpg rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190  , robust</span>
 <span class=result>PAN={3}, COL={2}</span>
@@ -235,9 +300,13 @@ BODY{background-color: ffffff;
 <span class=result>PAN={3}, COL={3}</span>
 <span class=result>reg mpg rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190 &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
 <span class=result>PAN={3}, COL={4}</span>
-<span class=result>reg mpg rep78  weight gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190  , robust</span>
+<span class=result>areg mpg rep78  weight gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190  , absorb(foreign)</span>
 <span class=result>PAN={3}, COL={5}</span>
 <span class=result>reg mpg rep78  turn gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190 &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>PAN={3}, COL={6}</span>
+<span class=result>reg mpg rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190  , robust</span>
+<span class=result>PAN={3}, COL={7}</span>
+<span class=result>areg mpg rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190  , absorb(foreign)</span>
 <span class=result>PAN={4}, COL={1}</span>
 <span class=result>reg price rep78 mpg  gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
 <span class=result>PAN={4}, COL={2}</span>
@@ -245,9 +314,13 @@ BODY{background-color: ffffff;
 <span class=result>PAN={4}, COL={3}</span>
 <span class=result>reg weight rep78 mpg  gear_ratio   if price !=. &amp; foreign !=.  &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
 <span class=result>PAN={4}, COL={4}</span>
-<span class=result>reg price rep78 mpg weight gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
+<span class=result>areg price rep78 mpg weight gear_ratio   if price !=. &amp; foreign !=.   , absorb(foreign)</span>
 <span class=result>PAN={4}, COL={5}</span>
 <span class=result>reg price rep78 mpg turn gear_ratio   if price !=. &amp; foreign !=.  &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>PAN={4}, COL={6}</span>
+<span class=result>reg price rep78 mpg  gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
+<span class=result>PAN={4}, COL={7}</span>
+<span class=result>areg price rep78 mpg  gear_ratio   if price !=. &amp; foreign !=.   , absorb(foreign)</span>
 <span class=result>PAN={5}, COL={1}</span>
 <span class=result>reg price rep78   gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
 <span class=result>PAN={5}, COL={2}</span>
@@ -255,9 +328,13 @@ BODY{background-color: ffffff;
 <span class=result>PAN={5}, COL={3}</span>
 <span class=result>reg weight rep78   gear_ratio   if price !=. &amp; foreign !=.  &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
 <span class=result>PAN={5}, COL={4}</span>
-<span class=result>reg price rep78  weight gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
+<span class=result>areg price rep78  weight gear_ratio   if price !=. &amp; foreign !=.   , absorb(foreign)</span>
 <span class=result>PAN={5}, COL={5}</span>
 <span class=result>reg price rep78  turn gear_ratio   if price !=. &amp; foreign !=.  &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>PAN={5}, COL={6}</span>
+<span class=result>reg price rep78   gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
+<span class=result>PAN={5}, COL={7}</span>
+<span class=result>areg price rep78   gear_ratio   if price !=. &amp; foreign !=.   , absorb(foreign)</span>
 <span class=result>PAN={6}, COL={1}</span>
 <span class=result>reg mpg rep78   gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
 <span class=result>PAN={6}, COL={2}</span>
@@ -265,9 +342,13 @@ BODY{background-color: ffffff;
 <span class=result>PAN={6}, COL={3}</span>
 <span class=result>reg mpg rep78   gear_ratio   if price !=. &amp; foreign !=.  &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
 <span class=result>PAN={6}, COL={4}</span>
-<span class=result>reg mpg rep78  weight gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
+<span class=result>areg mpg rep78  weight gear_ratio   if price !=. &amp; foreign !=.   , absorb(foreign)</span>
 <span class=result>PAN={6}, COL={5}</span>
 <span class=result>reg mpg rep78  turn gear_ratio   if price !=. &amp; foreign !=.  &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>PAN={6}, COL={6}</span>
+<span class=result>reg mpg rep78   gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
+<span class=result>PAN={6}, COL={7}</span>
+<span class=result>areg mpg rep78   gear_ratio   if price !=. &amp; foreign !=.   , absorb(foreign)</span>
 <br><br>
 <span class=input>. </span>
 <span class=input>. /////////////////////////////////////////////////</span>
@@ -304,40 +385,51 @@ BODY{background-color: ffffff;
  11<span class=input>. </span>
 <span class=input>.                         ///--- Reset Strings to Default Always</span>
 <span class=input>&gt;                         global slb_col_u "${slb_col}"</span>
- 12<span class=input>. </span>
+ 12<span class=input>.                         global st_ls_rep "slb_col"</span>
+ 13<span class=input>.                         foreach st_seg in $st_ls_rep {</span>
+ 14<span class=input>.                                 global st_seg "`st_seg'"</span>
+ 15<span class=input>.                                 if ("${${st_seg}_${it_col_ctr}}" != "") {</span>
+ 16<span class=input>.                                         global ${st_seg}_u `"${${st_seg}_${it_col_ctr}}"'</span>
+ 17<span class=input>.                                 }</span>
+ 18<span class=input>.                         }</span>
+ 19<span class=input>. </span>
 <span class=input>.                         ///--- Regress</span>
 <span class=input>&gt;                         capture $quiornot {</span>
- 13<span class=input>.                                 eststo m${it_reg_ctr}, title("${slb_col_u}") : ${$st_cur_srg_name}</span>
- 14<span class=input>.                         }</span>
- 15<span class=input>.                         if _rc!=0 {</span>
- 16<span class=input>.                                 ///--- This means this this regression failed, proceed with empty col</span>
+ 20<span class=input>.                                 eststo m${it_reg_ctr}, title("${slb_col_u}") : ${$st_cur_srg_name}</span>
+ 21<span class=input>.                         }</span>
+ 22<span class=input>.                         if _rc!=0 {</span>
+ 23<span class=input>.                                 ///--- This means this this regression failed, proceed with empty col</span>
 <span class=input>&gt;                                 * Generate a fake observation to create a new estimated model</span>
 <span class=input>.                                 * Then replace the observation N by setting it to 0, otherwise N = 1</span>
 <span class=input>.                                 capture drop aaa</span>
- 17<span class=input>.                                 gen aaa = 0 if _n == 1</span>
- 18<span class=input>.                                 eststo m${it_reg_ctr}, title("${slb_col_u}") : estpost tabstat aaa , statistics(n) c(s)</span>
- 19<span class=input>.                                 estadd scalar N = 0, replace</span>
- 20<span class=input>.                         }</span>
- 21<span class=input>. </span>
+ 24<span class=input>.                                 gen aaa = 0 if _n == 1</span>
+ 25<span class=input>.                                 eststo m${it_reg_ctr}, title("${slb_col_u}") : estpost tabstat aaa , statistics(n) c(s)</span>
+ 26<span class=input>.                                 estadd scalar N = 0, replace</span>
+ 27<span class=input>.                         }</span>
+ 28<span class=input>. </span>
 <span class=input>.                         ///--- Estadd Controls</span>
-<span class=input>&gt; //                      foreach st_scalar_name in $stc_sca {</span>
-<span class=input>. //                              estadd local ${st_scalar_name} e(${st_scalar_name})</span>
-<span class=input>. //                      }</span>
+<span class=input>&gt;                         * foreach st_scalar_name in $stc_sca {</span>
+<span class=input>.                         *       estadd local ${st_scalar_name} e(${st_scalar_name})</span>
+<span class=input>.                         * }</span>
 <span class=input>. </span>
 <span class=input>.                         ///--- Track Regression Store</span>
 <span class=input>&gt;                         global $st_cur_sm_stor "${${st_cur_sm_stor}} m${it_reg_ctr}"</span>
- 22<span class=input>.                 }</span>
- 23<span class=input>.         }</span>
+ 29<span class=input>.                 }</span>
+ 30<span class=input>.         }</span>
 <span class=result>PAN={1}, COL={1}, srg_pan_1_col_1</span>
-<span class=result>reg price rep78 mpg headroom trunk  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
+<span class=result>reg price rep78 mpg headroom  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
 <span class=result>PAN={1}, COL={2}, srg_pan_1_col_2</span>
-<span class=result>reg price rep78 mpg headroom trunk  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
+<span class=result>reg price rep78 mpg headroom  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
 <span class=result>PAN={1}, COL={3}, srg_pan_1_col_3</span>
-<span class=result>reg weight rep78 mpg headroom trunk  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0 &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
+<span class=result>reg weight rep78 mpg headroom  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0 &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
 <span class=result>PAN={1}, COL={4}, srg_pan_1_col_4</span>
-<span class=result>reg price rep78 mpg headroom trunk weight gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
+<span class=result>areg price rep78 mpg headroom weight gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , absorb(foreign)</span>
 <span class=result>PAN={1}, COL={5}, srg_pan_1_col_5</span>
-<span class=result>reg price rep78 mpg headroom trunk turn gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0 &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>reg price rep78 mpg headroom turn gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0 &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>PAN={1}, COL={6}, srg_pan_1_col_6</span>
+<span class=result>reg price rep78 mpg headroom  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
+<span class=result>PAN={1}, COL={7}, srg_pan_1_col_7</span>
+<span class=result>areg price rep78 mpg headroom  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , absorb(foreign)</span>
 <span class=result>PAN={2}, COL={1}, srg_pan_2_col_1</span>
 <span class=result>reg price rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1  , robust</span>
 <span class=result>PAN={2}, COL={2}, srg_pan_2_col_2</span>
@@ -345,7 +437,7 @@ BODY{background-color: ffffff;
 <span class=result>PAN={2}, COL={3}, srg_pan_2_col_3</span>
 <span class=result>reg weight rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1 &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
 <span class=result>PAN={2}, COL={4}, srg_pan_2_col_4</span>
-<span class=result>reg price rep78  weight gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1  , robust</span>
+<span class=result>areg price rep78  weight gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1  , absorb(foreign)</span>
 <span class=result>PAN={2}, COL={5}, srg_pan_2_col_5</span>
 <span class=result>reg price rep78  turn gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1 &amp; gear_ratio &lt;= 3 , robust</span>
 (73 missing values generated)
@@ -359,6 +451,10 @@ Summary statistics: count
 <br><br>
 added scalar:
                   e(N) =  <span class=result>0</span>
+<span class=result>PAN={2}, COL={6}, srg_pan_2_col_6</span>
+<span class=result>reg price rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1  , robust</span>
+<span class=result>PAN={2}, COL={7}, srg_pan_2_col_7</span>
+<span class=result>areg price rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 1  , absorb(foreign)</span>
 <span class=result>PAN={3}, COL={1}, srg_pan_3_col_1</span>
 <span class=result>reg mpg rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190  , robust</span>
 <span class=result>PAN={3}, COL={2}, srg_pan_3_col_2</span>
@@ -366,9 +462,13 @@ added scalar:
 <span class=result>PAN={3}, COL={3}, srg_pan_3_col_3</span>
 <span class=result>reg mpg rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190 &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
 <span class=result>PAN={3}, COL={4}, srg_pan_3_col_4</span>
-<span class=result>reg mpg rep78  weight gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190  , robust</span>
+<span class=result>areg mpg rep78  weight gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190  , absorb(foreign)</span>
 <span class=result>PAN={3}, COL={5}, srg_pan_3_col_5</span>
 <span class=result>reg mpg rep78  turn gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190 &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>PAN={3}, COL={6}, srg_pan_3_col_6</span>
+<span class=result>reg mpg rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190  , robust</span>
+<span class=result>PAN={3}, COL={7}, srg_pan_3_col_7</span>
+<span class=result>areg mpg rep78   gear_ratio   if price !=. &amp; foreign !=. &amp; length &gt;= 190  , absorb(foreign)</span>
 <span class=result>PAN={4}, COL={1}, srg_pan_4_col_1</span>
 <span class=result>reg price rep78 mpg  gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
 <span class=result>PAN={4}, COL={2}, srg_pan_4_col_2</span>
@@ -376,9 +476,13 @@ added scalar:
 <span class=result>PAN={4}, COL={3}, srg_pan_4_col_3</span>
 <span class=result>reg weight rep78 mpg  gear_ratio   if price !=. &amp; foreign !=.  &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
 <span class=result>PAN={4}, COL={4}, srg_pan_4_col_4</span>
-<span class=result>reg price rep78 mpg weight gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
+<span class=result>areg price rep78 mpg weight gear_ratio   if price !=. &amp; foreign !=.   , absorb(foreign)</span>
 <span class=result>PAN={4}, COL={5}, srg_pan_4_col_5</span>
 <span class=result>reg price rep78 mpg turn gear_ratio   if price !=. &amp; foreign !=.  &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>PAN={4}, COL={6}, srg_pan_4_col_6</span>
+<span class=result>reg price rep78 mpg  gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
+<span class=result>PAN={4}, COL={7}, srg_pan_4_col_7</span>
+<span class=result>areg price rep78 mpg  gear_ratio   if price !=. &amp; foreign !=.   , absorb(foreign)</span>
 <span class=result>PAN={5}, COL={1}, srg_pan_5_col_1</span>
 <span class=result>reg price rep78   gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
 <span class=result>PAN={5}, COL={2}, srg_pan_5_col_2</span>
@@ -386,9 +490,13 @@ added scalar:
 <span class=result>PAN={5}, COL={3}, srg_pan_5_col_3</span>
 <span class=result>reg weight rep78   gear_ratio   if price !=. &amp; foreign !=.  &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
 <span class=result>PAN={5}, COL={4}, srg_pan_5_col_4</span>
-<span class=result>reg price rep78  weight gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
+<span class=result>areg price rep78  weight gear_ratio   if price !=. &amp; foreign !=.   , absorb(foreign)</span>
 <span class=result>PAN={5}, COL={5}, srg_pan_5_col_5</span>
 <span class=result>reg price rep78  turn gear_ratio   if price !=. &amp; foreign !=.  &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>PAN={5}, COL={6}, srg_pan_5_col_6</span>
+<span class=result>reg price rep78   gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
+<span class=result>PAN={5}, COL={7}, srg_pan_5_col_7</span>
+<span class=result>areg price rep78   gear_ratio   if price !=. &amp; foreign !=.   , absorb(foreign)</span>
 <span class=result>PAN={6}, COL={1}, srg_pan_6_col_1</span>
 <span class=result>reg mpg rep78   gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
 <span class=result>PAN={6}, COL={2}, srg_pan_6_col_2</span>
@@ -396,13 +504,17 @@ added scalar:
 <span class=result>PAN={6}, COL={3}, srg_pan_6_col_3</span>
 <span class=result>reg mpg rep78   gear_ratio   if price !=. &amp; foreign !=.  &amp; trunk != 5 &amp; ~strpos(make, "Ford") , robust</span>
 <span class=result>PAN={6}, COL={4}, srg_pan_6_col_4</span>
-<span class=result>reg mpg rep78  weight gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
+<span class=result>areg mpg rep78  weight gear_ratio   if price !=. &amp; foreign !=.   , absorb(foreign)</span>
 <span class=result>PAN={6}, COL={5}, srg_pan_6_col_5</span>
 <span class=result>reg mpg rep78  turn gear_ratio   if price !=. &amp; foreign !=.  &amp; gear_ratio &lt;= 3 , robust</span>
+<span class=result>PAN={6}, COL={6}, srg_pan_6_col_6</span>
+<span class=result>reg mpg rep78   gear_ratio   if price !=. &amp; foreign !=.   , robust</span>
+<span class=result>PAN={6}, COL={7}, srg_pan_6_col_7</span>
+<span class=result>areg mpg rep78   gear_ratio   if price !=. &amp; foreign !=.   , absorb(foreign)</span>
 <br><br>
 <span class=input>. </span>
 <span class=input>.         di "${${st_cur_sm_stor}}"</span>
-<span class=result> m26 m27 m28 m29 m30</span>
+<span class=result> m36 m37 m38 m39 m40 m41 m42</span>
 <br><br>
 <span class=input>. </span>
 <span class=input>.         ///--- Regression Panel String list</span>
@@ -424,132 +536,192 @@ added scalar:
 <span class=input>&gt; /////////////////////////////////////////////////</span>
 <span class=input>&gt; </span>
 <span class=input>.         foreach it_pan_ctr of numlist 1(1)$it_pan_cnt {</span>
-  2<span class=input>. </span>
+  2<span class=input>.         </span>
 <span class=input>.                 global it_pan_ctr "`it_pan_ctr'"</span>
   3<span class=input>. </span>
+<span class=input>.                 global slb_eso_u "${slb_eso}"</span>
+  4<span class=input>.                 global slb_tex_eso_u "${slb_tex_eso}"</span>
+  5<span class=input>.                 </span>
 <span class=input>.                 global slb_pan_u "${slb_pan}"</span>
-  4<span class=input>.                 global slb_eso_u "${slb_eso}"</span>
-  5<span class=input>. </span>
+  6<span class=input>.                 global slb_pan_nte_u "${slb_pan_nte}"</span>
+  7<span class=input>. </span>
+<span class=input>.                 global st_ls_rep "slb_pan slb_pan_nte"</span>
+  8<span class=input>.                 foreach st_seg in $st_ls_rep {</span>
+  9<span class=input>.                         global st_seg "`st_seg'"</span>
+ 10<span class=input>.                         if (`"${${st_seg}_${it_pan_ctr}}"' != "") {</span>
+ 11<span class=input>.                                 global ${st_seg}_u `"${${st_seg}_${it_pan_ctr}}"'</span>
+ 12<span class=input>.                         }</span>
+ 13<span class=input>.                 }</span>
+ 14<span class=input>. </span>
 <span class=input>.                 global svr_kep_u "${svr_kep} ${svr_kep_pan_${it_pan_ctr}}"</span>
-  6<span class=input>. </span>
-<span class=input>.                 di `"esttab ${smd_${it_pan_ctr}_m}, title("${slb_pan_u}") keep(${svr_kep_u}) order(${svr_kep_u}) ${slb_eso_u}"'</span>
-  7<span class=input>.                 esttab ${smd_${it_pan_ctr}_m}, title("${slb_pan_u}") keep(${svr_kep_u}) order(${svr_kep_u}) ${slb_eso_u}</span>
-  8<span class=input>. </span>
+ 15<span class=input>.                 global st_esttab_opts_main `"addnotes(${slb_pan_nte_u}) title("${slb_pan_u}") keep(${svr_kep_u}) order(${svr_kep_u})"'</span>
+ 16<span class=input>.                 global st_esttab_opts_tex `"${st_esttab_opts_main} ${slb_tex_eso_u}"'</span>
+ 17<span class=input>.                 global st_esttab_opts_oth `"${st_esttab_opts_main} ${slb_eso_u}"'</span>
+ 18<span class=input>.                 </span>
+<span class=input>.                 di "MODELS: ${smd_${it_pan_ctr}_m}"</span>
+ 19<span class=input>.                 di `"st_esttab_opts_main: ${st_esttab_opts_main}"'</span>
+ 20<span class=input>.                 </span>
+<span class=input>.                 ///--- output to log</span>
+<span class=input>&gt;                 esttab ${smd_${it_pan_ctr}_m}, ${st_esttab_opts_oth}</span>
+ 21<span class=input>.                                 </span>
+<span class=input>.                 ///--- save results to html, rtf, as well as tex</span>
+<span class=input>&gt;                 if ($it_pan_ctr == 1) {</span>
+ 22<span class=input>.                         global st_replace "replace"</span>
+ 23<span class=input>.                 }</span>
+ 24<span class=input>.                 else {</span>
+ 25<span class=input>.                         global st_replace "append"</span>
+ 26<span class=input>.                 }               </span>
+ 27<span class=input>.                 esttab ${smd_${it_pan_ctr}_m} using "${st_tab_html}", ${st_esttab_opts_oth} $st_replace</span>
+ 28<span class=input>.                 esttab ${smd_${it_pan_ctr}_m} using "${st_tab_rtf}",  ${st_esttab_opts_oth} $st_replace</span>
+ 29<span class=input>.                 esttab ${smd_${it_pan_ctr}_m} using "${st_tab_tex}",  ${st_esttab_opts_tex} $st_replace</span>
+ 30<span class=input>. </span>
 <span class=input>.         }</span>
-<span class=result>esttab  m1 m2 m3 m4 m5, title("current panel results") keep(rep78 mpg headroom trunk  turn) order(rep78 mpg headroom trunk  turn) label stats(N r2 rank)</span>
+<span class=result>MODELS:  m1 m2 m3 m4 m5 m6 m7</span>
+<span class=result>st_esttab_opts_main: addnotes("This panel only includes foreign == 0. Absorb no effects.") title("Panel A, foreign == 0") keep(rep78 mpg headroom  turn) order(rep78 mpg headroom  turn)</span>
+<br><br>
+Panel A, foreign == 0
+------------------------------------------------------------------------------------------------------------------------------------
+                              (1)             (2)             (3)             (4)             (5)             (6)             (7)   
+                            price           price             wgt            areg       gear &lt;= 3             reg            areg   
+------------------------------------------------------------------------------------------------------------------------------------
+Repair Record 1978  <span class=result>        404.2           404.2           71.68*          215.3           297.7           404.2           404.2   </span>
+                    <span class=result>      </span>(<span class=result>0.252</span>)<span class=result>         </span>(<span class=result>0.252</span>)<span class=result>         </span>(<span class=result>0.063</span>)<span class=result>         </span>(<span class=result>0.602</span>)<span class=result>         </span>(<span class=result>0.547</span>)<span class=result>         </span>(<span class=result>0.252</span>)<span class=result>         </span>(<span class=result>0.380</span>)<span class=result>   </span>
+<br><br>
+Mileage (mpg)       <span class=result>       -226.9**        -226.9**        -107.8***        167.5          -175.7          -226.9**        -226.9** </span>
+                    <span class=result>      </span>(<span class=result>0.046</span>)<span class=result>         </span>(<span class=result>0.046</span>)<span class=result>         </span>(<span class=result>0.000</span>)<span class=result>         </span>(<span class=result>0.261</span>)<span class=result>         </span>(<span class=result>0.409</span>)<span class=result>         </span>(<span class=result>0.046</span>)<span class=result>         </span>(<span class=result>0.036</span>)<span class=result>   </span>
+<br><br>
+Headroom (in.)      <span class=result>       -426.0          -426.0          -27.26          -470.6          -431.9          -426.0          -426.0   </span>
+                    <span class=result>      </span>(<span class=result>0.191</span>)<span class=result>         </span>(<span class=result>0.191</span>)<span class=result>         </span>(<span class=result>0.535</span>)<span class=result>         </span>(<span class=result>0.259</span>)<span class=result>         </span>(<span class=result>0.382</span>)<span class=result>         </span>(<span class=result>0.191</span>)<span class=result>         </span>(<span class=result>0.361</span>)<span class=result>   </span>
+<br><br>
+Turn Circle (ft.)   <span class=result>                                                                        126.7                                   </span>
+                    <span class=result>                                                                      </span>(<span class=result>0.499</span>)<span class=result>                                   </span>
+------------------------------------------------------------------------------------------------------------------------------------
+N                   <span class=result>           48              48              46              48              37              48              48   </span>
+r2                  <span class=result>        0.431           0.431           0.792           0.558           0.450           0.431           0.431   </span>
+rank                <span class=result>            5               5               5               6               6               5               5   </span>
+------------------------------------------------------------------------------------------------------------------------------------
+p-values in parentheses
+This panel only includes foreign == 0. Absorb no effects.
+* p&lt;0.10, ** p&lt;0.05, *** p&lt;0.01
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab.html)
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab.rtf)
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab_texbody.tex)
+MODELS:  m8 m9 m10 m11 m12 m13 m14
+st_esttab_opts_main: addnotes("This panel then focuses only on foreign == 1" "Hi there, more notes next line") title("Panel B, foreign == 1") keep(rep78 ) order(rep78 )
+<br><br>
+Panel B, foreign == 1
+------------------------------------------------------------------------------------------------------------------------------------
+                              (1)             (2)             (3)             (4)             (5)             (6)             (7)   
+                            price           price             wgt            areg       gear &lt;= 3             reg            areg   
+------------------------------------------------------------------------------------------------------------------------------------
+Repair Record 1978  <span class=result>        182.2           182.2           50.78          -356.9                           182.2           182.2   </span>
+                    <span class=result>      </span>(<span class=result>0.761</span>)<span class=result>         </span>(<span class=result>0.761</span>)<span class=result>         </span>(<span class=result>0.472</span>)<span class=result>         </span>(<span class=result>0.430</span>)<span class=result>                         </span>(<span class=result>0.761</span>)<span class=result>         </span>(<span class=result>0.818</span>)<span class=result>   </span>
+------------------------------------------------------------------------------------------------------------------------------------
+N                   <span class=result>           21              21              20              21               0              21              21   </span>
+r2                  <span class=result>       0.0891          0.0891           0.400           0.735                          0.0891          0.0891   </span>
+rank                <span class=result>            3               3               3               4               0               3               3   </span>
+------------------------------------------------------------------------------------------------------------------------------------
+p-values in parentheses
+This panel then focuses only on foreign == 1
+Hi there, more notes next line
+* p&lt;0.10, ** p&lt;0.05, *** p&lt;0.01
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab.html)
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab.rtf)
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab_texbody.tex)
+MODELS:  m15 m16 m17 m18 m19 m20 m21
+st_esttab_opts_main: addnotes(general notes) title("Panel C, length &gt;= 190") keep(rep78 ) order(rep78 )
+<br><br>
+Panel C, length &gt;= 190
+------------------------------------------------------------------------------------------------------------------------------------
+                              (1)             (2)             (3)             (4)             (5)             (6)             (7)   
+                            price           price             wgt            areg       gear &lt;= 3             reg            areg   
+------------------------------------------------------------------------------------------------------------------------------------
+Repair Record 1978  <span class=result>       -0.297          -0.297          -0.297           0.272          -0.935          -0.297          -0.183   </span>
+                    <span class=result>      </span>(<span class=result>0.526</span>)<span class=result>         </span>(<span class=result>0.526</span>)<span class=result>         </span>(<span class=result>0.526</span>)<span class=result>         </span>(<span class=result>0.577</span>)<span class=result>         </span>(<span class=result>0.117</span>)<span class=result>         </span>(<span class=result>0.526</span>)<span class=result>         </span>(<span class=result>0.769</span>)<span class=result>   </span>
+------------------------------------------------------------------------------------------------------------------------------------
+N                   <span class=result>           36              36              36              36              31              36              36   </span>
+r2                  <span class=result>        0.174           0.174           0.174           0.533           0.431           0.174           0.178   </span>
+rank                <span class=result>            3               3               3               4               4               3               3   </span>
+------------------------------------------------------------------------------------------------------------------------------------
+p-values in parentheses
+general notes
+* p&lt;0.10, ** p&lt;0.05, *** p&lt;0.01
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab.html)
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab.rtf)
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab_texbody.tex)
+MODELS:  m22 m23 m24 m25 m26 m27 m28
+st_esttab_opts_main: addnotes(general notes) title("current panel results") keep(rep78 mpg  turn length turn) order(rep78 mpg  turn length turn)
 <br><br>
 current panel results
-----------------------------------------------------------------------------------------------------
-                              (1)             (2)             (3)             (4)             (5)   
-                            Price           Price        Weigh..)           Price           Price   
-----------------------------------------------------------------------------------------------------
-Repair Record 1978  <span class=result>        369.8           369.8           45.50           279.8           271.9   </span>
-                    <span class=result>       </span>(<span class=result>0.98</span>)<span class=result>          </span>(<span class=result>0.98</span>)<span class=result>          </span>(<span class=result>1.11</span>)<span class=result>          </span>(<span class=result>0.76</span>)<span class=result>          </span>(<span class=result>0.54</span>)<span class=result>   </span>
+------------------------------------------------------------------------------------------------------------------------------------
+                              (1)             (2)             (3)             (4)             (5)             (6)             (7)   
+                            price           price             wgt            areg       gear &lt;= 3             reg            areg   
+------------------------------------------------------------------------------------------------------------------------------------
+Repair Record 1978  <span class=result>        774.6***        774.6***       -6.772           65.63           614.0           774.6***        248.6   </span>
+                    <span class=result>      </span>(<span class=result>0.003</span>)<span class=result>         </span>(<span class=result>0.003</span>)<span class=result>         </span>(<span class=result>0.903</span>)<span class=result>         </span>(<span class=result>0.844</span>)<span class=result>         </span>(<span class=result>0.248</span>)<span class=result>         </span>(<span class=result>0.003</span>)<span class=result>         </span>(<span class=result>0.513</span>)<span class=result>   </span>
 <br><br>
-Mileage (mpg)       <span class=result>       -213.9          -213.9          -97.73***        156.3          -163.3   </span>
-                    <span class=result>      </span>(<span class=result>-1.88</span>)<span class=result>         </span>(<span class=result>-1.88</span>)<span class=result>         </span>(<span class=result>-6.30</span>)<span class=result>          </span>(<span class=result>0.83</span>)<span class=result>         </span>(<span class=result>-0.73</span>)<span class=result>   </span>
+Mileage (mpg)       <span class=result>       -210.6***       -210.6***       -63.16***        46.88          -250.6          -210.6***       -180.2** </span>
+                    <span class=result>      </span>(<span class=result>0.005</span>)<span class=result>         </span>(<span class=result>0.005</span>)<span class=result>         </span>(<span class=result>0.000</span>)<span class=result>         </span>(<span class=result>0.548</span>)<span class=result>         </span>(<span class=result>0.210</span>)<span class=result>         </span>(<span class=result>0.005</span>)<span class=result>         </span>(<span class=result>0.010</span>)<span class=result>   </span>
 <br><br>
-Headroom (in.)      <span class=result>       -498.4          -498.4          -80.08          -320.1          -501.3   </span>
-                    <span class=result>      </span>(<span class=result>-1.24</span>)<span class=result>         </span>(<span class=result>-1.24</span>)<span class=result>         </span>(<span class=result>-1.37</span>)<span class=result>         </span>(<span class=result>-0.99</span>)<span class=result>         </span>(<span class=result>-0.87</span>)<span class=result>   </span>
+Turn Circle (ft.)   <span class=result>                                                                        12.54                                   </span>
+                    <span class=result>                                                                      </span>(<span class=result>0.948</span>)<span class=result>                                   </span>
 <br><br>
-Trunk space (.. ft.)<span class=result>        35.43           35.43           26.71          -74.57           34.19   </span>
-                    <span class=result>       </span>(<span class=result>0.26</span>)<span class=result>          </span>(<span class=result>0.26</span>)<span class=result>          </span>(<span class=result>1.40</span>)<span class=result>         </span>(<span class=result>-0.60</span>)<span class=result>          </span>(<span class=result>0.20</span>)<span class=result>   </span>
-<br><br>
-Turn Circle (ft.)   <span class=result>                                                                        120.8   </span>
-                    <span class=result>                                                                       </span>(<span class=result>0.64</span>)<span class=result>   </span>
-----------------------------------------------------------------------------------------------------
-N                   <span class=result>           48              48              46              48              37   </span>
-r2                  <span class=result>        0.432           0.432           0.803           0.562           0.451   </span>
-rank                <span class=result>            6               6               6               7               7   </span>
-----------------------------------------------------------------------------------------------------
-t statistics in parentheses
-* p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
-esttab  m6 m7 m8 m9 m10, title("current panel results") keep(rep78 ) order(rep78 ) label stats(N r2 rank)
-<br><br>
-current panel results
-----------------------------------------------------------------------------------------------------
-                              (1)             (2)             (3)             (4)             (5)   
-                            Price           Price        Weigh..)           Price                   
-----------------------------------------------------------------------------------------------------
-Repair Record 1978  <span class=result>        182.2           182.2           50.78          -356.9                   </span>
-                    <span class=result>       </span>(<span class=result>0.31</span>)<span class=result>          </span>(<span class=result>0.31</span>)<span class=result>          </span>(<span class=result>0.74</span>)<span class=result>         </span>(<span class=result>-0.99</span>)<span class=result>                   </span>
-----------------------------------------------------------------------------------------------------
-N                   <span class=result>           21              21              20              21               0   </span>
-r2                  <span class=result>       0.0891          0.0891           0.400           0.735                   </span>
-rank                <span class=result>            3               3               3               4               0   </span>
-----------------------------------------------------------------------------------------------------
-t statistics in parentheses
-* p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
-esttab  m11 m12 m13 m14 m15, title("current panel results") keep(rep78 ) order(rep78 ) label stats(N r2 rank)
+Length (in.)        <span class=result>                                                                                                                </span>
+                    <span class=result>                                                                                                                </span>
+------------------------------------------------------------------------------------------------------------------------------------
+N                   <span class=result>           69              69              66              69              38              69              69   </span>
+r2                  <span class=result>        0.275           0.275           0.774           0.516           0.383           0.275           0.357   </span>
+rank                <span class=result>            4               4               4               5               5               4               4   </span>
+------------------------------------------------------------------------------------------------------------------------------------
+p-values in parentheses
+general notes
+* p&lt;0.10, ** p&lt;0.05, *** p&lt;0.01
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab.html)
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab.rtf)
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab_texbody.tex)
+MODELS:  m29 m30 m31 m32 m33 m34 m35
+st_esttab_opts_main: addnotes("This panel is the 5th" "Yes it is the 5th, so what") title("current panel results") keep(rep78 ) order(rep78 )
 <br><br>
 current panel results
-----------------------------------------------------------------------------------------------------
-                              (1)             (2)             (3)             (4)             (5)   
-                     Mileage (m~)    Mileage (m~)    Mileage (m~)    Mileage (m~)    Mileage (m~)   
-----------------------------------------------------------------------------------------------------
-Repair Record 1978  <span class=result>       -0.297          -0.297          -0.297         -0.0521          -0.935   </span>
-                    <span class=result>      </span>(<span class=result>-0.64</span>)<span class=result>         </span>(<span class=result>-0.64</span>)<span class=result>         </span>(<span class=result>-0.64</span>)<span class=result>         </span>(<span class=result>-0.12</span>)<span class=result>         </span>(<span class=result>-1.62</span>)<span class=result>   </span>
-----------------------------------------------------------------------------------------------------
-N                   <span class=result>           36              36              36              36              31   </span>
-r2                  <span class=result>        0.174           0.174           0.174           0.503           0.431   </span>
-rank                <span class=result>            3               3               3               4               4   </span>
-----------------------------------------------------------------------------------------------------
-t statistics in parentheses
-* p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
-esttab  m16 m17 m18 m19 m20, title("current panel results") keep(rep78 mpg  turn) order(rep78 mpg  turn) label stats(N r2 rank)
+------------------------------------------------------------------------------------------------------------------------------------
+                              (1)             (2)             (3)             (4)             (5)             (6)             (7)   
+                            price           price             wgt            areg       gear &lt;= 3             reg            areg   
+------------------------------------------------------------------------------------------------------------------------------------
+Repair Record 1978  <span class=result>        575.2**         575.2**        -62.11           118.3           768.2           575.2**         5.905   </span>
+                    <span class=result>      </span>(<span class=result>0.043</span>)<span class=result>         </span>(<span class=result>0.043</span>)<span class=result>         </span>(<span class=result>0.403</span>)<span class=result>         </span>(<span class=result>0.712</span>)<span class=result>         </span>(<span class=result>0.199</span>)<span class=result>         </span>(<span class=result>0.043</span>)<span class=result>         </span>(<span class=result>0.988</span>)<span class=result>   </span>
+------------------------------------------------------------------------------------------------------------------------------------
+N                   <span class=result>           69              69              66              69              38              69              69   </span>
+r2                  <span class=result>        0.176           0.176           0.648           0.513           0.331           0.176           0.287   </span>
+rank                <span class=result>            3               3               3               4               4               3               3   </span>
+------------------------------------------------------------------------------------------------------------------------------------
+p-values in parentheses
+This panel is the 5th
+Yes it is the 5th, so what
+* p&lt;0.10, ** p&lt;0.05, *** p&lt;0.01
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab.html)
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab.rtf)
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab_texbody.tex)
+MODELS:  m36 m37 m38 m39 m40 m41 m42
+st_esttab_opts_main: addnotes(general notes) title("current panel results") keep(rep78 ) order(rep78 )
 <br><br>
 current panel results
-----------------------------------------------------------------------------------------------------
-                              (1)             (2)             (3)             (4)             (5)   
-                            Price           Price        Weigh..)           Price           Price   
-----------------------------------------------------------------------------------------------------
-Repair Record 1978  <span class=result>        774.6**         774.6**        -6.772           795.5**         614.0   </span>
-                    <span class=result>       </span>(<span class=result>3.08</span>)<span class=result>          </span>(<span class=result>3.08</span>)<span class=result>         </span>(<span class=result>-0.12</span>)<span class=result>          </span>(<span class=result>2.99</span>)<span class=result>          </span>(<span class=result>1.18</span>)<span class=result>   </span>
-<br><br>
-Mileage (mpg)       <span class=result>       -210.6**        -210.6**        -63.16***       -53.45          -250.6   </span>
-                    <span class=result>      </span>(<span class=result>-2.93</span>)<span class=result>         </span>(<span class=result>-2.93</span>)<span class=result>         </span>(<span class=result>-4.20</span>)<span class=result>         </span>(<span class=result>-0.61</span>)<span class=result>         </span>(<span class=result>-1.28</span>)<span class=result>   </span>
-<br><br>
-Turn Circle (ft.)   <span class=result>                                                                        12.54   </span>
-                    <span class=result>                                                                       </span>(<span class=result>0.07</span>)<span class=result>   </span>
-----------------------------------------------------------------------------------------------------
-N                   <span class=result>           69              69              66              69              38   </span>
-r2                  <span class=result>        0.275           0.275           0.774           0.367           0.383   </span>
-rank                <span class=result>            4               4               4               5               5   </span>
-----------------------------------------------------------------------------------------------------
-t statistics in parentheses
-* p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
-esttab  m21 m22 m23 m24 m25, title("current panel results") keep(rep78 ) order(rep78 ) label stats(N r2 rank)
-<br><br>
-current panel results
-----------------------------------------------------------------------------------------------------
-                              (1)             (2)             (3)             (4)             (5)   
-                            Price           Price        Weigh..)           Price           Price   
-----------------------------------------------------------------------------------------------------
-Repair Record 1978  <span class=result>        575.2*          575.2*         -62.11           766.4**         768.2   </span>
-                    <span class=result>       </span>(<span class=result>2.07</span>)<span class=result>          </span>(<span class=result>2.07</span>)<span class=result>         </span>(<span class=result>-0.84</span>)<span class=result>          </span>(<span class=result>2.90</span>)<span class=result>          </span>(<span class=result>1.31</span>)<span class=result>   </span>
-----------------------------------------------------------------------------------------------------
-N                   <span class=result>           69              69              66              69              38   </span>
-r2                  <span class=result>        0.176           0.176           0.648           0.363           0.331   </span>
-rank                <span class=result>            3               3               3               4               4   </span>
-----------------------------------------------------------------------------------------------------
-t statistics in parentheses
-* p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
-esttab  m26 m27 m28 m29 m30, title("current panel results") keep(rep78 ) order(rep78 ) label stats(N r2 rank)
-<br><br>
-current panel results
-----------------------------------------------------------------------------------------------------
-                              (1)             (2)             (3)             (4)             (5)   
-                     Mileage (m~)    Mileage (m~)    Mileage (m~)    Mileage (m~)    Mileage (m~)   
-----------------------------------------------------------------------------------------------------
-Repair Record 1978  <span class=result>        0.947           0.947           0.876           0.544          -0.615   </span>
-                    <span class=result>       </span>(<span class=result>1.31</span>)<span class=result>          </span>(<span class=result>1.31</span>)<span class=result>          </span>(<span class=result>1.20</span>)<span class=result>          </span>(<span class=result>1.00</span>)<span class=result>         </span>(<span class=result>-0.64</span>)<span class=result>   </span>
-----------------------------------------------------------------------------------------------------
-N                   <span class=result>           69              69              66              69              38   </span>
-r2                  <span class=result>        0.452           0.452           0.448           0.657           0.498   </span>
-rank                <span class=result>            3               3               3               4               4   </span>
-----------------------------------------------------------------------------------------------------
-t statistics in parentheses
-* p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
+------------------------------------------------------------------------------------------------------------------------------------
+                              (1)             (2)             (3)             (4)             (5)             (6)             (7)   
+                            price           price             wgt            areg       gear &lt;= 3             reg            areg   
+------------------------------------------------------------------------------------------------------------------------------------
+Repair Record 1978  <span class=result>        0.947           0.947           0.876           1.123**        -0.615           0.947           1.347** </span>
+                    <span class=result>      </span>(<span class=result>0.195</span>)<span class=result>         </span>(<span class=result>0.195</span>)<span class=result>         </span>(<span class=result>0.236</span>)<span class=result>         </span>(<span class=result>0.033</span>)<span class=result>         </span>(<span class=result>0.528</span>)<span class=result>         </span>(<span class=result>0.195</span>)<span class=result>         </span>(<span class=result>0.048</span>)<span class=result>   </span>
+------------------------------------------------------------------------------------------------------------------------------------
+N                   <span class=result>           69              69              66              69              38              69              69   </span>
+r2                  <span class=result>        0.452           0.452           0.448           0.686           0.498           0.452           0.466   </span>
+rank                <span class=result>            3               3               3               4               4               3               3   </span>
+------------------------------------------------------------------------------------------------------------------------------------
+p-values in parentheses
+general notes
+* p&lt;0.10, ** p&lt;0.05, *** p&lt;0.01
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab.html)
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab.rtf)
+(output written to ~\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_tab_texbody.tex)
 <br><br>
 <span class=input>. </span>
 <span class=input>. /////////////////////////////////////////////////</span>
@@ -561,7 +733,7 @@ t statistics in parentheses
 <span class=result>      </span>name:  <span class=result>&lt;unnamed&gt;</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\reglin\multipanel\allpurpose\allpurpose.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>closed on:  <span class=result> 1 Sep 2019, 16:17:24</span>
+<span class=result> </span>closed on:  <span class=result> 2 Sep 2019, 15:22:45</span>
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </pre>
 </body>

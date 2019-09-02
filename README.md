@@ -8,9 +8,11 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 
 ## 1.1 All Purpose Regression Tool
 
-1. [All Purpose N Column M Panels Regression Structure](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose.html) \| [**PDF**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose.pdf)
-    + A regression has these ingredients: **(1)** regression method **(2)** LHS **(3)** RHS (to keep) **(4)** RHS (controls not to show in table) **(5)** Conditions **(6)** regression options
-    + Specify regression table column and panel specific ingredients for each
+1. [All Purpose N Columns M Panels Regression Structure](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose.pdf)
+    + *Code*: [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose.do) \| [**PDF Gen Tables Log**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose.pdf) \| [**HTML Gen Tables Log**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose.html)
+    + *Output*: [**PDF Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose_tab.pdf) \| [**HTML Table**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose_tab.html) \| [**DOC Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose_tab.rtf)
+    + A regression table has these ingredients: **(1)** regression method **(2)** LHS **(3)** RHS (to keep) **(4)** RHS (controls not to show in table) **(5)** conditions **(6)** regression options **(7)** row and column title and footnotes labeling
+    + Specify regression table column and panel specific ingredients for all, none, any row or column subset freely
     + Versatile structure that can test large sets of regression specifications
 
 ## 1.2 Various Examples
@@ -36,7 +38,7 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 ## 2.3 Cross Tabulation
 
 1. [Continuous and Discrete Interactions](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/tabsumm/tab_mcol_npanel/tab_mcol_npanel.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/tabsumm/tab_mcol_npanel/gen_reg.do) \| [**Gen Table Log**](https://fanwangecon.github.io/Stata4Econ/table/tabsumm/tab_mcol_npanel/gen_reg.pdf) \| [**PDF Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/tabsumm/tab_mcol_npanel/tab_mcol_npanel.pdf) \| [**TEX Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/table/tabsumm/tab_mcol_npanel/tab_mcol_npanel_texbody.tex)
-    + Three row categories, two interacting column categories, mean and sd and obs for multiple variables
+    + Three row categories, two interacting column categories, statistics for multiple variables
     + **core**: *regres + estpost tabstat*
 
 # 3. Programming

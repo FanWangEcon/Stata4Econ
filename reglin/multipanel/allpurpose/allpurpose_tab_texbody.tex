@@ -1,0 +1,140 @@
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Panel A, foreign == 0}
+\begin{tabular}{l*{7}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}\\
+                    &\multicolumn{1}{c}{price}&\multicolumn{1}{c}{price}&\multicolumn{1}{c}{wgt}&\multicolumn{1}{c}{areg}&\multicolumn{1}{c}{gear <= 3}&\multicolumn{1}{c}{reg}&\multicolumn{1}{c}{areg}\\
+\midrule
+Repair Record 1978  &       404.2         &       404.2         &       71.68\sym{*}  &       215.3         &       297.7         &       404.2         &       404.2         \\
+                    &     (0.252)         &     (0.252)         &     (0.063)         &     (0.602)         &     (0.547)         &     (0.252)         &     (0.380)         \\
+\addlinespace
+Mileage (mpg)       &      -226.9\sym{**} &      -226.9\sym{**} &      -107.8\sym{***}&       167.5         &      -175.7         &      -226.9\sym{**} &      -226.9\sym{**} \\
+                    &     (0.046)         &     (0.046)         &     (0.000)         &     (0.261)         &     (0.409)         &     (0.046)         &     (0.036)         \\
+\addlinespace
+Headroom (in.)      &      -426.0         &      -426.0         &      -27.26         &      -470.6         &      -431.9         &      -426.0         &      -426.0         \\
+                    &     (0.191)         &     (0.191)         &     (0.535)         &     (0.259)         &     (0.382)         &     (0.191)         &     (0.361)         \\
+\addlinespace
+Turn Circle (ft.)   &                     &                     &                     &                     &       126.7         &                     &                     \\
+                    &                     &                     &                     &                     &     (0.499)         &                     &                     \\
+\midrule
+N                   &          48         &          48         &          46         &          48         &          37         &          48         &          48         \\
+r2                  &       0.431         &       0.431         &       0.792         &       0.558         &       0.450         &       0.431         &       0.431         \\
+rank                &           5         &           5         &           5         &           6         &           6         &           5         &           5         \\
+\bottomrule
+\multicolumn{8}{l}{\footnotesize \textit{p}-values in parentheses}\\
+\multicolumn{8}{l}{\footnotesize This panel only includes foreign == 0. Absorb no effects.}\\
+\multicolumn{8}{l}{\footnotesize \sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)}\\
+\end{tabular}
+\end{table}
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Panel B, foreign == 1}
+\begin{tabular}{l*{7}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}\\
+                    &\multicolumn{1}{c}{price}&\multicolumn{1}{c}{price}&\multicolumn{1}{c}{wgt}&\multicolumn{1}{c}{areg}&\multicolumn{1}{c}{gear <= 3}&\multicolumn{1}{c}{reg}&\multicolumn{1}{c}{areg}\\
+\midrule
+Repair Record 1978  &       182.2         &       182.2         &       50.78         &      -356.9         &                     &       182.2         &       182.2         \\
+                    &     (0.761)         &     (0.761)         &     (0.472)         &     (0.430)         &                     &     (0.761)         &     (0.818)         \\
+\midrule
+N                   &          21         &          21         &          20         &          21         &           0         &          21         &          21         \\
+r2                  &      0.0891         &      0.0891         &       0.400         &       0.735         &                     &      0.0891         &      0.0891         \\
+rank                &           3         &           3         &           3         &           4         &           0         &           3         &           3         \\
+\bottomrule
+\multicolumn{8}{l}{\footnotesize \textit{p}-values in parentheses}\\
+\multicolumn{8}{l}{\footnotesize This panel then focuses only on foreign == 1}\\
+\multicolumn{8}{l}{\footnotesize Hi there, more notes next line}\\
+\multicolumn{8}{l}{\footnotesize \sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)}\\
+\end{tabular}
+\end{table}
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Panel C, length >= 190}
+\begin{tabular}{l*{7}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}\\
+                    &\multicolumn{1}{c}{price}&\multicolumn{1}{c}{price}&\multicolumn{1}{c}{wgt}&\multicolumn{1}{c}{areg}&\multicolumn{1}{c}{gear <= 3}&\multicolumn{1}{c}{reg}&\multicolumn{1}{c}{areg}\\
+\midrule
+Repair Record 1978  &      -0.297         &      -0.297         &      -0.297         &       0.272         &      -0.935         &      -0.297         &      -0.183         \\
+                    &     (0.526)         &     (0.526)         &     (0.526)         &     (0.577)         &     (0.117)         &     (0.526)         &     (0.769)         \\
+\midrule
+N                   &          36         &          36         &          36         &          36         &          31         &          36         &          36         \\
+r2                  &       0.174         &       0.174         &       0.174         &       0.533         &       0.431         &       0.174         &       0.178         \\
+rank                &           3         &           3         &           3         &           4         &           4         &           3         &           3         \\
+\bottomrule
+\multicolumn{8}{l}{\footnotesize \textit{p}-values in parentheses}\\
+\multicolumn{8}{l}{\footnotesize general notes}\\
+\multicolumn{8}{l}{\footnotesize \sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)}\\
+\end{tabular}
+\end{table}
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{current panel results}
+\begin{tabular}{l*{7}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}\\
+                    &\multicolumn{1}{c}{price}&\multicolumn{1}{c}{price}&\multicolumn{1}{c}{wgt}&\multicolumn{1}{c}{areg}&\multicolumn{1}{c}{gear <= 3}&\multicolumn{1}{c}{reg}&\multicolumn{1}{c}{areg}\\
+\midrule
+Repair Record 1978  &       774.6\sym{***}&       774.6\sym{***}&      -6.772         &       65.63         &       614.0         &       774.6\sym{***}&       248.6         \\
+                    &     (0.003)         &     (0.003)         &     (0.903)         &     (0.844)         &     (0.248)         &     (0.003)         &     (0.513)         \\
+\addlinespace
+Mileage (mpg)       &      -210.6\sym{***}&      -210.6\sym{***}&      -63.16\sym{***}&       46.88         &      -250.6         &      -210.6\sym{***}&      -180.2\sym{**} \\
+                    &     (0.005)         &     (0.005)         &     (0.000)         &     (0.548)         &     (0.210)         &     (0.005)         &     (0.010)         \\
+\addlinespace
+Turn Circle (ft.)   &                     &                     &                     &                     &       12.54         &                     &                     \\
+                    &                     &                     &                     &                     &     (0.948)         &                     &                     \\
+\addlinespace
+Length (in.)        &                     &                     &                     &                     &                     &                     &                     \\
+                    &                     &                     &                     &                     &                     &                     &                     \\
+\midrule
+N                   &          69         &          69         &          66         &          69         &          38         &          69         &          69         \\
+r2                  &       0.275         &       0.275         &       0.774         &       0.516         &       0.383         &       0.275         &       0.357         \\
+rank                &           4         &           4         &           4         &           5         &           5         &           4         &           4         \\
+\bottomrule
+\multicolumn{8}{l}{\footnotesize \textit{p}-values in parentheses}\\
+\multicolumn{8}{l}{\footnotesize general notes}\\
+\multicolumn{8}{l}{\footnotesize \sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)}\\
+\end{tabular}
+\end{table}
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{current panel results}
+\begin{tabular}{l*{7}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}\\
+                    &\multicolumn{1}{c}{price}&\multicolumn{1}{c}{price}&\multicolumn{1}{c}{wgt}&\multicolumn{1}{c}{areg}&\multicolumn{1}{c}{gear <= 3}&\multicolumn{1}{c}{reg}&\multicolumn{1}{c}{areg}\\
+\midrule
+Repair Record 1978  &       575.2\sym{**} &       575.2\sym{**} &      -62.11         &       118.3         &       768.2         &       575.2\sym{**} &       5.905         \\
+                    &     (0.043)         &     (0.043)         &     (0.403)         &     (0.712)         &     (0.199)         &     (0.043)         &     (0.988)         \\
+\midrule
+N                   &          69         &          69         &          66         &          69         &          38         &          69         &          69         \\
+r2                  &       0.176         &       0.176         &       0.648         &       0.513         &       0.331         &       0.176         &       0.287         \\
+rank                &           3         &           3         &           3         &           4         &           4         &           3         &           3         \\
+\bottomrule
+\multicolumn{8}{l}{\footnotesize \textit{p}-values in parentheses}\\
+\multicolumn{8}{l}{\footnotesize This panel is the 5th}\\
+\multicolumn{8}{l}{\footnotesize Yes it is the 5th, so what}\\
+\multicolumn{8}{l}{\footnotesize \sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)}\\
+\end{tabular}
+\end{table}
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{current panel results}
+\begin{tabular}{l*{7}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}\\
+                    &\multicolumn{1}{c}{price}&\multicolumn{1}{c}{price}&\multicolumn{1}{c}{wgt}&\multicolumn{1}{c}{areg}&\multicolumn{1}{c}{gear <= 3}&\multicolumn{1}{c}{reg}&\multicolumn{1}{c}{areg}\\
+\midrule
+Repair Record 1978  &       0.947         &       0.947         &       0.876         &       1.123\sym{**} &      -0.615         &       0.947         &       1.347\sym{**} \\
+                    &     (0.195)         &     (0.195)         &     (0.236)         &     (0.033)         &     (0.528)         &     (0.195)         &     (0.048)         \\
+\midrule
+N                   &          69         &          69         &          66         &          69         &          38         &          69         &          69         \\
+r2                  &       0.452         &       0.452         &       0.448         &       0.686         &       0.498         &       0.452         &       0.466         \\
+rank                &           3         &           3         &           3         &           4         &           4         &           3         &           3         \\
+\bottomrule
+\multicolumn{8}{l}{\footnotesize \textit{p}-values in parentheses}\\
+\multicolumn{8}{l}{\footnotesize general notes}\\
+\multicolumn{8}{l}{\footnotesize \sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)}\\
+\end{tabular}
+\end{table}
