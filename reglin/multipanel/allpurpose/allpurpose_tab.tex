@@ -16,14 +16,23 @@
 \usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, plainpages=false, pdfpagelabels=true, urlcolor=blue]{hyperref}
 \usepackage{geometry}
 
+% 46.8
+% 33.1
+% 23.4
+% 16.5
+% 11.7
+% 8.27
+
 \geometry{
-	a4paper,
+	paperheight=23.4in,
+	paperwidth=8.27in,
 	noheadfoot=true,
 	left=1.0in,
 	right=1.0in,
 	top=1.0in,
 	bottom=1.0in,
 }
+
 \setlength{\parindent}{0pt}
 \makeatletter
 %\doublespacing
@@ -33,6 +42,26 @@
 \title{\href{https://github.com/FanWangEcon/Stata4Econ/tree/master/reglin/multipanel/allpurpose}{All Purpose N Columns M Panels Regression}}
 \author{\href{fanwangecon.github.io}{Fan Wang}}
 \date{\today}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Area of Page that FLoat can Take
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\textfraction}{0.0}
+\renewcommand{\topfraction}{1.0}
+\renewcommand{\bottomfraction}{1.0}
+\setcounter{topnumber}{100}
+\setcounter{bottomnumber}{100}
+\setcounter{totalnumber}{100}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Change Table Font Size
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Change Table Font Size
+\let\oldtabular\tabular
+\renewcommand{\tabular}{\footnotesize\oldtabular}
+%\renewcommand{\tabular}{\large\oldtabular}
+%\renewcommand{\tabular}{\scriptsize\oldtabular}
+
 \begin{document}
 
 \maketitle

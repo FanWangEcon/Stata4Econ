@@ -24,4 +24,4 @@ The program here allows one to:
 + *Code*: [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose.do) \| [**PDF Gen Tables Log**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose.pdf) \| [**HTML Gen Tables Log**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose.html)
 + *Output*: [**PDF Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose_tab.pdf) \| [**HTML Table**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose_tab.html) \| [**DOC Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose_tab.rtf)
 
-The file [allpurpose_prog.do](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose.do) contains the core reusable component of the all purpose regression files.
+The file [allpurpose_prog.do](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose_prog.do) contains the core reusable component of the all purpose regression files.

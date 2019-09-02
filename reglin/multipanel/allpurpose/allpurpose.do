@@ -98,7 +98,7 @@ sysuse auto, clear
   /////////////////////////////////////////////////
   ///--- A3. Labeling
   /////////////////////////////////////////////////
-  
+
   * column title, panel title, and slb_pan_nte = panel notes
   global slb_col "price"
   global slb_pan "current panel results"
@@ -141,16 +141,16 @@ sysuse auto, clear
 /////////////////////////////////////////////////
 
   * Panel titling, 1 2 3 get panel specific titles, other use base
-  global slb_pan_1 "Panel A, foreign == 0"  
-  global slb_pan_2 "Panel B, foreign == 1"  
+  global slb_pan_1 "Panel A, foreign == 0"
+  global slb_pan_2 "Panel B, foreign == 1"
   global slb_pan_3 "Panel C, length >= 190"
-  
+
   * Panel Specific Notes
   global slb_pan_nte_1 `""This panel only includes foreign == 0. Absorb no effects.""'
   global slb_pan_nte_2 `""This panel then focuses only on foreign == 1""'
   global slb_pan_nte_2 `"${slb_pan_nte_2} "Hi there, more notes next line""'
   global slb_pan_nte_5 `""This panel is the 5th" "Yes it is the 5th, so what""'
-  
+
   * the 3rd panel and 6 panel lhs variable is mpg, note column override panel lhs
   global svr_lhs_pan_3 "mpg"
   global svr_lhs_pan_6 "mpg"
@@ -307,12 +307,12 @@ sysuse auto, clear
 /////////////////////////////////////////////////
 
 	foreach it_pan_ctr of numlist 1(1)$it_pan_cnt {
-	
+
 		global it_pan_ctr "`it_pan_ctr'"
 
 		global slb_eso_u "${slb_eso}"
 		global slb_tex_eso_u "${slb_tex_eso}"
-		
+
 		global slb_pan_u "${slb_pan}"
 		global slb_pan_nte_u "${slb_pan_nte}"
 
@@ -328,20 +328,20 @@ sysuse auto, clear
 		global st_esttab_opts_main `"addnotes(${slb_pan_nte_u}) title("${slb_pan_u}") keep(${svr_kep_u}) order(${svr_kep_u})"'
 		global st_esttab_opts_tex `"${st_esttab_opts_main} ${slb_tex_eso_u}"'
 		global st_esttab_opts_oth `"${st_esttab_opts_main} ${slb_eso_u}"'
-		
+
 		di "MODELS: ${smd_${it_pan_ctr}_m}"
 		di `"st_esttab_opts_main: ${st_esttab_opts_main}"'
-		
+
 		///--- output to log
 		esttab ${smd_${it_pan_ctr}_m}, ${st_esttab_opts_oth}
-				
+
 		///--- save results to html, rtf, as well as tex
 		if ($it_pan_ctr == 1) {
 			global st_replace "replace"
 		}
 		else {
 			global st_replace "append"
-		}		
+		}
 		esttab ${smd_${it_pan_ctr}_m} using "${st_tab_html}", ${st_esttab_opts_oth} $st_replace
 		esttab ${smd_${it_pan_ctr}_m} using "${st_tab_rtf}",  ${st_esttab_opts_oth} $st_replace
 		esttab ${smd_${it_pan_ctr}_m} using "${st_tab_tex}",  ${st_esttab_opts_tex} $st_replace

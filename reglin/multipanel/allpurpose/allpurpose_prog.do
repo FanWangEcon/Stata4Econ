@@ -1,3 +1,6 @@
+// do "C:\Users\fan\Stata4Econ\reglin\multipanel\allpurpose\allpurpose_prog.do"
+// content file of allpurpose.do
+
 /////////////////////////////////////////////////
 ///--- C. Define Regression Strings
 /////////////////////////////////////////////////
