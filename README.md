@@ -8,11 +8,11 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 
 ## 1.1 All Purpose Regression Tool
 
-1. [All Purpose N Columns M Panels Regression Structure](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose.pdf)
+1. [All Purpose N Columns M Panels Regression Structure](https://github.com/FanWangEcon/Stata4Econ/tree/master/reglin/multipanel/allpurpose)
     + *Code*: [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose.do) \| [**PDF Gen Tables Log**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose.pdf) \| [**HTML Gen Tables Log**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose.html)
     + *Output*: [**PDF Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose_tab.pdf) \| [**HTML Table**](https://fanwangecon.github.io/Stata4Econ/reglin/multipanel/allpurpose/allpurpose_tab.html) \| [**DOC Table**](https://github.com/FanWangEcon/Stata4Econ/blob/master/reglin/multipanel/allpurpose/allpurpose_tab.rtf)
     + A regression table has these ingredients: **(1)** regression method **(2)** LHS **(3)** RHS (to keep) **(4)** RHS (controls not to show in table) **(5)** conditions **(6)** regression options **(7)** row and column title and footnotes labeling
-    + Specify regression table column and panel specific ingredients for all, none, any row or column subset freely
+    + Specify regression table column and panel specific ingredients for all, none, any row or column subsets freely
     + Versatile structure that can test large sets of regression specifications
 
 ## 1.2 Various Examples

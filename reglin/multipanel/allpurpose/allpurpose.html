@@ -18,7 +18,7 @@ BODY{background-color: ffffff;
       name:  <span class=result>&lt;unnamed&gt;</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\reglin\multipanel\allpurpose\allpurpose.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>opened on:  <span class=result> 2 Sep 2019, 15:22:41</span>
+<span class=result> </span>opened on:  <span class=result> 2 Sep 2019, 15:37:47</span>
 <br><br>
 <span class=input>. log on</span>
 (log already on)
@@ -217,54 +217,54 @@ BODY{background-color: ffffff;
 <span class=input>&gt; ///--- C. Define Regression Strings</span>
 <span class=input>&gt; /////////////////////////////////////////////////</span>
 <span class=input>&gt; </span>
-<span class=input>.   foreach it_pan_ctr of numlist 1(1)$it_pan_cnt {</span>
-  2<span class=input>.         foreach it_col_ctr of numlist 1(1)$it_col_cnt {</span>
+<span class=input>.         foreach it_pan_ctr of numlist 1(1)$it_pan_cnt {</span>
+  2<span class=input>.                 foreach it_col_ctr of numlist 1(1)$it_col_cnt {</span>
   3<span class=input>. </span>
-<span class=input>.       ///--- Counters</span>
-<span class=input>&gt;       global it_col_ctr "`it_col_ctr'"</span>
-  4<span class=input>.       global it_pan_ctr "`it_pan_ctr'"</span>
+<span class=input>.                         ///--- Counters</span>
+<span class=input>&gt;                         global it_col_ctr "`it_col_ctr'"</span>
+  4<span class=input>.                         global it_pan_ctr "`it_pan_ctr'"</span>
   5<span class=input>. </span>
-<span class=input>.       ///--- Reset Strings to Default Always, _u = use</span>
+<span class=input>.                         ///--- Reset Strings to Default Always, _u = use</span>
 <span class=input>&gt; </span>
-<span class=input>.       * if there are panel or column specific values, replace, eith col or row specific</span>
-<span class=input>.       * generates: stc_rgc_u and stc_opt_u</span>
-<span class=input>.       global stc_rgc_u "${stc_rgc}"</span>
-  6<span class=input>.       global stc_opt_u "${stc_opt}"</span>
-  7<span class=input>.           global svr_lhs_u "${svr_lhs}"</span>
-  8<span class=input>.           global st_ls_rep "stc_rgc stc_opt svr_lhs"</span>
-  9<span class=input>.         foreach st_seg in $st_ls_rep {</span>
- 10<span class=input>.           global st_seg "`st_seg'"</span>
+<span class=input>.                         * if there are panel or column specific values, replace, eith col or row specific</span>
+<span class=input>.                         * generates: stc_rgc_u and stc_opt_u</span>
+<span class=input>.                         global stc_rgc_u "${stc_rgc}"</span>
+  6<span class=input>.                         global stc_opt_u "${stc_opt}"</span>
+  7<span class=input>.                         global svr_lhs_u "${svr_lhs}"</span>
+  8<span class=input>.                         global st_ls_rep "stc_rgc stc_opt svr_lhs"</span>
+  9<span class=input>.                         foreach st_seg in $st_ls_rep {</span>
+ 10<span class=input>.                                 global st_seg "`st_seg'"</span>
  11<span class=input>. </span>
-<span class=input>.                 * di `"${st_seg}_pan_${it_pan_ctr}: ${${st_seg}_pan_${it_pan_ctr}}"'</span>
-<span class=input>.                 * di `"${st_seg}_col_${it_col_ctr}: ${${st_seg}_col_${it_col_ctr}}"'</span>
-<span class=input>.                 * di `"${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}: ${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'</span>
+<span class=input>.                                 * di `"${st_seg}_pan_${it_pan_ctr}: ${${st_seg}_pan_${it_pan_ctr}}"'</span>
+<span class=input>.                                 * di `"${st_seg}_col_${it_col_ctr}: ${${st_seg}_col_${it_col_ctr}}"'</span>
+<span class=input>.                                 * di `"${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}: ${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'</span>
 <span class=input>. </span>
-<span class=input>.           if (`"${${st_seg}_pan_${it_pan_ctr}}"' != "") {</span>
- 12<span class=input>.             global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}}"'</span>
- 13<span class=input>.           }</span>
- 14<span class=input>.           else if (`"${${st_seg}_col_${it_col_ctr}}"' != "") {</span>
- 15<span class=input>.             global ${st_seg}_u `"${${st_seg}_col_${it_col_ctr}}"'</span>
- 16<span class=input>.           }</span>
- 17<span class=input>.           else if (`"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"' != "") {</span>
- 18<span class=input>.             global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'</span>
- 19<span class=input>.           }</span>
- 20<span class=input>.                 * di `"${st_seg}_u: ${${st_seg}_u}"'</span>
-<span class=input>.         }</span>
+<span class=input>.                                 if (`"${${st_seg}_pan_${it_pan_ctr}}"' != "") {</span>
+ 12<span class=input>.                                         global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}}"'</span>
+ 13<span class=input>.                                 }</span>
+ 14<span class=input>.                                 else if (`"${${st_seg}_col_${it_col_ctr}}"' != "") {</span>
+ 15<span class=input>.                                         global ${st_seg}_u `"${${st_seg}_col_${it_col_ctr}}"'</span>
+ 16<span class=input>.                                 }</span>
+ 17<span class=input>.                                 else if (`"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"' != "") {</span>
+ 18<span class=input>.                                         global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'</span>
+ 19<span class=input>.                                 }</span>
+ 20<span class=input>.                                 * di `"${st_seg}_u: ${${st_seg}_u}"'</span>
+<span class=input>.                         }</span>
  21<span class=input>. </span>
-<span class=input>.       * if there are panel or column specific values, append</span>
-<span class=input>.       global svr_rhs_u "${svr_rhs} ${svr_rhs_pan_${it_pan_ctr}} ${svr_rhs_col_${it_col_ctr}}"</span>
- 22<span class=input>.       global svr_cov_u "${svr_cov} ${svr_cov_pan_${it_pan_ctr}} ${svr_cov_col_${it_col_ctr}}"</span>
- 23<span class=input>.       global sif_cdn_u `"${sif_cdn} ${sif_cdn_pan_${it_pan_ctr}} ${sif_cdn_col_${it_col_ctr}}"'</span>
+<span class=input>.                         * if there are panel or column specific values, append</span>
+<span class=input>.                         global svr_rhs_u "${svr_rhs} ${svr_rhs_pan_${it_pan_ctr}} ${svr_rhs_col_${it_col_ctr}}"</span>
+ 22<span class=input>.                         global svr_cov_u "${svr_cov} ${svr_cov_pan_${it_pan_ctr}} ${svr_cov_col_${it_col_ctr}}"</span>
+ 23<span class=input>.                         global sif_cdn_u `"${sif_cdn} ${sif_cdn_pan_${it_pan_ctr}} ${sif_cdn_col_${it_col_ctr}}"'</span>
  24<span class=input>. </span>
-<span class=input>.       ///--- Compose Regression String</span>
-<span class=input>&gt;           global srg_pan_${it_pan_ctr}_col_${it_col_ctr} `"${stc_rgc_u} ${svr_lhs_u} ${svr_rhs_u} ${svr_cov_u} ${sif_cdn_u} ${stc_opt_u}"'</span>
+<span class=input>.                         ///--- Compose Regression String</span>
+<span class=input>&gt;                         global srg_pan_${it_pan_ctr}_col_${it_col_ctr} `"${stc_rgc_u} ${svr_lhs_u} ${svr_rhs_u} ${svr_cov_u} ${sif_cdn_u} ${stc_opt_u}"'</span>
  25<span class=input>. </span>
-<span class=input>.       ///--- Display Regression String</span>
-<span class=input>&gt;           di "PAN={$it_pan_ctr}, COL={$it_col_ctr}"</span>
- 26<span class=input>.       di `"${srg_pan_${it_pan_ctr}_col_${it_col_ctr}}"'</span>
+<span class=input>.                         ///--- Display Regression String</span>
+<span class=input>&gt;                         di "PAN={$it_pan_ctr}, COL={$it_col_ctr}"</span>
+ 26<span class=input>.                         di `"${srg_pan_${it_pan_ctr}_col_${it_col_ctr}}"'</span>
  27<span class=input>. </span>
-<span class=input>.         }</span>
- 28<span class=input>.   }</span>
+<span class=input>.                 }</span>
+ 28<span class=input>.         }</span>
 <span class=result>PAN={1}, COL={1}</span>
 <span class=result>reg price rep78 mpg headroom  gear_ratio   if price !=. &amp; foreign !=. &amp; foreign == 0  , robust</span>
 <span class=result>PAN={1}, COL={2}</span>
@@ -733,7 +733,7 @@ general notes
 <span class=result>      </span>name:  <span class=result>&lt;unnamed&gt;</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\reglin\multipanel\allpurpose\allpurpose.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>closed on:  <span class=result> 2 Sep 2019, 15:22:45</span>
+<span class=result> </span>closed on:  <span class=result> 2 Sep 2019, 15:37:51</span>
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </pre>
 </body>

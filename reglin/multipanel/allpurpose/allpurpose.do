@@ -180,54 +180,54 @@ sysuse auto, clear
 ///--- C. Define Regression Strings
 /////////////////////////////////////////////////
 
-  foreach it_pan_ctr of numlist 1(1)$it_pan_cnt {
-  	foreach it_col_ctr of numlist 1(1)$it_col_cnt {
+	foreach it_pan_ctr of numlist 1(1)$it_pan_cnt {
+		foreach it_col_ctr of numlist 1(1)$it_col_cnt {
 
-      ///--- Counters
-      global it_col_ctr "`it_col_ctr'"
-      global it_pan_ctr "`it_pan_ctr'"
+			///--- Counters
+			global it_col_ctr "`it_col_ctr'"
+			global it_pan_ctr "`it_pan_ctr'"
 
-      ///--- Reset Strings to Default Always, _u = use
+			///--- Reset Strings to Default Always, _u = use
 
-      * if there are panel or column specific values, replace, eith col or row specific
-      * generates: stc_rgc_u and stc_opt_u
-      global stc_rgc_u "${stc_rgc}"
-      global stc_opt_u "${stc_opt}"
-  	  global svr_lhs_u "${svr_lhs}"
-  	  global st_ls_rep "stc_rgc stc_opt svr_lhs"
-        foreach st_seg in $st_ls_rep {
-          global st_seg "`st_seg'"
+			* if there are panel or column specific values, replace, eith col or row specific
+			* generates: stc_rgc_u and stc_opt_u
+			global stc_rgc_u "${stc_rgc}"
+			global stc_opt_u "${stc_opt}"
+			global svr_lhs_u "${svr_lhs}"
+			global st_ls_rep "stc_rgc stc_opt svr_lhs"
+			foreach st_seg in $st_ls_rep {
+				global st_seg "`st_seg'"
 
-      		* di `"${st_seg}_pan_${it_pan_ctr}: ${${st_seg}_pan_${it_pan_ctr}}"'
-      		* di `"${st_seg}_col_${it_col_ctr}: ${${st_seg}_col_${it_col_ctr}}"'
-      		* di `"${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}: ${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'
+				* di `"${st_seg}_pan_${it_pan_ctr}: ${${st_seg}_pan_${it_pan_ctr}}"'
+				* di `"${st_seg}_col_${it_col_ctr}: ${${st_seg}_col_${it_col_ctr}}"'
+				* di `"${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}: ${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'
 
-          if (`"${${st_seg}_pan_${it_pan_ctr}}"' != "") {
-            global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}}"'
-          }
-          else if (`"${${st_seg}_col_${it_col_ctr}}"' != "") {
-            global ${st_seg}_u `"${${st_seg}_col_${it_col_ctr}}"'
-          }
-          else if (`"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"' != "") {
-            global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'
-          }
-  		* di `"${st_seg}_u: ${${st_seg}_u}"'
-        }
+				if (`"${${st_seg}_pan_${it_pan_ctr}}"' != "") {
+					global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}}"'
+				}
+				else if (`"${${st_seg}_col_${it_col_ctr}}"' != "") {
+					global ${st_seg}_u `"${${st_seg}_col_${it_col_ctr}}"'
+				}
+				else if (`"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"' != "") {
+					global ${st_seg}_u `"${${st_seg}_pan_${it_pan_ctr}_col_${it_col_ctr}}"'
+				}
+				* di `"${st_seg}_u: ${${st_seg}_u}"'
+			}
 
-      * if there are panel or column specific values, append
-      global svr_rhs_u "${svr_rhs} ${svr_rhs_pan_${it_pan_ctr}} ${svr_rhs_col_${it_col_ctr}}"
-      global svr_cov_u "${svr_cov} ${svr_cov_pan_${it_pan_ctr}} ${svr_cov_col_${it_col_ctr}}"
-      global sif_cdn_u `"${sif_cdn} ${sif_cdn_pan_${it_pan_ctr}} ${sif_cdn_col_${it_col_ctr}}"'
+			* if there are panel or column specific values, append
+			global svr_rhs_u "${svr_rhs} ${svr_rhs_pan_${it_pan_ctr}} ${svr_rhs_col_${it_col_ctr}}"
+			global svr_cov_u "${svr_cov} ${svr_cov_pan_${it_pan_ctr}} ${svr_cov_col_${it_col_ctr}}"
+			global sif_cdn_u `"${sif_cdn} ${sif_cdn_pan_${it_pan_ctr}} ${sif_cdn_col_${it_col_ctr}}"'
 
-      ///--- Compose Regression String
-  	  global srg_pan_${it_pan_ctr}_col_${it_col_ctr} `"${stc_rgc_u} ${svr_lhs_u} ${svr_rhs_u} ${svr_cov_u} ${sif_cdn_u} ${stc_opt_u}"'
+			///--- Compose Regression String
+			global srg_pan_${it_pan_ctr}_col_${it_col_ctr} `"${stc_rgc_u} ${svr_lhs_u} ${svr_rhs_u} ${svr_cov_u} ${sif_cdn_u} ${stc_opt_u}"'
 
-      ///--- Display Regression String
-  	  di "PAN={$it_pan_ctr}, COL={$it_col_ctr}"
-      di `"${srg_pan_${it_pan_ctr}_col_${it_col_ctr}}"'
+			///--- Display Regression String
+			di "PAN={$it_pan_ctr}, COL={$it_col_ctr}"
+			di `"${srg_pan_${it_pan_ctr}_col_${it_col_ctr}}"'
 
-  	}
-  }
+		}
+	}
 
 /////////////////////////////////////////////////
 ///--- D. Run Regressions
