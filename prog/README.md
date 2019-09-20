@@ -4,6 +4,7 @@
 - sif = conditional string
 - stc = technical string
 - slb = label string
+- spt = path strings
 
 - st = string
 - it = integer
