@@ -41,17 +41,32 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
     + Three row categories, two interacting column categories, statistics for multiple variables
     + **core**: *regres + estpost tabstat*
 
-# 3. Programming
+# 3. Dataset Manipulation
 
-## 3.1 Matrix
+## 3.1 Summary
+
+1. [Multiple Variables Jointly Nonmissing](https://github.com/FanWangEcon/Stata4Econ/blob/master/summ/count/fs_nonmissing.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/summ/count/fs_nonmissing.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/summ/count/fs_nonmissing.html) \| [**PDF**](https://fanwangecon.github.io/Stata4Econ/summ/count/fs_nonmissing.pdf)
+    + Find rows where there are no missing values for any variables in a list of variables and where certain conditionings are satisfied
+    + **core**: *egen valid = rownonmiss($svr_list) if $scd_bse $scd_one $scd_two*
+
+## 3.2 Random
+
+1. [Drop Random Subset of Data](https://github.com/FanWangEcon/Stata4Econ/blob/master/rand/basic/fs_droprand.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/rand/basic/fs_droprand.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/rand/basic/fs_droprand.html) \| [**PDF**](https://fanwangecon.github.io/Stata4Econ/rand/basic/fs_droprand.pdf)
+    + Drop random subset of data for different variables
+    + **core**: *round((_n/_N)*it_drop_frac) == round(it_drop_frac*uniform())*
+
+
+# 4. Programming
+
+## 4.1 Matrix
 
 1. [Define and Slice Matrix](https://github.com/FanWangEcon/Stata4Econ/blob/master/matrix/define/basic.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/matrix/define/basic.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/matrix/define/basic.html) \| [**PDF**](https://fanwangecon.github.io/Stata4Econ/matrix/define/basic.pdf)
     + matrix definition and slicing, get column and row names, replace matrix subset.
     + **core**: *matrix + rownumb/colnumb +	matrix mt_bl_estd = J(it_rowcnt, it_colcnt, bl_fillval) + mat_a[1..., colnumb(mat_a, "reg1")] + ...*
 
-# 4. Support
+# 5. Support
 
-## 4.1 Logging
+## 5.1 Logging
 
 1. [LOG2HTML and Translator](https://github.com/FanWangEcon/Stata4Econ/blob/master/output/log/fs_log2html_results.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/output/log/fs_log2html.do) \| [**Translator PDF**](https://fanwangecon.github.io/Stata4Econ/output/log/fs_log2html_results.pdf) \| [**SMCL Log PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/output/log/fs_log2html_results.pdf)
     + translator to export console buffer to PDF, or to export log file to pdf; log2html to convert to html.

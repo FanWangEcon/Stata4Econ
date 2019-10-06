@@ -1,0 +1,179 @@
+
+<html>
+<head>
+<title>Stata Select Rows where Multiple Variables are All Observed, Jointly Nonmissing (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/summ/count/fs_nonmissing.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</title>
+<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css">
+BODY{background-color: ffffff;
+    font-family: monaco, "courier new", monospace;
+     color: #000000}
+.input {color: #CC6600}
+.result{color: #000099}
+.error{color: #dd0000}
+</style>
+</head>
+<body>
+<h2>Stata Select Rows where Multiple Variables are All Observed, Jointly Nonmissing (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/summ/count/fs_nonmissing.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</h2>
+<pre>
+-----------------------------------------------------------------------------------------------------------------------------
+      name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//summ/count/fs_nonmissing.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>opened on:  <span class=result> 6 Oct 2019, 18:25:38</span>
+<br><br>
+<span class=input>. log on</span>
+(log already on)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///-- Site Link: Fan's Project Reusable Stata Codes Table of Content</span>
+<span class=input>&gt; di "https://fanwangecon.github.io/"</span>
+<span class=result>https://fanwangecon.github.io/</span>
+<br><br>
+<span class=input>. di "https://fanwangecon.github.io/Stata4Econ/"</span>
+<span class=result>https://fanwangecon.github.io/Stata4Econ/</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///-- File Title</span>
+<span class=input>&gt; global filetitle "Stata Select Rows where Multiple Variables are All Observed, Jointly Nonmissing"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Load Data</span>
+<span class=input>&gt; set more off</span>
+<br><br>
+<span class=input>. sysuse auto, clear</span>
+(1978 Automobile Data)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Generating Index for Dropping</span>
+<span class=input>&gt; set seed 987</span>
+<br><br>
+<span class=input>. scalar it_drop_frac = 3</span>
+<br><br>
+<span class=input>. gen row_idx_it = round((_n/_N)*it_drop_frac) </span>
+<br><br>
+<span class=input>. gen row_idx_rand = round(it_drop_frac*uniform())</span>
+<br><br>
+<span class=input>. replace mpg =. if row_idx_it == row_idx_rand</span>
+(21 real changes made, 21 to missing)
+<br><br>
+<span class=input>. </span>
+<span class=input>. set seed 123</span>
+<br><br>
+<span class=input>. scalar it_drop_frac = 3</span>
+<br><br>
+<span class=input>. replace row_idx_it = round((_n/_N)*it_drop_frac) </span>
+(0 real changes made)
+<br><br>
+<span class=input>. replace row_idx_rand = round(it_drop_frac*uniform())</span>
+(48 real changes made)
+<br><br>
+<span class=input>. replace price =. if row_idx_it == row_idx_rand</span>
+(14 real changes made, 14 to missing)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- list vars to include in a regression for example</span>
+<span class=input>&gt; global svr_list "mpg price length weight"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Conditioning </span>
+<span class=input>&gt; global scd_bse "foreign !=."</span>
+<br><br>
+<span class=input>. global scd_one "&amp; foreign == 1"</span>
+<br><br>
+<span class=input>. global scd_two "&amp; gear_ratio &lt;= 4"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Drop approximately 1/2 of make randomly</span>
+<span class=input>&gt; egen valid = rownonmiss($svr_list) if $scd_bse $scd_one $scd_two</span>
+(52 missing values generated)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Tabulate and list Results</span>
+<span class=input>&gt; tab valid</span>
+<br><br>
+<span class=result>      </span>valid |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          2 |<span class=result>          2        9.09        9.09</span>
+          3 |<span class=result>          9       40.91       50.00</span>
+          4 |<span class=result>         11       50.00      100.00</span>
+------------+-----------------------------------
+      Total |<span class=result>         22      100.00</span>
+<br><br>
+<span class=input>. list $svr_list if valid == wordcount("$svr_list")</span>
+<br><br>
+     +--------------------------------+
+     | <span class=result>mpg    price   length   weight </span>|
+     |--------------------------------|
+ 53. | <span class=result> 17    9,690      189    2,830 </span>|
+ 57. | <span class=result> 35    4,589      165    2,020 </span>|
+ 59. | <span class=result> 21    8,129      184    2,750 </span>|
+ 60. | <span class=result> 21    4,296      161    2,130 </span>|
+ 63. | <span class=result> 30    3,995      154    1,980 </span>|
+     |--------------------------------|
+ 64. | <span class=result> 14   12,990      192    3,420 </span>|
+ 66. | <span class=result> 35    3,798      164    2,050 </span>|
+ 69. | <span class=result> 18    5,719      175    2,670 </span>|
+ 70. | <span class=result> 23    7,140      172    2,160 </span>|
+ 71. | <span class=result> 41    5,397      155    2,040 </span>|
+     |--------------------------------|
+ 74. | <span class=result> 17   11,995      193    3,170 </span>|
+     +--------------------------------+
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- List including rows where not all values are observed but conditioning satisfied</span>
+<span class=input>&gt; tab valid</span>
+<br><br>
+<span class=result>      </span>valid |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          2 |<span class=result>          2        9.09        9.09</span>
+          3 |<span class=result>          9       40.91       50.00</span>
+          4 |<span class=result>         11       50.00      100.00</span>
+------------+-----------------------------------
+      Total |<span class=result>         22      100.00</span>
+<br><br>
+<span class=input>. list $svr_list if valid !=.</span>
+<br><br>
+     +--------------------------------+
+     | <span class=result>mpg    price   length   weight </span>|
+     |--------------------------------|
+ 53. | <span class=result> 17    9,690      189    2,830 </span>|
+ 54. | <span class=result>  .    6,295      174    2,070 </span>|
+ 55. | <span class=result>  .        .      177    2,650 </span>|
+ 56. | <span class=result> 23        .      170    2,370 </span>|
+ 57. | <span class=result> 35    4,589      165    2,020 </span>|
+     |--------------------------------|
+ 58. | <span class=result>  .        .      170    2,280 </span>|
+ 59. | <span class=result> 21    8,129      184    2,750 </span>|
+ 60. | <span class=result> 21    4,296      161    2,130 </span>|
+ 61. | <span class=result> 25        .      172    2,240 </span>|
+ 62. | <span class=result> 28        .      149    1,760 </span>|
+     |--------------------------------|
+ 63. | <span class=result> 30    3,995      154    1,980 </span>|
+ 64. | <span class=result> 14   12,990      192    3,420 </span>|
+ 65. | <span class=result>  .    3,895      142    1,830 </span>|
+ 66. | <span class=result> 35    3,798      164    2,050 </span>|
+ 67. | <span class=result>  .    5,899      174    2,410 </span>|
+     |--------------------------------|
+ 68. | <span class=result> 31        .      165    2,200 </span>|
+ 69. | <span class=result> 18    5,719      175    2,670 </span>|
+ 70. | <span class=result> 23    7,140      172    2,160 </span>|
+ 71. | <span class=result> 41    5,397      155    2,040 </span>|
+ 72. | <span class=result>  .    4,697      155    1,930 </span>|
+     |--------------------------------|
+ 73. | <span class=result>  .    6,850      156    1,990 </span>|
+ 74. | <span class=result> 17   11,995      193    3,170 </span>|
+     +--------------------------------+
+<br><br>
+<span class=input>. </span>
+<span class=input>. </span>
+<span class=input>. ///--- End Log and to HTML</span>
+<span class=input>&gt; log close</span>
+<span class=result>      </span>name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//summ/count/fs_nonmissing.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>closed on:  <span class=result> 6 Oct 2019, 18:25:38</span>
+-----------------------------------------------------------------------------------------------------------------------------
+</pre>
+</body>
+</html>

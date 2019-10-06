@@ -27,9 +27,18 @@ set more off
 capture log close
 
 cd "${root_log}"
-global curlogfile "~\Stata4Econ\matrix\define\basic"
+global st_link "/matrix/define/basic"
+global curlogfile "~/Stata4Econ/${st_link}"
 log using "${curlogfile}" , replace
 log on
+
+///-- Site Link: Fan's Project Reusable Stata Codes Table of Content
+di "https://fanwangecon.github.io/"
+di "https://fanwangecon.github.io/Stata4Econ/"
+
+///-- File Title
+global filetitle "Stata Matrix Slicing, Select Subset of Matrix Values, Subset of Rows and Columns"
+
 
 ///--- Generate matrix with all 0
 	scalar it_rowcnt = 4
@@ -72,7 +81,7 @@ log on
 ///--- End Log and to HTML
 log close
 capture noisily {
-  log2html "${curlogfile}", replace
+  log2html "${curlogfile}", replace title($filetitle (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master${st_link}.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>))  
 }
 ///--- to PDF
 capture noisily {

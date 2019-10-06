@@ -1,0 +1,335 @@
+
+<html>
+<head>
+<title>Stata Drop a Random Subset of Observations (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/rand/basic/fs_droprand.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</title>
+<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css">
+BODY{background-color: ffffff;
+    font-family: monaco, "courier new", monospace;
+     color: #000000}
+.input {color: #CC6600}
+.result{color: #000099}
+.error{color: #dd0000}
+</style>
+</head>
+<body>
+<h2>Stata Drop a Random Subset of Observations (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/rand/basic/fs_droprand.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</h2>
+<pre>
+-----------------------------------------------------------------------------------------------------------------------------
+      name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//rand/basic/fs_droprand.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>opened on:  <span class=result> 6 Oct 2019, 18:17:31</span>
+<br><br>
+<span class=input>. log on</span>
+(log already on)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///-- Site Link: Fan's Project Reusable Stata Codes Table of Content</span>
+<span class=input>&gt; di "https://fanwangecon.github.io/"</span>
+<span class=result>https://fanwangecon.github.io/</span>
+<br><br>
+<span class=input>. di "https://fanwangecon.github.io/Stata4Econ/"</span>
+<span class=result>https://fanwangecon.github.io/Stata4Econ/</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///-- File Title</span>
+<span class=input>&gt; global filetitle "Stata Drop a Random Subset of Observations"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Load Data</span>
+<span class=input>&gt; set more off</span>
+<br><br>
+<span class=input>. sysuse auto, clear</span>
+(1978 Automobile Data)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Generating Index for Dropping</span>
+<span class=input>&gt; set seed 987</span>
+<br><br>
+<span class=input>. scalar it_drop_frac = 3</span>
+<br><br>
+<span class=input>. gen row_idx_it = round((_n/_N)*it_drop_frac) </span>
+<br><br>
+<span class=input>. gen row_idx_rand = round(it_drop_frac*uniform())</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. //--- drop when row_idx_it == row_idx_rand, if it_drop_frac set at 3</span>
+<span class=input>. list make price mpg row_idx_it row_idx_rand, ab(20)</span>
+<br><br>
+     +--------------------------------------------------------------+
+     | <span class=result>make                 price   mpg   row_idx_it   row_idx_rand </span>|
+     |--------------------------------------------------------------|
+  1. | <span class=result>AMC Concord          4,099    22            0              0 </span>|
+  2. | <span class=result>AMC Pacer            4,749    17            0              2 </span>|
+  3. | <span class=result>AMC Spirit           3,799    22            0              1 </span>|
+  4. | <span class=result>Buick Century        4,816    20            0              3 </span>|
+  5. | <span class=result>Buick Electra        7,827    15            0              1 </span>|
+     |--------------------------------------------------------------|
+  6. | <span class=result>Buick LeSabre        5,788    18            0              1 </span>|
+  7. | <span class=result>Buick Opel           4,453    26            0              2 </span>|
+  8. | <span class=result>Buick Regal          5,189    20            0              2 </span>|
+  9. | <span class=result>Buick Riviera       10,372    16            0              1 </span>|
+ 10. | <span class=result>Buick Skylark        4,082    19            0              2 </span>|
+     |--------------------------------------------------------------|
+ 11. | <span class=result>Cad. Deville        11,385    14            0              1 </span>|
+ 12. | <span class=result>Cad. Eldorado       14,500    14            0              2 </span>|
+ 13. | <span class=result>Cad. Seville        15,906    21            1              1 </span>|
+ 14. | <span class=result>Chev. Chevette       3,299    29            1              2 </span>|
+ 15. | <span class=result>Chev. Impala         5,705    16            1              1 </span>|
+     |--------------------------------------------------------------|
+ 16. | <span class=result>Chev. Malibu         4,504    22            1              2 </span>|
+ 17. | <span class=result>Chev. Monte Carlo    5,104    22            1              2 </span>|
+ 18. | <span class=result>Chev. Monza          3,667    24            1              2 </span>|
+ 19. | <span class=result>Chev. Nova           3,955    19            1              3 </span>|
+ 20. | <span class=result>Dodge Colt           3,984    30            1              1 </span>|
+     |--------------------------------------------------------------|
+ 21. | <span class=result>Dodge Diplomat       4,010    18            1              2 </span>|
+ 22. | <span class=result>Dodge Magnum         5,886    16            1              2 </span>|
+ 23. | <span class=result>Dodge St. Regis      6,342    17            1              1 </span>|
+ 24. | <span class=result>Ford Fiesta          4,389    28            1              0 </span>|
+ 25. | <span class=result>Ford Mustang         4,187    21            1              1 </span>|
+     |--------------------------------------------------------------|
+ 26. | <span class=result>Linc. Continental   11,497    12            1              3 </span>|
+ 27. | <span class=result>Linc. Mark V        13,594    12            1              2 </span>|
+ 28. | <span class=result>Linc. Versailles    13,466    14            1              2 </span>|
+ 29. | <span class=result>Merc. Bobcat         3,829    22            1              3 </span>|
+ 30. | <span class=result>Merc. Cougar         5,379    14            1              2 </span>|
+     |--------------------------------------------------------------|
+ 31. | <span class=result>Merc. Marquis        6,165    15            1              1 </span>|
+ 32. | <span class=result>Merc. Monarch        4,516    18            1              3 </span>|
+ 33. | <span class=result>Merc. XR-7           6,303    14            1              2 </span>|
+ 34. | <span class=result>Merc. Zephyr         3,291    20            1              1 </span>|
+ 35. | <span class=result>Olds 98              8,814    21            1              1 </span>|
+     |--------------------------------------------------------------|
+ 36. | <span class=result>Olds Cutl Supr       5,172    19            1              1 </span>|
+ 37. | <span class=result>Olds Cutlass         4,733    19            2              1 </span>|
+ 38. | <span class=result>Olds Delta 88        4,890    18            2              1 </span>|
+ 39. | <span class=result>Olds Omega           4,181    19            2              1 </span>|
+ 40. | <span class=result>Olds Starfire        4,195    24            2              1 </span>|
+     |--------------------------------------------------------------|
+ 41. | <span class=result>Olds Toronado       10,371    16            2              3 </span>|
+ 42. | <span class=result>Plym. Arrow          4,647    28            2              1 </span>|
+ 43. | <span class=result>Plym. Champ          4,425    34            2              0 </span>|
+ 44. | <span class=result>Plym. Horizon        4,482    25            2              1 </span>|
+ 45. | <span class=result>Plym. Sapporo        6,486    26            2              2 </span>|
+     |--------------------------------------------------------------|
+ 46. | <span class=result>Plym. Volare         4,060    18            2              1 </span>|
+ 47. | <span class=result>Pont. Catalina       5,798    18            2              2 </span>|
+ 48. | <span class=result>Pont. Firebird       4,934    18            2              1 </span>|
+ 49. | <span class=result>Pont. Grand Prix     5,222    19            2              1 </span>|
+ 50. | <span class=result>Pont. Le Mans        4,723    19            2              2 </span>|
+     |--------------------------------------------------------------|
+ 51. | <span class=result>Pont. Phoenix        4,424    19            2              1 </span>|
+ 52. | <span class=result>Pont. Sunbird        4,172    24            2              2 </span>|
+ 53. | <span class=result>Audi 5000            9,690    17            2              3 </span>|
+ 54. | <span class=result>Audi Fox             6,295    23            2              2 </span>|
+ 55. | <span class=result>BMW 320i             9,735    25            2              2 </span>|
+     |--------------------------------------------------------------|
+ 56. | <span class=result>Datsun 200           6,229    23            2              1 </span>|
+ 57. | <span class=result>Datsun 210           4,589    35            2              3 </span>|
+ 58. | <span class=result>Datsun 510           5,079    24            2              2 </span>|
+ 59. | <span class=result>Datsun 810           8,129    21            2              3 </span>|
+ 60. | <span class=result>Fiat Strada          4,296    21            2              0 </span>|
+     |--------------------------------------------------------------|
+ 61. | <span class=result>Honda Accord         5,799    25            2              3 </span>|
+ 62. | <span class=result>Honda Civic          4,499    28            3              2 </span>|
+ 63. | <span class=result>Mazda GLC            3,995    30            3              1 </span>|
+ 64. | <span class=result>Peugeot 604         12,990    14            3              2 </span>|
+ 65. | <span class=result>Renault Le Car       3,895    26            3              3 </span>|
+     |--------------------------------------------------------------|
+ 66. | <span class=result>Subaru               3,798    35            3              1 </span>|
+ 67. | <span class=result>Toyota Celica        5,899    18            3              3 </span>|
+ 68. | <span class=result>Toyota Corolla       3,748    31            3              1 </span>|
+ 69. | <span class=result>Toyota Corona        5,719    18            3              0 </span>|
+ 70. | <span class=result>VW Dasher            7,140    23            3              1 </span>|
+     |--------------------------------------------------------------|
+ 71. | <span class=result>VW Diesel            5,397    41            3              0 </span>|
+ 72. | <span class=result>VW Rabbit            4,697    25            3              3 </span>|
+ 73. | <span class=result>VW Scirocco          6,850    25            3              3 </span>|
+ 74. | <span class=result>Volvo 260           11,995    17            3              2 </span>|
+     +--------------------------------------------------------------+
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Drop approximately 1/2 of make randomly</span>
+<span class=input>&gt; set seed 987</span>
+<br><br>
+<span class=input>. scalar it_drop_frac = 2</span>
+<br><br>
+<span class=input>. clonevar make_wth_mimssing = make</span>
+<br><br>
+<span class=input>. replace make_wth_mimssing = "" if round((_n/_N)*it_drop_frac) == round(it_drop_frac*uniform())</span>
+(33 real changes made)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Drop approximately 1/3 of mpg randomly</span>
+<span class=input>&gt; set seed 987</span>
+<br><br>
+<span class=input>. scalar it_drop_frac = 3</span>
+<br><br>
+<span class=input>. clonevar mpg_wth_mimssing = mpg</span>
+<br><br>
+<span class=input>. replace mpg_wth_mimssing =. if round((_n/_N)*it_drop_frac) == round(it_drop_frac*uniform())</span>
+(21 real changes made, 21 to missing)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Drop approximately 1/5 of mpg randomly</span>
+<span class=input>&gt; set seed 987</span>
+<br><br>
+<span class=input>. scalar it_drop_frac = 5</span>
+<br><br>
+<span class=input>. clonevar price_wth_mimssing = price</span>
+<br><br>
+<span class=input>. replace price_wth_mimssing =. if round((_n/_N)*it_drop_frac) == round(it_drop_frac*uniform())</span>
+(16 real changes made, 16 to missing)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Summarize</span>
+<span class=input>&gt; codebook make*</span>
+<br><br>
+-----------------------------------------------------------------------------------------------------------------------------
+<span class=result>make                                                                                                           Make and Model</span>
+-----------------------------------------------------------------------------------------------------------------------------
+<br><br>
+                  type:  string (<span class=result>str18</span>), but longest is str17
+<br><br>
+         unique values:  <span class=result>74                       </span>missing "":  <span class=result>0</span>/<span class=result>74</span>
+<br><br>
+              examples:  <span class=result>"Cad. Deville"</span>
+<span class=result>                         "Dodge Magnum"</span>
+<span class=result>                         "Merc. XR-7"</span>
+<span class=result>                         "Pont. Catalina"</span>
+<br><br>
+               warning:  variable has embedded blanks
+<br><br>
+-----------------------------------------------------------------------------------------------------------------------------
+<span class=result>make_wth_mimssing                                                                                              Make and Model</span>
+-----------------------------------------------------------------------------------------------------------------------------
+<br><br>
+                  type:  string (<span class=result>str18</span>), but longest is str17
+<br><br>
+         unique values:  <span class=result>41                       </span>missing "":  <span class=result>33</span>/<span class=result>74</span>
+<br><br>
+              examples:  <span class=result>""</span>
+<span class=result>                         ""</span>
+<span class=result>                         "Cad. Deville"</span>
+<span class=result>                         "Mazda GLC"</span>
+<br><br>
+               warning:  variable has embedded blanks
+<br><br>
+<span class=input>. summ mpg* price*</span>
+<br><br>
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         mpg |<span class=result>         74     21.2973    5.785503         12         41</span>
+mpg_wth_mi~g |<span class=result>         53    21.15094     6.41931         12         41</span>
+       price |<span class=result>         74    6165.257    2949.496       3291      15906</span>
+price_wth_~g |<span class=result>         58    6254.069    3219.379       3291      15906</span>
+<br><br>
+<span class=input>. list make* mpg* price*</span>
+<br><br>
+     +----------------------------------------------------------------------------+
+     | <span class=result>make                make_wth_mimssing   mpg   mpg_wt~g    price   price_~g </span>|
+     |----------------------------------------------------------------------------|
+  1. | <span class=result>AMC Concord                              22          .    4,099          . </span>|
+  2. | <span class=result>AMC Pacer           AMC Pacer            17         17    4,749      4,749 </span>|
+  3. | <span class=result>AMC Spirit          AMC Spirit           22         22    3,799      3,799 </span>|
+  4. | <span class=result>Buick Century       Buick Century        20         20    4,816      4,816 </span>|
+  5. | <span class=result>Buick Electra       Buick Electra        15         15    7,827      7,827 </span>|
+     |----------------------------------------------------------------------------|
+  6. | <span class=result>Buick LeSabre       Buick LeSabre        18         18    5,788      5,788 </span>|
+  7. | <span class=result>Buick Opel          Buick Opel           26         26    4,453      4,453 </span>|
+  8. | <span class=result>Buick Regal         Buick Regal          20         20    5,189      5,189 </span>|
+  9. | <span class=result>Buick Riviera       Buick Riviera        16         16   10,372          . </span>|
+ 10. | <span class=result>Buick Skylark       Buick Skylark        19         19    4,082      4,082 </span>|
+     |----------------------------------------------------------------------------|
+ 11. | <span class=result>Cad. Deville        Cad. Deville         14         14   11,385     11,385 </span>|
+ 12. | <span class=result>Cad. Eldorado       Cad. Eldorado        14         14   14,500     14,500 </span>|
+ 13. | <span class=result>Cad. Seville        Cad. Seville         21          .   15,906     15,906 </span>|
+ 14. | <span class=result>Chev. Chevette      Chev. Chevette       29         29    3,299      3,299 </span>|
+ 15. | <span class=result>Chev. Impala        Chev. Impala         16          .    5,705      5,705 </span>|
+     |----------------------------------------------------------------------------|
+ 16. | <span class=result>Chev. Malibu        Chev. Malibu         22         22    4,504      4,504 </span>|
+ 17. | <span class=result>Chev. Monte Carlo   Chev. Monte Carlo    22         22    5,104      5,104 </span>|
+ 18. | <span class=result>Chev. Monza         Chev. Monza          24         24    3,667      3,667 </span>|
+ 19. | <span class=result>Chev. Nova          Chev. Nova           19         19    3,955      3,955 </span>|
+ 20. | <span class=result>Dodge Colt                               30          .    3,984      3,984 </span>|
+     |----------------------------------------------------------------------------|
+ 21. | <span class=result>Dodge Diplomat                           18         18    4,010      4,010 </span>|
+ 22. | <span class=result>Dodge Magnum                             16         16    5,886      5,886 </span>|
+ 23. | <span class=result>Dodge St. Regis                          17          .    6,342          . </span>|
+ 24. | <span class=result>Ford Fiesta         Ford Fiesta          28         28    4,389      4,389 </span>|
+ 25. | <span class=result>Ford Mustang        Ford Mustang         21          .    4,187      4,187 </span>|
+     |----------------------------------------------------------------------------|
+ 26. | <span class=result>Linc. Continental   Linc. Continental    12         12   11,497     11,497 </span>|
+ 27. | <span class=result>Linc. Mark V                             12         12   13,594     13,594 </span>|
+ 28. | <span class=result>Linc. Versailles                         14         14   13,466     13,466 </span>|
+ 29. | <span class=result>Merc. Bobcat        Merc. Bobcat         22         22    3,829      3,829 </span>|
+ 30. | <span class=result>Merc. Cougar                             14         14    5,379      5,379 </span>|
+     |----------------------------------------------------------------------------|
+ 31. | <span class=result>Merc. Marquis                            15          .    6,165          . </span>|
+ 32. | <span class=result>Merc. Monarch       Merc. Monarch        18         18    4,516      4,516 </span>|
+ 33. | <span class=result>Merc. XR-7                               14         14    6,303      6,303 </span>|
+ 34. | <span class=result>Merc. Zephyr        Merc. Zephyr         20          .    3,291      3,291 </span>|
+ 35. | <span class=result>Olds 98             Olds 98              21          .    8,814      8,814 </span>|
+     |----------------------------------------------------------------------------|
+ 36. | <span class=result>Olds Cutl Supr                           19          .    5,172          . </span>|
+ 37. | <span class=result>Olds Cutlass        Olds Cutlass         19         19    4,733      4,733 </span>|
+ 38. | <span class=result>Olds Delta 88                            18         18    4,890      4,890 </span>|
+ 39. | <span class=result>Olds Omega                               19         19    4,181      4,181 </span>|
+ 40. | <span class=result>Olds Starfire                            24         24    4,195      4,195 </span>|
+     |----------------------------------------------------------------------------|
+ 41. | <span class=result>Olds Toronado       Olds Toronado        16         16   10,371     10,371 </span>|
+ 42. | <span class=result>Plym. Arrow         Plym. Arrow          28         28    4,647      4,647 </span>|
+ 43. | <span class=result>Plym. Champ         Plym. Champ          34         34    4,425      4,425 </span>|
+ 44. | <span class=result>Plym. Horizon                            25         25    4,482      4,482 </span>|
+ 45. | <span class=result>Plym. Sapporo                            26          .    6,486          . </span>|
+     |----------------------------------------------------------------------------|
+ 46. | <span class=result>Plym. Volare                             18         18    4,060      4,060 </span>|
+ 47. | <span class=result>Pont. Catalina                           18          .    5,798          . </span>|
+ 48. | <span class=result>Pont. Firebird                           18         18    4,934      4,934 </span>|
+ 49. | <span class=result>Pont. Grand Prix                         19         19    5,222      5,222 </span>|
+ 50. | <span class=result>Pont. Le Mans                            19          .    4,723          . </span>|
+     |----------------------------------------------------------------------------|
+ 51. | <span class=result>Pont. Phoenix       Pont. Phoenix        19         19    4,424      4,424 </span>|
+ 52. | <span class=result>Pont. Sunbird                            24          .    4,172          . </span>|
+ 53. | <span class=result>Audi 5000           Audi 5000            17         17    9,690      9,690 </span>|
+ 54. | <span class=result>Audi Fox                                 23          .    6,295          . </span>|
+ 55. | <span class=result>BMW 320i                                 25          .    9,735      9,735 </span>|
+     |----------------------------------------------------------------------------|
+ 56. | <span class=result>Datsun 200          Datsun 200           23         23    6,229      6,229 </span>|
+ 57. | <span class=result>Datsun 210                               35         35    4,589      4,589 </span>|
+ 58. | <span class=result>Datsun 510          Datsun 510           24          .    5,079      5,079 </span>|
+ 59. | <span class=result>Datsun 810                               21         21    8,129          . </span>|
+ 60. | <span class=result>Fiat Strada         Fiat Strada          21         21    4,296      4,296 </span>|
+     |----------------------------------------------------------------------------|
+ 61. | <span class=result>Honda Accord                             25         25    5,799          . </span>|
+ 62. | <span class=result>Honda Civic                              28         28    4,499          . </span>|
+ 63. | <span class=result>Mazda GLC           Mazda GLC            30         30    3,995      3,995 </span>|
+ 64. | <span class=result>Peugeot 604         Peugeot 604          14         14   12,990     12,990 </span>|
+ 65. | <span class=result>Renault Le Car                           26          .    3,895          . </span>|
+     |----------------------------------------------------------------------------|
+ 66. | <span class=result>Subaru              Subaru               35         35    3,798      3,798 </span>|
+ 67. | <span class=result>Toyota Celica                            18          .    5,899      5,899 </span>|
+ 68. | <span class=result>Toyota Corolla      Toyota Corolla       31         31    3,748      3,748 </span>|
+ 69. | <span class=result>Toyota Corona       Toyota Corona        18         18    5,719      5,719 </span>|
+ 70. | <span class=result>VW Dasher           VW Dasher            23         23    7,140      7,140 </span>|
+     |----------------------------------------------------------------------------|
+ 71. | <span class=result>VW Diesel           VW Diesel            41         41    5,397      5,397 </span>|
+ 72. | <span class=result>VW Rabbit                                25          .    4,697          . </span>|
+ 73. | <span class=result>VW Scirocco                              25          .    6,850          . </span>|
+ 74. | <span class=result>Volvo 260                                17         17   11,995     11,995 </span>|
+     +----------------------------------------------------------------------------+
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- End Log and to HTML</span>
+<span class=input>&gt; log close</span>
+<span class=result>      </span>name:  <span class=result>&lt;unnamed&gt;</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//rand/basic/fs_droprand.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>closed on:  <span class=result> 6 Oct 2019, 18:17:31</span>
+-----------------------------------------------------------------------------------------------------------------------------
+</pre>
+</body>
+</html>
