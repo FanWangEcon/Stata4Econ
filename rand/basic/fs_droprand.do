@@ -17,13 +17,14 @@ clear
 */
 
 ///--- Start log
-set more off
-capture log close
+set more off 
+capture log close _all
 cd "${root_log}"
 global st_link "/rand/basic/fs_droprand"
 global curlogfile "~/Stata4Econ/${st_link}"
-log using "${curlogfile}" , replace
-log on
+global st_logname "drop_random_subset"
+log using "${curlogfile}" , replace name($st_logname)
+log on $st_logname
 
 ///-- Site Link: Fan's Project Reusable Stata Codes Table of Content
 di "https://fanwangecon.github.io/"
@@ -69,7 +70,7 @@ summ mpg* price*
 list make* mpg* price*
 
 ///--- End Log and to HTML
-log close
+log close _all
 capture noisily {
   log2html "${curlogfile}", replace title($filetitle (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master${st_link}.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>))
 }

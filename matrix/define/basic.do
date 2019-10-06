@@ -24,13 +24,14 @@ clear
 
 ///--- Start log
 set more off
-capture log close
+capture log close _all
 
 cd "${root_log}"
 global st_link "/matrix/define/basic"
 global curlogfile "~/Stata4Econ/${st_link}"
-log using "${curlogfile}" , replace
-log on
+global st_logname "matrix_select_subset"
+log using "${curlogfile}" , replace name($st_logname)
+log on $st_logname
 
 ///-- Site Link: Fan's Project Reusable Stata Codes Table of Content
 di "https://fanwangecon.github.io/"
@@ -79,7 +80,7 @@ global filetitle "Stata Matrix Slicing, Select Subset of Matrix Values, Subset o
 	matrix list mt_bl_estd
 
 ///--- End Log and to HTML
-log close
+log close _all
 capture noisily {
   log2html "${curlogfile}", replace title($filetitle (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master${st_link}.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>))  
 }

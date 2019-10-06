@@ -45,13 +45,13 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 
 ## 3.1 Summary
 
-1. [Multiple Variables Jointly Nonmissing](https://github.com/FanWangEcon/Stata4Econ/blob/master/summ/count/fs_nonmissing.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/summ/count/fs_nonmissing.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/summ/count/fs_nonmissing.html) \| [**PDF**](https://fanwangecon.github.io/Stata4Econ/summ/count/fs_nonmissing.pdf)
+1. [Multiple Variables Jointly Nonmissing](https://github.com/FanWangEcon/Stata4Econ/blob/master/summ/count/fs_nonmissing.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/summ/count/fs_nonmissing.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/summ/count/fs_nonmissing.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/summ/count/fs_nonmissing.pdf)
     + Find rows where there are no missing values for any variables in a list of variables and where certain conditionings are satisfied
     + **core**: *egen valid = rownonmiss($svr_list) if $scd_bse $scd_one $scd_two*
 
 ## 3.2 Random
 
-1. [Drop Random Subset of Data](https://github.com/FanWangEcon/Stata4Econ/blob/master/rand/basic/fs_droprand.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/rand/basic/fs_droprand.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/rand/basic/fs_droprand.html) \| [**PDF**](https://fanwangecon.github.io/Stata4Econ/rand/basic/fs_droprand.pdf)
+1. [Drop Random Subset of Data](https://github.com/FanWangEcon/Stata4Econ/blob/master/rand/basic/fs_droprand.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/rand/basic/fs_droprand.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/rand/basic/fs_droprand.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/rand/basic/fs_droprand.pdf)
     + Drop random subset of data for different variables
     + **core**: *round((_n/_N)*it_drop_frac) == round(it_drop_frac*uniform())*
 
@@ -60,7 +60,7 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 
 ## 4.1 Matrix
 
-1. [Define and Slice Matrix](https://github.com/FanWangEcon/Stata4Econ/blob/master/matrix/define/basic.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/matrix/define/basic.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/matrix/define/basic.html) \| [**PDF**](https://fanwangecon.github.io/Stata4Econ/matrix/define/basic.pdf)
+1. [Define and Slice Matrix](https://github.com/FanWangEcon/Stata4Econ/blob/master/matrix/define/basic.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/matrix/define/basic.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/matrix/define/basic.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/matrix/define/basic.pdf)
     + matrix definition and slicing, get column and row names, replace matrix subset.
     + **core**: *matrix + rownumb/colnumb +	matrix mt_bl_estd = J(it_rowcnt, it_colcnt, bl_fillval) + mat_a[1..., colnumb(mat_a, "reg1")] + ...*
 

@@ -20,13 +20,14 @@ clear
 
 ///--- Start log
 set more off
-capture log close
+capture log close _all
 cd "${root_log}"
 global st_link "/summ/count/fs_nonmissing"
 global curlogfile "~/Stata4Econ/${st_link}"
-log using "${curlogfile}" , replace
-log on
-
+global st_logname "select_rows_nonmissing"
+log using "${curlogfile}" , replace name($st_logname)
+log on $st_logname
+ 
 ///-- Site Link: Fan's Project Reusable Stata Codes Table of Content
 di "https://fanwangecon.github.io/"
 di "https://fanwangecon.github.io/Stata4Econ/"
@@ -70,9 +71,8 @@ list $svr_list if valid == wordcount("$svr_list")
 tab valid
 list $svr_list if valid !=.
 
-
 ///--- End Log and to HTML
-log close
+log close _all
 capture noisily {
   log2html "${curlogfile}", replace title($filetitle (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master${st_link}.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>))
 }
