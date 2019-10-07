@@ -3,3 +3,4 @@ title: Project Reusable Stata Codes
 google_analytics: UA-92953468-8
 plugins:
   - jekyll-sitemap
+  - jekyll-seo-tag
