@@ -77,3 +77,8 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 1. [LOG2HTML and Translator](https://github.com/FanWangEcon/Stata4Econ/blob/master/output/log/fs_log2html_results.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/output/log/fs_log2html.do) \| [**Translator PDF**](https://fanwangecon.github.io/Stata4Econ/output/log/fs_log2html_results.pdf) \| [**SMCL Log PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/output/log/fs_log2html_results.pdf)
     + translator to export console buffer to PDF, or to export log file to pdf; log2html to convert to html.
     + **core**: *log2html + translate @Results*
+
+----
+Files are from [Fan](https://fanwangecon.github.io)'s [Stata4Econ](https://github.com/FanWangEcon/Stata4Econ) repository. Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or problems.
+
+[![HitCount](http://hits.dwyl.io/FanWangEcon/Stata4Econ.svg)](http://hits.dwyl.io/FanWangEcon/Stata4Econ)
