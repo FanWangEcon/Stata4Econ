@@ -1,8 +1,12 @@
+[![HitCount](http://hits.dwyl.io/fanwangecon/Stata4Econ.svg)](https://github.com/FanWangEcon/Stata4Econ)  [![Star](https://img.shields.io/github/stars/fanwangecon/Stata4Econ?style=social)](https://github.com/FanWangEcon/Stata4Econ/stargazers) [![Fork](https://img.shields.io/github/forks/fanwangecon/Stata4Econ?style=social)](https://github.com/FanWangEcon/Stata4Econ/network/members) [![Star](https://img.shields.io/github/watchers/fanwangecon/Stata4Econ?style=social)](https://github.com/FanWangEcon/Stata4Econ/watchers)
+
 This is a work-in-progress [website](https://fanwangecon.github.io/Stata4Econ/) of sample Stata files, produced by [Fan](https://fanwangecon.github.io/). Materials gathered from various [projects](https://fanwangecon.github.io/research) in which STATA code is used. The goal of this repository is to make it easier to find/re-use codes produced for various projects.
 
 STATA files are linked below by section. Various functions are stored in corresponding .do files. To use the files, clone the repository. Some files have examples/instructions created using Jupyter notebooks or STATA translator and are shown as HTML and PDF files. See [here](docs/gitsetup.md) for Github set up.
 
 Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or problems.
+
+[![](https://img.shields.io/github/last-commit/fanwangecon/Stata4Econ)](https://github.com/FanWangEcon/Stata4Econ/commits/master) [![](https://img.shields.io/github/commit-activity/m/fanwangecon/Stata4Econ)](https://github.com/FanWangEcon/Stata4Econ/graphs/commit-activity) [![](https://img.shields.io/github/issues/fanwangecon/Stata4Econ)](https://github.com/FanWangEcon/Stata4Econ/issues) [![](https://img.shields.io/github/issues-pr/fanwangecon/Stata4Econ)](https://github.com/FanWangEcon/Stata4Econ/pulls)
 
 # 1. Regressions
 
@@ -81,4 +85,8 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 ----
 Files are from [Fan](https://fanwangecon.github.io)'s [Stata4Econ](https://github.com/FanWangEcon/Stata4Econ) repository. Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or problems.
 
-[![HitCount](http://hits.dwyl.io/FanWangEcon/Stata4Econ.svg)](http://hits.dwyl.io/FanWangEcon/Stata4Econ)
+![RepoSize](https://img.shields.io/github/repo-size/fanwangecon/Stata4Econ)
+![CodeSize](https://img.shields.io/github/languages/code-size/fanwangecon/Stata4Econ)
+![Language](https://img.shields.io/github/languages/top/fanwangecon/Stata4Econ)
+![Release](https://img.shields.io/github/downloads/fanwangecon/Stata4Econ/total)
+![License](https://img.shields.io/github/license/fanwangecon/Stata4Econ)
