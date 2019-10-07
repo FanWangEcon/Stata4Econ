@@ -1,0 +1,151 @@
+
+<html>
+<head>
+<title>Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</title>
+<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css">
+BODY{background-color: ffffff;
+    font-family: monaco, "courier new", monospace;
+     color: #000000}
+.input {color: #CC6600}
+.result{color: #000099}
+.error{color: #dd0000}
+</style>
+</head>
+<body>
+<h2>Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</h2>
+<pre>
+-----------------------------------------------------------------------------------------------------------------------------
+      name:  <span class=result>stata_recode_discrete_subset</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//gen/replace/fs_recode.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>opened on:  <span class=result> 6 Oct 2019, 20:10:08</span>
+<br><br>
+<span class=input>. log on $st_logname</span>
+(log already on)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///-- Site Link: Fan's Project Reusable Stata Codes Table of Content</span>
+<span class=input>&gt; di "https://fanwangecon.github.io/"</span>
+<span class=result>https://fanwangecon.github.io/</span>
+<br><br>
+<span class=input>. di "https://fanwangecon.github.io/Stata4Econ/"</span>
+<span class=result>https://fanwangecon.github.io/Stata4Econ/</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///-- File Title</span>
+<span class=input>&gt; global filetitle "Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Load Data</span>
+<span class=input>&gt; set more off</span>
+<br><br>
+<span class=input>. sysuse auto, clear</span>
+(1978 Automobile Data)
+<br><br>
+<span class=input>. </span>
+<span class=input>. capture drop turn_m5</span>
+<br><br>
+<span class=input>. recode turn ///</span>
+<span class=input>&gt;   (min/35 = 1 "Turn &lt;35") ///</span>
+<span class=input>&gt;   (36 = 2 "Turn = 36") ///</span>
+<span class=input>&gt;   (37 = 3 "Turn = 37") ///</span>
+<span class=input>&gt;   (38/45 = 4 "Turn 38 to 45") ///</span>
+<span class=input>&gt;   (46/max = 5 "Turn &gt; 45") ///</span>
+<span class=input>&gt;   (else  =. ) ///</span>
+<span class=input>&gt;   , gen(turn_m5)</span>
+(74 differences between turn and turn_m5)
+<br><br>
+<span class=input>. </span>
+<span class=input>. </span>
+<span class=input>. ///--- Summarize</span>
+<span class=input>&gt; codebook turn*</span>
+<br><br>
+-----------------------------------------------------------------------------------------------------------------------------
+<span class=result>turn                                                                                                       Turn Circle (ft.) </span>
+-----------------------------------------------------------------------------------------------------------------------------
+<br><br>
+                  type:  numeric (<span class=result>int</span>)
+<br><br>
+                 range:  [<span class=result>31</span>,<span class=result>51</span>]                      units:  <span class=result>1</span>
+<span class=result>         </span>unique values:  <span class=result>18                       </span>missing .:  <span class=result>0</span>/<span class=result>74</span>
+<br><br>
+                  mean:<span class=result>   39.6486</span>
+              std. dev:<span class=result>   4.39935</span>
+<br><br>
+           percentiles:        10%       25%       50%       75%       90%
+<span class=result>                                34        36        40        43        45</span>
+<br><br>
+-----------------------------------------------------------------------------------------------------------------------------
+<span class=result>turn_m5                                                                                   RECODE of turn (Turn Circle (ft.) )</span>
+-----------------------------------------------------------------------------------------------------------------------------
+<br><br>
+                  type:  numeric (<span class=result>int</span>)
+                 label:  <span class=result>turn_m5</span>
+<br><br>
+                 range:  [<span class=result>1</span>,<span class=result>5</span>]                        units:  <span class=result>1</span>
+<span class=result>         </span>unique values:  <span class=result>5                        </span>missing .:  <span class=result>0</span>/<span class=result>74</span>
+<br><br>
+            tabulation:  Freq.   Numeric  Label
+                    <span class=result>        16         1  </span>Turn &lt;35
+                    <span class=result>         9         2  </span>Turn = 36
+                    <span class=result>         4         3  </span>Turn = 37
+                    <span class=result>        39         4  </span>Turn 38 to 45
+                    <span class=result>         6         5  </span>Turn &gt; 45
+<br><br>
+<span class=input>. tab turn_m5</span>
+<br><br>
+<span class=result>    </span>RECODE of |
+   turn (Turn |
+ Circle (ft.) |
+            ) |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+     Turn &lt;35 |<span class=result>         16       21.62       21.62</span>
+    Turn = 36 |<span class=result>          9       12.16       33.78</span>
+    Turn = 37 |<span class=result>          4        5.41       39.19</span>
+Turn 38 to 45 |<span class=result>         39       52.70       91.89</span>
+    Turn &gt; 45 |<span class=result>          6        8.11      100.00</span>
+--------------+-----------------------------------
+        Total |<span class=result>         74      100.00</span>
+<br><br>
+<span class=input>. tab turn turn_m5</span>
+<br><br>
+<span class=result>      </span>Turn |
+    Circle |          RECODE of turn (Turn Circle (ft.) )
+    (ft.)  |  Turn &lt;35  Turn = 36  Turn = 37  Turn 38 t  Turn &gt; 45 |     Total
+-----------+-------------------------------------------------------+----------
+        31 |<span class=result>         1          0          0          0          0 </span>|<span class=result>         1 </span>
+        32 |<span class=result>         1          0          0          0          0 </span>|<span class=result>         1 </span>
+        33 |<span class=result>         2          0          0          0          0 </span>|<span class=result>         2 </span>
+        34 |<span class=result>         6          0          0          0          0 </span>|<span class=result>         6 </span>
+        35 |<span class=result>         6          0          0          0          0 </span>|<span class=result>         6 </span>
+        36 |<span class=result>         0          9          0          0          0 </span>|<span class=result>         9 </span>
+        37 |<span class=result>         0          0          4          0          0 </span>|<span class=result>         4 </span>
+        38 |<span class=result>         0          0          0          3          0 </span>|<span class=result>         3 </span>
+        39 |<span class=result>         0          0          0          1          0 </span>|<span class=result>         1 </span>
+        40 |<span class=result>         0          0          0          6          0 </span>|<span class=result>         6 </span>
+        41 |<span class=result>         0          0          0          4          0 </span>|<span class=result>         4 </span>
+        42 |<span class=result>         0          0          0          7          0 </span>|<span class=result>         7 </span>
+        43 |<span class=result>         0          0          0         12          0 </span>|<span class=result>        12 </span>
+        44 |<span class=result>         0          0          0          3          0 </span>|<span class=result>         3 </span>
+        45 |<span class=result>         0          0          0          3          0 </span>|<span class=result>         3 </span>
+        46 |<span class=result>         0          0          0          0          3 </span>|<span class=result>         3 </span>
+        48 |<span class=result>         0          0          0          0          2 </span>|<span class=result>         2 </span>
+        51 |<span class=result>         0          0          0          0          1 </span>|<span class=result>         1 </span>
+-----------+-------------------------------------------------------+----------
+     Total |<span class=result>        16          9          4         39          6 </span>|<span class=result>        74 </span>
+<br><br>
+<br><br>
+<span class=input>. </span>
+<span class=input>. </span>
+<span class=input>. ///--- End Log and to HTML</span>
+<span class=input>&gt; log close _all</span>
+<span class=result>      </span>name:  <span class=result>stata_recode_discrete_subset</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//gen/replace/fs_recode.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>closed on:  <span class=result> 6 Oct 2019, 20:10:08</span>
+-----------------------------------------------------------------------------------------------------------------------------
+</pre>
+</body>
+</html>

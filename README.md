@@ -43,17 +43,23 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 
 # 3. Dataset Manipulation
 
-## 3.1 Summary
+## 3.1 Generate
+
+1. [Generate Grouped Categorical Variable](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/gen/replace/fs_recode.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.pdf)
+    + Reduce the number of categories for a categorical variable
+    + **core**: *recode turn (min/35 = 1 "Turn <35") (36 = 2 "Turn = 36") ... (46/max = 5 "Turn > 45") (else  =. ), gen(turn_m5)*
+
+## 3.2 Summary
 
 1. [Multiple Variables Jointly Nonmissing](https://github.com/FanWangEcon/Stata4Econ/blob/master/summ/count/fs_nonmissing.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/summ/count/fs_nonmissing.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/summ/count/fs_nonmissing.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/summ/count/fs_nonmissing.pdf)
     + Find rows where there are no missing values for any variables in a list of variables and where certain conditionings are satisfied
     + **core**: *egen valid = rownonmiss($svr_list) if $scd_bse $scd_one $scd_two*
 
-## 3.2 Random
+## 3.3 Random
 
 1. [Drop Random Subset of Data](https://github.com/FanWangEcon/Stata4Econ/blob/master/rand/basic/fs_droprand.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/rand/basic/fs_droprand.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/rand/basic/fs_droprand.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/rand/basic/fs_droprand.pdf)
     + Drop random subset of data for different variables
-    + **core**: *round((_n/_N)*it_drop_frac) == round(it_drop_frac*uniform())*
+    + **core**: *round((_n/_N) x it_drop_frac) == round(it_drop_frac x uniform())*
 
 
 # 4. Programming
