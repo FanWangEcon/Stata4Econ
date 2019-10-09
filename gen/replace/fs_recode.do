@@ -32,27 +32,39 @@ di "https://fanwangecon.github.io/"
 di "https://fanwangecon.github.io/Stata4Econ/"
 
 ///-- File Title
-global filetitle "Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups"
+global filetitle "Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups: recode, inrange, inlist"
 
 ///--- Load Data
 set more off
 sysuse auto, clear
 
-capture drop turn_m5
-recode turn ///
-  (min/35 = 1 "Turn <35") ///
-  (36 = 2 "Turn = 36") ///
-  (37 = 3 "Turn = 37") ///
-  (38/45 = 4 "Turn 38 to 45") ///
-  (46/max = 5 "Turn > 45") ///
-  (else  =. ) ///
-  , gen(turn_m5)
+///--- Recode Method 1
+	capture drop turn_m5
+	recode turn ///
+	  (min/35 = 1 "Turn <35") ///
+	  (36 = 2 "Turn = 36") ///
+	  (37 = 3 "Turn = 37") ///
+	  (38/45 = 4 "Turn 38 to 45") ///
+	  (46/max = 5 "Turn > 45") ///
+	  (else  =. ) ///
+	  , gen(turn_m5)
 
+///-- Recode Method 2
+	clonevar turn_m5_alt = turn
+	label variable turn_m5_alt "Recode using inlist and inrange"
+	replace turn_m5_alt = 1 if inrange(turn, 31, 35)
+	replace turn_m5_alt = 2 if inlist(turn, 36)
+	replace turn_m5_alt = 3 if inlist(turn, 37)
+	replace turn_m5_alt = 4 if inrange(turn, 38, 45)
+	replace turn_m5_alt = 5 if inlist(turn, 46, 48, 51)
+	label define turn_m5_alt 1 "Turn <35" 2 "Turn = 36" 3 "Turn = 37" 4 "Turn 38 to 45" 5 "Turn > 45", modify
+	label values turn_m5_alt turn_m5_alt
 
 ///--- Summarize
 codebook turn*
 tab turn_m5
 tab turn turn_m5
+tab turn_m5 turn_m5_alt
 
 
 ///--- End Log and to HTML

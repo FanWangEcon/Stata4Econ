@@ -1,7 +1,7 @@
 
 <html>
 <head>
-<title>Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</title>
+<title>Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups: recode, inrange, inlist (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</title>
 <meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <style type="text/css">
@@ -14,13 +14,13 @@ BODY{background-color: ffffff;
 </style>
 </head>
 <body>
-<h2>Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</h2>
+<h2>Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups: recode, inrange, inlist (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</h2>
 <pre>
 -----------------------------------------------------------------------------------------------------------------------------
       name:  <span class=result>stata_recode_discrete_subset</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//gen/replace/fs_recode.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>opened on:  <span class=result> 6 Oct 2019, 20:10:08</span>
+<span class=result> </span>opened on:  <span class=result> 9 Oct 2019, 08:09:41</span>
 <br><br>
 <span class=input>. log on $st_logname</span>
 (log already on)
@@ -35,7 +35,7 @@ BODY{background-color: ffffff;
 <br><br>
 <span class=input>. </span>
 <span class=input>. ///-- File Title</span>
-<span class=input>&gt; global filetitle "Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups"</span>
+<span class=input>&gt; global filetitle "Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups: recode, inrange, inlist"</span>
 <br><br>
 <span class=input>. </span>
 <span class=input>. ///--- Load Data</span>
@@ -45,19 +45,44 @@ BODY{background-color: ffffff;
 (1978 Automobile Data)
 <br><br>
 <span class=input>. </span>
-<span class=input>. capture drop turn_m5</span>
+<span class=input>. ///--- Recode Method 1</span>
+<span class=input>&gt;         capture drop turn_m5</span>
 <br><br>
-<span class=input>. recode turn ///</span>
-<span class=input>&gt;   (min/35 = 1 "Turn &lt;35") ///</span>
-<span class=input>&gt;   (36 = 2 "Turn = 36") ///</span>
-<span class=input>&gt;   (37 = 3 "Turn = 37") ///</span>
-<span class=input>&gt;   (38/45 = 4 "Turn 38 to 45") ///</span>
-<span class=input>&gt;   (46/max = 5 "Turn &gt; 45") ///</span>
-<span class=input>&gt;   (else  =. ) ///</span>
-<span class=input>&gt;   , gen(turn_m5)</span>
+<span class=input>.         recode turn ///</span>
+<span class=input>&gt;           (min/35 = 1 "Turn &lt;35") ///</span>
+<span class=input>&gt;           (36 = 2 "Turn = 36") ///</span>
+<span class=input>&gt;           (37 = 3 "Turn = 37") ///</span>
+<span class=input>&gt;           (38/45 = 4 "Turn 38 to 45") ///</span>
+<span class=input>&gt;           (46/max = 5 "Turn &gt; 45") ///</span>
+<span class=input>&gt;           (else  =. ) ///</span>
+<span class=input>&gt;           , gen(turn_m5)</span>
 (74 differences between turn and turn_m5)
 <br><br>
 <span class=input>. </span>
+<span class=input>. ///-- Recode Method 2</span>
+<span class=input>&gt;         clonevar turn_m5_alt = turn</span>
+<br><br>
+<span class=input>.         label variable turn_m5_alt "Recode using inlist and inrange"</span>
+<br><br>
+<span class=input>.         replace turn_m5_alt = 1 if inrange(turn, 31, 35)</span>
+(16 real changes made)
+<br><br>
+<span class=input>.         replace turn_m5_alt = 2 if inlist(turn, 36)</span>
+(9 real changes made)
+<br><br>
+<span class=input>.         replace turn_m5_alt = 3 if inlist(turn, 37)</span>
+(4 real changes made)
+<br><br>
+<span class=input>.         replace turn_m5_alt = 4 if inrange(turn, 38, 45)</span>
+(39 real changes made)
+<br><br>
+<span class=input>.         replace turn_m5_alt = 5 if inlist(turn, 46, 48, 51)</span>
+(6 real changes made)
+<br><br>
+<span class=input>.         label define turn_m5_alt 1 "Turn &lt;35" 2 "Turn = 36" 3 "Turn = 37" 4 "Turn 38 to 45" 5 "Turn &gt; 45", modify</span>
+<br><br>
+<span class=input>.         label values turn_m5_alt turn_m5_alt</span>
+<br><br>
 <span class=input>. </span>
 <span class=input>. ///--- Summarize</span>
 <span class=input>&gt; codebook turn*</span>
@@ -83,6 +108,23 @@ BODY{background-color: ffffff;
 <br><br>
                   type:  numeric (<span class=result>int</span>)
                  label:  <span class=result>turn_m5</span>
+<br><br>
+                 range:  [<span class=result>1</span>,<span class=result>5</span>]                        units:  <span class=result>1</span>
+<span class=result>         </span>unique values:  <span class=result>5                        </span>missing .:  <span class=result>0</span>/<span class=result>74</span>
+<br><br>
+            tabulation:  Freq.   Numeric  Label
+                    <span class=result>        16         1  </span>Turn &lt;35
+                    <span class=result>         9         2  </span>Turn = 36
+                    <span class=result>         4         3  </span>Turn = 37
+                    <span class=result>        39         4  </span>Turn 38 to 45
+                    <span class=result>         6         5  </span>Turn &gt; 45
+<br><br>
+-----------------------------------------------------------------------------------------------------------------------------
+<span class=result>turn_m5_alt                                                                                   Recode using inlist and inrange</span>
+-----------------------------------------------------------------------------------------------------------------------------
+<br><br>
+                  type:  numeric (<span class=result>int</span>)
+                 label:  <span class=result>turn_m5_alt</span>
 <br><br>
                  range:  [<span class=result>1</span>,<span class=result>5</span>]                        units:  <span class=result>1</span>
 <span class=result>         </span>unique values:  <span class=result>5                        </span>missing .:  <span class=result>0</span>/<span class=result>74</span>
@@ -137,6 +179,22 @@ Turn 38 to 45 |<span class=result>         39       52.70       91.89</span>
      Total |<span class=result>        16          9          4         39          6 </span>|<span class=result>        74 </span>
 <br><br>
 <br><br>
+<span class=input>. tab turn_m5 turn_m5_alt</span>
+<br><br>
+<span class=result>    </span>RECODE of |
+   turn (Turn |
+ Circle (ft.) |            Recode using inlist and inrange
+            ) |  Turn &lt;35  Turn = 36  Turn = 37  Turn 38 t  Turn &gt; 45 |     Total
+--------------+-------------------------------------------------------+----------
+     Turn &lt;35 |<span class=result>        16          0          0          0          0 </span>|<span class=result>        16 </span>
+    Turn = 36 |<span class=result>         0          9          0          0          0 </span>|<span class=result>         9 </span>
+    Turn = 37 |<span class=result>         0          0          4          0          0 </span>|<span class=result>         4 </span>
+Turn 38 to 45 |<span class=result>         0          0          0         39          0 </span>|<span class=result>        39 </span>
+    Turn &gt; 45 |<span class=result>         0          0          0          0          6 </span>|<span class=result>         6 </span>
+--------------+-------------------------------------------------------+----------
+        Total |<span class=result>        16          9          4         39          6 </span>|<span class=result>        74 </span>
+<br><br>
+<br><br>
 <span class=input>. </span>
 <span class=input>. </span>
 <span class=input>. ///--- End Log and to HTML</span>
@@ -144,7 +202,7 @@ Turn 38 to 45 |<span class=result>         39       52.70       91.89</span>
 <span class=result>      </span>name:  <span class=result>stata_recode_discrete_subset</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//gen/replace/fs_recode.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>closed on:  <span class=result> 6 Oct 2019, 20:10:08</span>
+<span class=result> </span>closed on:  <span class=result> 9 Oct 2019, 08:09:41</span>
 -----------------------------------------------------------------------------------------------------------------------------
 </pre>
 </body>
