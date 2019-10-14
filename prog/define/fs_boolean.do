@@ -27,12 +27,13 @@ log on
 set more off
 sysuse auto, clear
 
-
 ///--- Control
 local bl_includereg1 = 1
 local bl_includereg2 = 0
 global bl_includereg3 = 0
 global bl_includereg4 = 1
+scalar bl_includereg5 = 0
+scalar bl_includereg6 = 1
 
 ///--- Define Multiple Variables as global in delimit
 	#delimit;
@@ -75,14 +76,20 @@ if (`bl_includereg1') {
 }
 if (`bl_includereg2') {
 	eststo, title("reg2"): regress price $vars_rhs if foreign == 1
-}	
+}
 if ($bl_includereg3) {
     eststo, title("reg3"): regress price $vars_rhs if foreign == 1
 }
 if ($bl_includereg4) {
     eststo, title("reg4"): regress price $vars_rhs if foreign == 1
 }
-	esttab, title("include reg 1 2 and 4 but not 4") ///
+if (bl_includereg5) {
+    eststo, title("reg5"): regress price $vars_rhs if foreign == 1
+}
+if (bl_includereg6) {
+    eststo, title("reg6"): regress price $vars_rhs if foreign == 1
+}
+	esttab, title("include reg 1 2 and 4 but not 3, and 6 but not 5.") ///
 		mtitle ///
 		coeflabels($st_coef_label) ///
 		varwidth(50)

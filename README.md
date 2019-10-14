@@ -4,6 +4,8 @@ This is a work-in-progress [website](https://fanwangecon.github.io/Stata4Econ/) 
 
 STATA files are linked below by section. Various functions are stored in corresponding .do files. To use the files, clone the repository. Some files have examples/instructions created using Jupyter notebooks or STATA translator and are shown as HTML and PDF files. See [here](docs/gitsetup.md) for Github set up.
 
+From [Fan](https://fanwangecon.github.io/)'s other repositories: For dynamic borrowing and savings problems, see [Dynamic Asset Repository](https://fanwangecon.github.io/CodeDynaAsset/); For example R code, see [R Panel Data Code](https://fanwangecon.github.io/R4Econ/), for example Matlab code, see [Matlab Example Code](https://fanwangecon.github.io/M4Econ/); For intro econ with Matlab, see [Intro Mathematics for Economists](https://fanwangecon.github.io/Math4Econ/), and for intro stat with R, see [Intro Statistics for Undergraduates](https://fanwangecon.github.io/Stat4Econ/). See [here](https://github.com/FanWangEcon) for all of [Fan](https://fanwangecon.github.io/)'s public repositories.
+
 Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or problems.
 
 [![](https://img.shields.io/github/last-commit/fanwangecon/Stata4Econ)](https://github.com/FanWangEcon/Stata4Econ/commits/master) [![](https://img.shields.io/github/commit-activity/m/fanwangecon/Stata4Econ)](https://github.com/FanWangEcon/Stata4Econ/graphs/commit-activity) [![](https://img.shields.io/github/issues/fanwangecon/Stata4Econ)](https://github.com/FanWangEcon/Stata4Econ/issues) [![](https://img.shields.io/github/issues-pr/fanwangecon/Stata4Econ)](https://github.com/FanWangEcon/Stata4Econ/pulls)
@@ -68,7 +70,13 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 
 # 4. Programming
 
-## 4.1 Matrix
+## 4.1 Basic
+
+1. [Local, Global and Scalar](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/define/fs_boolean.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/define/fs_boolean.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/prog/define/fs_boolean.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/define/fs_boolean.pdf)
+    + local, global and scalar as boolean controls
+    + **core**: *local bl_includereg1 = 1, if (`bl_includereg1'); global bl_includereg3 = 0, if ($bl_includereg3); scalar bl_includereg5 = 0, if (bl_includereg5);*
+
+## 4.2 Matrix
 
 1. [Define and Slice Matrix](https://github.com/FanWangEcon/Stata4Econ/blob/master/matrix/define/basic.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/matrix/define/basic.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/matrix/define/basic.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/matrix/define/basic.pdf)
     + matrix definition and slicing, get column and row names, replace matrix subset.

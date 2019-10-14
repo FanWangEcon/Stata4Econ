@@ -14,11 +14,11 @@ BODY{background-color: ffffff;
 </head>
 <body>
 <pre>
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
       name:  <span class=result>&lt;unnamed&gt;</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\prog\define\fs_boolean.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>opened on:  <span class=result>20 Sep 2019, 14:19:00</span>
+<span class=result> </span>opened on:  <span class=result>13 Oct 2019, 14:24:15</span>
 <br><br>
 <span class=input>. log on</span>
 (log already on)
@@ -31,7 +31,6 @@ BODY{background-color: ffffff;
 (1978 Automobile Data)
 <br><br>
 <span class=input>. </span>
-<span class=input>. </span>
 <span class=input>. ///--- Control</span>
 <span class=input>&gt; local bl_includereg1 = 1</span>
 <br><br>
@@ -40,6 +39,10 @@ BODY{background-color: ffffff;
 <span class=input>. global bl_includereg3 = 0</span>
 <br><br>
 <span class=input>. global bl_includereg4 = 1</span>
+<br><br>
+<span class=input>. scalar bl_includereg5 = 0</span>
+<br><br>
+<span class=input>. scalar bl_includereg6 = 1</span>
 <br><br>
 <span class=input>. </span>
 <span class=input>. ///--- Define Multiple Variables as global in delimit</span>
@@ -78,8 +81,10 @@ delimiter now ;
 delimiter now cr
 <span class=input>. </span>
 <span class=input>.         di `"$st_coef_label"'</span>
-<span class=result>                 mpg "mpg variable"                 1.rep78 "BASE GROUP CONSTANT = rep78 is 1"                 2.rep78 "rep78 is 2"                 3.rep78 "rep78 is 3"                 4.rep78 "rep78 is 4"                 </span>
-<span class=result>&gt; 5.rep78 "rep78 is 5"                 headroom "headroom variable"                 trunk "this is the trunk variable"                 weight "and here the weight variable"           </span>
+<span class=result>                 mpg "mpg variable"                 1.rep78 "BASE GROUP CONSTANT = rep78 is 1"                 2.rep78 "rep78</span>
+<span class=result>&gt;  is 2"                 3.rep78 "rep78 is 3"                 4.rep78 "rep78 is 4"                 5.rep78 "rep78 is 5"      </span>
+<span class=result>&gt;            headroom "headroom variable"                 trunk "this is the trunk variable"                 weight "and here</span>
+<span class=result>&gt;  the weight variable"           </span>
 <br><br>
 <span class=input>. </span>
 <span class=input>. ///--- Describe and Summarize</span>
@@ -89,10 +94,10 @@ Contains data from <span class=result>C:\Program Files (x86)\Stata14\ado\base/a/
   obs:<span class=result>            74                          1978 Automobile Data</span>
  vars:<span class=result>            12                          13 Apr 2014 17:45</span>
  size:<span class=result>         3,182                          (_dta has notes)</span>
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
 <span class=result>make           </span> str18   %-18s                 <span class=result>Make and Model</span>
 <span class=result>price          </span> int     %8.0gc                <span class=result>Price</span>
 <span class=result>mpg            </span> int     %8.0g                 <span class=result>Mileage (mpg)</span>
@@ -105,7 +110,7 @@ variable name   type    format     label      variable label
 <span class=result>displacement   </span> int     %8.0g                 <span class=result>Displacement (cu. in.)</span>
 <span class=result>gear_ratio     </span> float   %6.2f                 <span class=result>Gear Ratio</span>
 <span class=result>foreign        </span> byte    %8.0g      origin     <span class=result>Car type</span>
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
 Sorted by: <span class=result>foreign</span>
 <br><br>
 <span class=input>.         summ $rhs_vars_list</span>
@@ -163,7 +168,7 @@ displacement |<span class=result>         74    197.2973    91.83722         79 
 <br><br>
 <span class=input>. if (`bl_includereg2') {</span>
 <span class=input>.         eststo, title("reg2"): regress price $vars_rhs if foreign == 1</span>
-<span class=input>. }       </span>
+<span class=input>. }</span>
 <br><br>
 <span class=input>. if ($bl_includereg3) {</span>
 <span class=input>.     eststo, title("reg3"): regress price $vars_rhs if foreign == 1</span>
@@ -200,48 +205,83 @@ note: 5.rep78 omitted because of collinearity
 (<span class=result>est2</span> stored)
 <span class=input>. }</span>
 <br><br>
-<span class=input>.         esttab, title("include reg 1 2 and 4 but not 4") ///</span>
+<span class=input>. if (bl_includereg5) {</span>
+<span class=input>.     eststo, title("reg5"): regress price $vars_rhs if foreign == 1</span>
+<span class=input>. }</span>
+<br><br>
+<span class=input>. if (bl_includereg6) {</span>
+<span class=input>.     eststo, title("reg6"): regress price $vars_rhs if foreign == 1</span>
+note: 1b.rep78 identifies no observations in the sample
+note: 5.rep78 omitted because of collinearity
+<br><br>
+      Source |       SS           df       MS      Number of obs   =<span class=result>        21</span>
+-------------+----------------------------------   F(6, 14)        = <span class=result>     8.35</span>
+       Model | <span class=result> 77099791.3         6  12849965.2   </span>Prob &gt; F        =<span class=result>    0.0006</span>
+    Residual | <span class=result> 21555563.2        14  1539683.09   </span>R-squared       =<span class=result>    0.7815</span>
+-------------+----------------------------------   Adj R-squared   =<span class=result>    0.6879</span>
+       Total | <span class=result> 98655354.6        20  4932767.73   </span>Root MSE        =   <span class=result> 1240.8</span>
+<br><br>
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         mpg |<span class=result>   41.78335   69.31091     0.60   0.556    -106.8738    190.4405</span>
+             |
+       rep78 |
+          1  |<span class=result>          0</span>  (empty)
+          3  |<span class=result>    866.061   1060.461     0.82   0.428    -1408.402    3140.524</span>
+          4  |<span class=result>   1367.986   686.8411     1.99   0.066    -105.1419    2841.114</span>
+          5  |<span class=result>          0</span>  (omitted)
+             |
+    headroom |<span class=result>  -237.1521   660.3787    -0.36   0.725    -1653.524    1179.219</span>
+       trunk |<span class=result>     155.15   94.41051     1.64   0.123    -47.34039    357.6404</span>
+      weight |<span class=result>   5.747012   1.259762     4.56   0.000     3.045091    8.448933</span>
+       _cons |<span class=result>  -9844.945   4889.272    -2.01   0.064    -20331.39    641.4998</span>
+------------------------------------------------------------------------------
+(<span class=result>est3</span> stored)
+<span class=input>. }</span>
+<br><br>
+<span class=input>.         esttab, title("include reg 1 2 and 4 but not 3, and 6 but not 5.") ///</span>
 <span class=input>&gt;                 mtitle ///</span>
 <span class=input>&gt;                 coeflabels($st_coef_label) ///</span>
 <span class=input>&gt;                 varwidth(50)</span>
 <br><br>
-include reg 1 2 and 4 but not 4
-----------------------------------------------------------------------------------
-                                                            (1)             (2)   
-                                                           reg1            reg4   
-----------------------------------------------------------------------------------
-mpg variable                                      <span class=result>        92.54           41.78   </span>
-                                                  <span class=result>       </span>(<span class=result>0.57</span>)<span class=result>          </span>(<span class=result>0.60</span>)<span class=result>   </span>
+include reg 1 2 and 4 but not 3, and 6 but not 5.
+--------------------------------------------------------------------------------------------------
+                                                            (1)             (2)             (3)   
+                                                           reg1            reg4            reg6   
+--------------------------------------------------------------------------------------------------
+mpg variable                                      <span class=result>        92.54           41.78           41.78   </span>
+                                                  <span class=result>       </span>(<span class=result>0.57</span>)<span class=result>          </span>(<span class=result>0.60</span>)<span class=result>          </span>(<span class=result>0.60</span>)<span class=result>   </span>
 <br><br>
-BASE GROUP CONSTANT = rep78 is 1                  <span class=result>            0               0   </span>
-                                                  <span class=result>          </span>(<span class=result>.</span>)<span class=result>             </span>(<span class=result>.</span>)<span class=result>   </span>
+BASE GROUP CONSTANT = rep78 is 1                  <span class=result>            0               0               0   </span>
+                                                  <span class=result>          </span>(<span class=result>.</span>)<span class=result>             </span>(<span class=result>.</span>)<span class=result>             </span>(<span class=result>.</span>)<span class=result>   </span>
 <br><br>
-rep78 is 2                                        <span class=result>       1582.1                   </span>
-                                                  <span class=result>       </span>(<span class=result>0.80</span>)<span class=result>                   </span>
+rep78 is 2                                        <span class=result>       1582.1                                   </span>
+                                                  <span class=result>       </span>(<span class=result>0.80</span>)<span class=result>                                   </span>
 <br><br>
-rep78 is 3                                        <span class=result>       1832.2           866.1   </span>
-                                                  <span class=result>       </span>(<span class=result>0.98</span>)<span class=result>          </span>(<span class=result>0.82</span>)<span class=result>   </span>
+rep78 is 3                                        <span class=result>       1832.2           866.1           866.1   </span>
+                                                  <span class=result>       </span>(<span class=result>0.98</span>)<span class=result>          </span>(<span class=result>0.82</span>)<span class=result>          </span>(<span class=result>0.82</span>)<span class=result>   </span>
 <br><br>
-rep78 is 4                                        <span class=result>        921.9          1368.0   </span>
-                                                  <span class=result>       </span>(<span class=result>0.46</span>)<span class=result>          </span>(<span class=result>1.99</span>)<span class=result>   </span>
+rep78 is 4                                        <span class=result>        921.9          1368.0          1368.0   </span>
+                                                  <span class=result>       </span>(<span class=result>0.46</span>)<span class=result>          </span>(<span class=result>1.99</span>)<span class=result>          </span>(<span class=result>1.99</span>)<span class=result>   </span>
 <br><br>
-rep78 is 5                                        <span class=result>       4172.7               0   </span>
-                                                  <span class=result>       </span>(<span class=result>1.56</span>)<span class=result>             </span>(<span class=result>.</span>)<span class=result>   </span>
+rep78 is 5                                        <span class=result>       4172.7               0               0   </span>
+                                                  <span class=result>       </span>(<span class=result>1.56</span>)<span class=result>             </span>(<span class=result>.</span>)<span class=result>             </span>(<span class=result>.</span>)<span class=result>   </span>
 <br><br>
-headroom variable                                 <span class=result>       -436.3          -237.2   </span>
-                                                  <span class=result>      </span>(<span class=result>-0.84</span>)<span class=result>         </span>(<span class=result>-0.36</span>)<span class=result>   </span>
+headroom variable                                 <span class=result>       -436.3          -237.2          -237.2   </span>
+                                                  <span class=result>      </span>(<span class=result>-0.84</span>)<span class=result>         </span>(<span class=result>-0.36</span>)<span class=result>         </span>(<span class=result>-0.36</span>)<span class=result>   </span>
 <br><br>
-this is the trunk variable                        <span class=result>       -76.15           155.2   </span>
-                                                  <span class=result>      </span>(<span class=result>-0.56</span>)<span class=result>          </span>(<span class=result>1.64</span>)<span class=result>   </span>
+this is the trunk variable                        <span class=result>       -76.15           155.2           155.2   </span>
+                                                  <span class=result>      </span>(<span class=result>-0.56</span>)<span class=result>          </span>(<span class=result>1.64</span>)<span class=result>          </span>(<span class=result>1.64</span>)<span class=result>   </span>
 <br><br>
-and here the weight variable                      <span class=result>        4.611***        5.747***</span>
-                                                  <span class=result>       </span>(<span class=result>4.38</span>)<span class=result>          </span>(<span class=result>4.56</span>)<span class=result>   </span>
+and here the weight variable                      <span class=result>        4.611***        5.747***        5.747***</span>
+                                                  <span class=result>       </span>(<span class=result>4.38</span>)<span class=result>          </span>(<span class=result>4.56</span>)<span class=result>          </span>(<span class=result>4.56</span>)<span class=result>   </span>
 <br><br>
-_cons                                             <span class=result>     -10261.7         -9844.9   </span>
-                                                  <span class=result>      </span>(<span class=result>-1.56</span>)<span class=result>         </span>(<span class=result>-2.01</span>)<span class=result>   </span>
-----------------------------------------------------------------------------------
-N                                                 <span class=result>           48              21   </span>
-----------------------------------------------------------------------------------
+_cons                                             <span class=result>     -10261.7         -9844.9         -9844.9   </span>
+                                                  <span class=result>      </span>(<span class=result>-1.56</span>)<span class=result>         </span>(<span class=result>-2.01</span>)<span class=result>         </span>(<span class=result>-2.01</span>)<span class=result>   </span>
+--------------------------------------------------------------------------------------------------
+N                                                 <span class=result>           48              21              21   </span>
+--------------------------------------------------------------------------------------------------
 t statistics in parentheses
 * p&lt;0.05, ** p&lt;0.01, *** p&lt;0.001
 <br><br>
@@ -251,8 +291,8 @@ t statistics in parentheses
 <span class=result>      </span>name:  <span class=result>&lt;unnamed&gt;</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\prog\define\fs_boolean.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>closed on:  <span class=result>20 Sep 2019, 14:19:04</span>
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<span class=result> </span>closed on:  <span class=result>13 Oct 2019, 14:24:16</span>
+-----------------------------------------------------------------------------------------------------------------------------
 </pre>
 </body>
 </html>
