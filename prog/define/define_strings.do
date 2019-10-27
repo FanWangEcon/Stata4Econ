@@ -1,5 +1,6 @@
 cls
 clear
+macro drop _all
 
 /*
   Back to Fan's Stata4Econ or other repositories:
@@ -12,7 +13,7 @@ clear
   - http://fanwangecon.github.io/Stat4Econ/
   - http://fanwangecon.github.io/Tex4Econ
 
-  1. define variables through delimit 
+  1. define variables through delimit
   2. define string with quotes
   3. run regression, and use defined string as labels for rows in esttab
 */
@@ -44,7 +45,7 @@ sysuse auto, clear
 ///--- Define String with Quotes
 	#delimit;
 	global st_coef_label "
-		mpg "mpg variable"		
+		mpg "mpg variable"
 		1.rep78 "BASE GROUP CONSTANT = rep78 is 1"
 		2.rep78 "rep78 is 2"
 		3.rep78 "rep78 is 3"
@@ -61,13 +62,13 @@ sysuse auto, clear
 ///--- Describe and Summarize
 	d $rhs_vars_list, f
 	summ $rhs_vars_list
-	
+
 ///--- Run Regression
-	
-	eststo clear	
-	eststo, title("reg1"): regress price $vars_rhs if foreign == 0	
+
+	eststo clear
+	eststo, title("reg1"): regress price $vars_rhs if foreign == 0
 	eststo, title("reg2"): regress price $vars_rhs if foreign == 1
-		
+
 	esttab, title("regtest") ///
 		mtitle ///
 		coeflabels($st_coef_label) ///

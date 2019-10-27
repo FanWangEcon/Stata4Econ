@@ -1,5 +1,6 @@
 cls
 clear
+macro drop _all
 
 /*
   Back to Fan's Stata4Econ or other repositories:
@@ -15,7 +16,7 @@ clear
   1. given a list of variables, and some conditioning statement
   2. what is the subset of observations where these variables all have non missing values
   3. and satisfying the condioning statements
-  
+
 */
 
 ///--- Start log
@@ -27,7 +28,7 @@ global curlogfile "~/Stata4Econ/${st_link}"
 global st_logname "select_rows_nonmissing"
 log using "${curlogfile}" , replace name($st_logname)
 log on $st_logname
- 
+
 ///-- Site Link: Fan's Project Reusable Stata Codes Table of Content
 di "https://fanwangecon.github.io/"
 di "https://fanwangecon.github.io/Stata4Econ/"
@@ -42,20 +43,20 @@ sysuse auto, clear
 ///--- Generating Index for Dropping
 set seed 987
 scalar it_drop_frac = 3
-gen row_idx_it = round((_n/_N)*it_drop_frac) 
+gen row_idx_it = round((_n/_N)*it_drop_frac)
 gen row_idx_rand = round(it_drop_frac*uniform())
 replace mpg =. if row_idx_it == row_idx_rand
 
 set seed 123
 scalar it_drop_frac = 3
-replace row_idx_it = round((_n/_N)*it_drop_frac) 
+replace row_idx_it = round((_n/_N)*it_drop_frac)
 replace row_idx_rand = round(it_drop_frac*uniform())
 replace price =. if row_idx_it == row_idx_rand
 
 ///--- list vars to include in a regression for example
 global svr_list "mpg price length weight"
 
-///--- Conditioning 
+///--- Conditioning
 global scd_bse "foreign !=."
 global scd_one "& foreign == 1"
 global scd_two "& gear_ratio <= 4"

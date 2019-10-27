@@ -1,5 +1,6 @@
 cls
 clear
+macro drop _all
 
 /*
   Back to Fan's Stata4Econ or other repositories:
@@ -71,7 +72,7 @@ eststo clear
 regress ///
     weight ///
     ib0.foreign ///
-    ib3.rep78#ib0.foreign 
+    ib3.rep78#ib0.foreign
 esttab, mtitle title("Foreign or Domestic")
 
 * using cts for binary

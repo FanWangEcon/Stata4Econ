@@ -1,5 +1,6 @@
 cls
 clear
+macro drop _all
 
 /*
   Back to Fan's Stata4Econ or other repositories:
@@ -82,7 +83,7 @@ global filetitle "Stata Matrix Slicing, Select Subset of Matrix Values, Subset o
 ///--- End Log and to HTML
 log close _all
 capture noisily {
-  log2html "${curlogfile}", replace title($filetitle (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master${st_link}.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>))  
+  log2html "${curlogfile}", replace title($filetitle (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master${st_link}.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>))
 }
 ///--- to PDF
 capture noisily {

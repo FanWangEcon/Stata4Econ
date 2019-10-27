@@ -1,5 +1,6 @@
 cls
 clear
+macro drop _all
 
 /*
   Back to Fan's Stata4Econ or other repositories:
@@ -13,11 +14,11 @@ clear
   - http://fanwangecon.github.io/Tex4Econ
 
   1. drop a random subset of values
-  
+
 */
 
 ///--- Start log
-set more off 
+set more off
 capture log close _all
 cd "${root_log}"
 global st_link "/rand/basic/fs_droprand"
@@ -40,7 +41,7 @@ sysuse auto, clear
 ///--- Generating Index for Dropping
 set seed 987
 scalar it_drop_frac = 3
-gen row_idx_it = round((_n/_N)*it_drop_frac) 
+gen row_idx_it = round((_n/_N)*it_drop_frac)
 gen row_idx_rand = round(it_drop_frac*uniform())
 
 //--- drop when row_idx_it == row_idx_rand, if it_drop_frac set at 3
