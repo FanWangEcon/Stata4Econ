@@ -14,11 +14,11 @@ BODY{background-color: ffffff;
 </head>
 <body>
 <pre>
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <span class=result>&lt;unnamed&gt;</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\reglin\multipanel\allpurpose\allpurpose.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>opened on:  <span class=result> 2 Sep 2019, 15:37:47</span>
+<span class=result> </span>opened on:  <span class=result> 9 Apr 2020, 11:23:03</span>
 <br><br>
 <span class=input>. log on</span>
 (log already on)
@@ -52,12 +52,12 @@ BODY{background-color: ffffff;
 <span class=input>&gt;   /////////////////////////////////////////////////</span>
 <span class=input>&gt;   /*</span>
 <span class=input>&gt;     A regression has:</span>
-<span class=input>&gt;       1. reg method</span>
-<span class=input>&gt;       2. LHS</span>
-<span class=input>&gt;       3. RHS (to keep)</span>
-<span class=input>&gt;       4. RHS (controls not to show in table)</span>
-<span class=input>&gt;       5. Conditions</span>
-<span class=input>&gt;       6. reg options</span>
+<span class=input>&gt;       1. reg method: stc_rgc</span>
+<span class=input>&gt;       2. LHS: svr_lhs</span>
+<span class=input>&gt;       3. RHS (to keep): svr_rhs (go to svr_kep)</span>
+<span class=input>&gt;       4. RHS (controls not to show in table): svr_cov</span>
+<span class=input>&gt;       5. Conditions: svr_cdn</span>
+<span class=input>&gt;       6. reg options: stc_opt</span>
 <span class=input>&gt;   */</span>
 <span class=input>. </span>
 <span class=input>.   * rgc = regression, opt = option</span>
@@ -74,13 +74,20 @@ BODY{background-color: ffffff;
 <span class=input>.   global sif_cdn "if price !=. &amp; foreign !=."</span>
 <br><br>
 <span class=input>. </span>
-<span class=input>.   * variable names lists</span>
+<span class=input>.   * regression outcome</span>
 <span class=input>.   global svr_lhs "price"</span>
 <br><br>
+<span class=input>. </span>
+<span class=input>.   * right and side and what to Display</span>
+<span class=input>.   * svr_rhs what we want to keep on table</span>
+<span class=input>.   * svr_cov controls to not show on table</span>
+<span class=input>.   * this keeping aspect is not automatic, to allow flexibility, can specify</span>
+<span class=input>.   * with svr_kep what should be kept, below it is keeping svr_rhs.</span>
 <span class=input>.   global svr_rhs "rep78"</span>
 <br><br>
 <span class=input>.   global svr_cov "gear_ratio"</span>
 <br><br>
+<span class=input>. </span>
 <span class=input>.   global svr_kep "${svr_rhs}"</span>
 <br><br>
 <span class=input>. </span>
@@ -90,6 +97,9 @@ BODY{background-color: ffffff;
 <span class=input>&gt; </span>
 <span class=input>.   * column count, and panel count</span>
 <span class=input>.   * can specify any numbers here, code will run for any col and row count</span>
+<span class=input>.   * if both equal to 1, will only generate 1 panel with 1 column of regression</span>
+<span class=input>.   * if both very large, but do not specify column or panel specific variables or</span>
+<span class=input>.   * conditions, will just keep running identical regressions over and over.</span>
 <span class=input>.   global it_col_cnt = 7</span>
 <br><br>
 <span class=input>.   global it_pan_cnt = 6</span>
@@ -98,7 +108,7 @@ BODY{background-color: ffffff;
 <span class=input>.   /////////////////////////////////////////////////</span>
 <span class=input>&gt;   ///--- A3. Labeling</span>
 <span class=input>&gt;   /////////////////////////////////////////////////</span>
-<span class=input>&gt;   </span>
+<span class=input>&gt; </span>
 <span class=input>.   * column title, panel title, and slb_pan_nte = panel notes</span>
 <span class=input>.   global slb_col "price"</span>
 <br><br>
@@ -160,13 +170,13 @@ BODY{background-color: ffffff;
 <span class=input>&gt; /////////////////////////////////////////////////</span>
 <span class=input>&gt; </span>
 <span class=input>.   * Panel titling, 1 2 3 get panel specific titles, other use base</span>
-<span class=input>.   global slb_pan_1 "Panel A, foreign == 0"  </span>
+<span class=input>.   global slb_pan_1 "Panel A, foreign == 0"</span>
 <br><br>
-<span class=input>.   global slb_pan_2 "Panel B, foreign == 1"  </span>
+<span class=input>.   global slb_pan_2 "Panel B, foreign == 1"</span>
 <br><br>
 <span class=input>.   global slb_pan_3 "Panel C, length &gt;= 190"</span>
 <br><br>
-<span class=input>.   </span>
+<span class=input>. </span>
 <span class=input>.   * Panel Specific Notes</span>
 <span class=input>.   global slb_pan_nte_1 `""This panel only includes foreign == 0. Absorb no effects.""'</span>
 <br><br>
@@ -176,7 +186,7 @@ BODY{background-color: ffffff;
 <br><br>
 <span class=input>.   global slb_pan_nte_5 `""This panel is the 5th" "Yes it is the 5th, so what""'</span>
 <br><br>
-<span class=input>.   </span>
+<span class=input>. </span>
 <span class=input>.   * the 3rd panel and 6 panel lhs variable is mpg, note column override panel lhs</span>
 <span class=input>.   global svr_lhs_pan_3 "mpg"</span>
 <br><br>
@@ -536,12 +546,12 @@ added scalar:
 <span class=input>&gt; /////////////////////////////////////////////////</span>
 <span class=input>&gt; </span>
 <span class=input>.         foreach it_pan_ctr of numlist 1(1)$it_pan_cnt {</span>
-  2<span class=input>.         </span>
+  2<span class=input>. </span>
 <span class=input>.                 global it_pan_ctr "`it_pan_ctr'"</span>
   3<span class=input>. </span>
 <span class=input>.                 global slb_eso_u "${slb_eso}"</span>
   4<span class=input>.                 global slb_tex_eso_u "${slb_tex_eso}"</span>
-  5<span class=input>.                 </span>
+  5<span class=input>. </span>
 <span class=input>.                 global slb_pan_u "${slb_pan}"</span>
   6<span class=input>.                 global slb_pan_nte_u "${slb_pan_nte}"</span>
   7<span class=input>. </span>
@@ -557,20 +567,20 @@ added scalar:
  15<span class=input>.                 global st_esttab_opts_main `"addnotes(${slb_pan_nte_u}) title("${slb_pan_u}") keep(${svr_kep_u}) order(${svr_kep_u})"'</span>
  16<span class=input>.                 global st_esttab_opts_tex `"${st_esttab_opts_main} ${slb_tex_eso_u}"'</span>
  17<span class=input>.                 global st_esttab_opts_oth `"${st_esttab_opts_main} ${slb_eso_u}"'</span>
- 18<span class=input>.                 </span>
+ 18<span class=input>. </span>
 <span class=input>.                 di "MODELS: ${smd_${it_pan_ctr}_m}"</span>
  19<span class=input>.                 di `"st_esttab_opts_main: ${st_esttab_opts_main}"'</span>
- 20<span class=input>.                 </span>
+ 20<span class=input>. </span>
 <span class=input>.                 ///--- output to log</span>
 <span class=input>&gt;                 esttab ${smd_${it_pan_ctr}_m}, ${st_esttab_opts_oth}</span>
- 21<span class=input>.                                 </span>
+ 21<span class=input>. </span>
 <span class=input>.                 ///--- save results to html, rtf, as well as tex</span>
 <span class=input>&gt;                 if ($it_pan_ctr == 1) {</span>
  22<span class=input>.                         global st_replace "replace"</span>
  23<span class=input>.                 }</span>
  24<span class=input>.                 else {</span>
  25<span class=input>.                         global st_replace "append"</span>
- 26<span class=input>.                 }               </span>
+ 26<span class=input>.                 }</span>
  27<span class=input>.                 esttab ${smd_${it_pan_ctr}_m} using "${st_tab_html}", ${st_esttab_opts_oth} $st_replace</span>
  28<span class=input>.                 esttab ${smd_${it_pan_ctr}_m} using "${st_tab_rtf}",  ${st_esttab_opts_oth} $st_replace</span>
  29<span class=input>.                 esttab ${smd_${it_pan_ctr}_m} using "${st_tab_tex}",  ${st_esttab_opts_tex} $st_replace</span>
@@ -733,8 +743,8 @@ general notes
 <span class=result>      </span>name:  <span class=result>&lt;unnamed&gt;</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan\Stata4Econ\reglin\multipanel\allpurpose\allpurpose.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>closed on:  <span class=result> 2 Sep 2019, 15:37:51</span>
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<span class=result> </span>closed on:  <span class=result> 9 Apr 2020, 11:23:07</span>
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </pre>
 </body>
 </html>
