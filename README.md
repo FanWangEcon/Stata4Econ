@@ -51,8 +51,10 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 
 ## 3.1 Generate
 
-1. [Generate Grouped Categorical Variable](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/gen/replace/fs_recode.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.pdf)
-    + Reduce the number of categories for a categorical variable
+1. [Generate Re-group Categorical Variable](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/gen/replace/fs_recode.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.pdf)
+    + Reduce the number of categories for a categorical variable.
+    + Relabel and regroup a categorical variables.
+    + Relabel or revalue or regroup multiple variables loop semi-automated.
     + **core**: *recode turn (min/35 = 1 "Turn <35") ... (46/max = 5 "Turn > 45") (else  =. ), gen(turn_m5); if inrange(turn, 31, 35), if inlist(turn, 46, 48, 51)*
 
 ## 3.2 Summary

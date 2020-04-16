@@ -16,11 +16,11 @@ BODY{background-color: ffffff;
 <body>
 <h2>Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups: recode, inrange, inlist (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</h2>
 <pre>
------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <span class=result>stata_recode_discrete_subset</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//gen/replace/fs_recode.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>opened on:  <span class=result> 9 Oct 2019, 08:09:41</span>
+<span class=result> </span>opened on:  <span class=result>16 Apr 2020, 03:33:05</span>
 <br><br>
 <span class=input>. log on $st_logname</span>
 (log already on)
@@ -45,155 +45,450 @@ BODY{background-color: ffffff;
 (1978 Automobile Data)
 <br><br>
 <span class=input>. </span>
-<span class=input>. ///--- Recode Method 1</span>
-<span class=input>&gt;         capture drop turn_m5</span>
+<span class=input>. ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- Recode Method 1</span>
+<span class=input>&gt; ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; capture drop turn_m5</span>
 <br><br>
-<span class=input>.         recode turn ///</span>
-<span class=input>&gt;           (min/35 = 1 "Turn &lt;35") ///</span>
-<span class=input>&gt;           (36 = 2 "Turn = 36") ///</span>
-<span class=input>&gt;           (37 = 3 "Turn = 37") ///</span>
-<span class=input>&gt;           (38/45 = 4 "Turn 38 to 45") ///</span>
-<span class=input>&gt;           (46/max = 5 "Turn &gt; 45") ///</span>
-<span class=input>&gt;           (else  =. ) ///</span>
-<span class=input>&gt;           , gen(turn_m5)</span>
+<span class=input>. recode turn ///</span>
+<span class=input>&gt;         (min/35 = 1 "Turn &lt;35") ///</span>
+<span class=input>&gt;         (36 = 2 "Turn = 36") ///</span>
+<span class=input>&gt;         (37 = 3 "Turn = 37") ///</span>
+<span class=input>&gt;         (38/45 = 4 "Turn 38 to 45") ///</span>
+<span class=input>&gt;         (46/max = 5 "Turn &gt; 45") ///</span>
+<span class=input>&gt;         (else  =. ) ///</span>
+<span class=input>&gt;         , gen(turn_m5)</span>
 (74 differences between turn and turn_m5)
 <br><br>
 <span class=input>. </span>
-<span class=input>. ///-- Recode Method 2</span>
-<span class=input>&gt;         clonevar turn_m5_alt = turn</span>
+<span class=input>. ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- Recode Method 2</span>
+<span class=input>&gt; ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; clonevar turn_m5_alt = turn</span>
 <br><br>
-<span class=input>.         label variable turn_m5_alt "Recode using inlist and inrange"</span>
+<span class=input>. label variable turn_m5_alt "Recode using inlist and inrange"</span>
 <br><br>
-<span class=input>.         replace turn_m5_alt = 1 if inrange(turn, 31, 35)</span>
+<span class=input>. replace turn_m5_alt = 1 if inrange(turn, 31, 35)</span>
 (16 real changes made)
 <br><br>
-<span class=input>.         replace turn_m5_alt = 2 if inlist(turn, 36)</span>
+<span class=input>. replace turn_m5_alt = 2 if inlist(turn, 36)</span>
 (9 real changes made)
 <br><br>
-<span class=input>.         replace turn_m5_alt = 3 if inlist(turn, 37)</span>
+<span class=input>. replace turn_m5_alt = 3 if inlist(turn, 37)</span>
 (4 real changes made)
 <br><br>
-<span class=input>.         replace turn_m5_alt = 4 if inrange(turn, 38, 45)</span>
+<span class=input>. replace turn_m5_alt = 4 if inrange(turn, 38, 45)</span>
 (39 real changes made)
 <br><br>
-<span class=input>.         replace turn_m5_alt = 5 if inlist(turn, 46, 48, 51)</span>
+<span class=input>. replace turn_m5_alt = 5 if inlist(turn, 46, 48, 51)</span>
 (6 real changes made)
 <br><br>
-<span class=input>.         label define turn_m5_alt 1 "Turn &lt;35" 2 "Turn = 36" 3 "Turn = 37" 4 "Turn 38 to 45" 5 "Turn &gt; 45", modify</span>
+<span class=input>. label define turn_m5_alt 1 "Turn &lt;35" 2 "Turn = 36" 3 "Turn = 37" 4 "Turn 38 to 45" 5 "Turn &gt; 45", modify</span>
 <br><br>
-<span class=input>.         label values turn_m5_alt turn_m5_alt</span>
+<span class=input>. label values turn_m5_alt turn_m5_alt</span>
 <br><br>
 <span class=input>. </span>
-<span class=input>. ///--- Summarize</span>
-<span class=input>&gt; codebook turn*</span>
+<span class=input>. ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- Recode Method 3: Recode based on single variable, </span>
+<span class=input>&gt; ///    slightly less typing, compose ingredients together</span>
+<span class=input>&gt; ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; /*</span>
+<span class=input>&gt; Define string using local strings to avoid some retyping. </span>
+<span class=input>&gt; try to make variable label not longer than width limit. </span>
+<span class=input>&gt; */</span>
+<span class=input>. </span>
+<span class=input>. //-- Set Variable Strings</span>
+<span class=input>. global svr_newv "trunk_new"</span>
 <br><br>
------------------------------------------------------------------------------------------------------------------------------
-<span class=result>turn                                                                                                       Turn Circle (ft.) </span>
------------------------------------------------------------------------------------------------------------------------------
+<span class=input>. global svr_oldv "trunk"</span>
 <br><br>
-                  type:  numeric (<span class=result>int</span>)
+<span class=input>. global slb_labl "this is the new version of the trunk variable"</span>
 <br><br>
-                 range:  [<span class=result>31</span>,<span class=result>51</span>]                      units:  <span class=result>1</span>
-<span class=result>         </span>unique values:  <span class=result>18                       </span>missing .:  <span class=result>0</span>/<span class=result>74</span>
+<span class=input>. global slb_note "we reset this variable be grouping values 5 to 10, 11 to 13, 14 "</span>
 <br><br>
-                  mean:<span class=result>   39.6486</span>
-              std. dev:<span class=result>   4.39935</span>
+<span class=input>. global slb_note "$slb_note to 18, 20 to 22, and 23 into subgroups. We did this "</span>
 <br><br>
-           percentiles:        10%       25%       50%       75%       90%
-<span class=result>                                34        36        40        43        45</span>
+<span class=input>. global slb_note "$slb_note test things out for reseting variables"</span>
 <br><br>
------------------------------------------------------------------------------------------------------------------------------
-<span class=result>turn_m5                                                                                   RECODE of turn (Turn Circle (ft.) )</span>
------------------------------------------------------------------------------------------------------------------------------
+<span class=input>. </span>
+<span class=input>. //-- value resetting</span>
+<span class=input>. #delimit;</span>
+delimiter now ;
+<span class=input>. global slb_valv "</span>
+<span class=input>&gt;         (min/4 = 1 "trunk &lt;5")</span>
+<span class=input>&gt;         (5/10  = 2 "Turn = 36")</span>
+<span class=input>&gt;         (11/13 = 3 "Turn = 37")</span>
+<span class=input>&gt;         (14/18 = 4 "Turn 38 to 45")</span>
+<span class=input>&gt;         (20/22 = 5 "Turn &gt; 45")</span>
+<span class=input>&gt;         (23 = 5 "Turn &gt; 45")</span>
+<span class=input>&gt;         (else  =. )</span>
+<span class=input>&gt;   ";</span>
 <br><br>
-                  type:  numeric (<span class=result>int</span>)
-                 label:  <span class=result>turn_m5</span>
+<span class=input>. #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>. //-- recode</span>
+<span class=input>. * generate</span>
+<span class=input>. capture drop $svr_newv</span>
 <br><br>
-                 range:  [<span class=result>1</span>,<span class=result>5</span>]                        units:  <span class=result>1</span>
-<span class=result>         </span>unique values:  <span class=result>5                        </span>missing .:  <span class=result>0</span>/<span class=result>74</span>
+<span class=input>. recode $svr_oldv $slb_valv, gen($svr_newv)</span>
+(74 differences between trunk and trunk_new)
 <br><br>
-            tabulation:  Freq.   Numeric  Label
-                    <span class=result>        16         1  </span>Turn &lt;35
-                    <span class=result>         9         2  </span>Turn = 36
-                    <span class=result>         4         3  </span>Turn = 37
-                    <span class=result>        39         4  </span>Turn 38 to 45
-                    <span class=result>         6         5  </span>Turn &gt; 45
+<span class=input>. label variable $svr_newv "$slb_labl"</span>
 <br><br>
------------------------------------------------------------------------------------------------------------------------------
-<span class=result>turn_m5_alt                                                                                   Recode using inlist and inrange</span>
------------------------------------------------------------------------------------------------------------------------------
+<span class=input>. notes $svr_newv: $slb_note</span>
 <br><br>
-                  type:  numeric (<span class=result>int</span>)
-                 label:  <span class=result>turn_m5_alt</span>
+<span class=input>. * summ</span>
+<span class=input>. d $svr_oldv $svr_newv, f</span>
 <br><br>
-                 range:  [<span class=result>1</span>,<span class=result>5</span>]                        units:  <span class=result>1</span>
-<span class=result>         </span>unique values:  <span class=result>5                        </span>missing .:  <span class=result>0</span>/<span class=result>74</span>
+<span class=result>              </span>storage   display    value
+variable name   type    format     label      variable label
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<span class=result>trunk          </span> int     %8.0g                 <span class=result>Trunk space (cu. ft.)</span>
+<span class=result>trunk_new      </span> int     %13.0g     trunk_new
+                                            * <span class=result>this is the new version of the trunk variable</span>
 <br><br>
-            tabulation:  Freq.   Numeric  Label
-                    <span class=result>        16         1  </span>Turn &lt;35
-                    <span class=result>         9         2  </span>Turn = 36
-                    <span class=result>         4         3  </span>Turn = 37
-                    <span class=result>        39         4  </span>Turn 38 to 45
-                    <span class=result>         6         5  </span>Turn &gt; 45
+<span class=input>. notes $svr_oldv $svr_newv</span>
 <br><br>
-<span class=input>. tab turn_m5</span>
+<span class=result>trunk_new:</span>
+  1.  we reset this variable be grouping values 5 to 10, 11 to 13, 14 to 18, 20 to 22, and 23 into subgroups. We did this test things out for reseting variables
 <br><br>
-<span class=result>    </span>RECODE of |
-   turn (Turn |
- Circle (ft.) |
-            ) |      Freq.     Percent        Cum.
+<span class=input>. summ $svr_oldv $svr_newv</span>
+<br><br>
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       trunk |<span class=result>         74    13.75676    4.277404          5         23</span>
+   trunk_new |<span class=result>         74    3.418919    1.020432          2          5</span>
+<br><br>
+<span class=input>. tab $svr_oldv $svr_newv</span>
+<br><br>
+<span class=result>     </span>Trunk |    this is the new version of the trunk
+space (cu. |                  variable
+      ft.) | Turn = 36  Turn = 37  Turn 38 t  Turn &gt; 45 |     Total
+-----------+--------------------------------------------+----------
+         5 |<span class=result>         1          0          0          0 </span>|<span class=result>         1 </span>
+         6 |<span class=result>         1          0          0          0 </span>|<span class=result>         1 </span>
+         7 |<span class=result>         3          0          0          0 </span>|<span class=result>         3 </span>
+         8 |<span class=result>         5          0          0          0 </span>|<span class=result>         5 </span>
+         9 |<span class=result>         4          0          0          0 </span>|<span class=result>         4 </span>
+        10 |<span class=result>         5          0          0          0 </span>|<span class=result>         5 </span>
+        11 |<span class=result>         0          8          0          0 </span>|<span class=result>         8 </span>
+        12 |<span class=result>         0          3          0          0 </span>|<span class=result>         3 </span>
+        13 |<span class=result>         0          4          0          0 </span>|<span class=result>         4 </span>
+        14 |<span class=result>         0          0          4          0 </span>|<span class=result>         4 </span>
+        15 |<span class=result>         0          0          5          0 </span>|<span class=result>         5 </span>
+        16 |<span class=result>         0          0         12          0 </span>|<span class=result>        12 </span>
+        17 |<span class=result>         0          0          8          0 </span>|<span class=result>         8 </span>
+        18 |<span class=result>         0          0          1          0 </span>|<span class=result>         1 </span>
+        20 |<span class=result>         0          0          0          6 </span>|<span class=result>         6 </span>
+        21 |<span class=result>         0          0          0          2 </span>|<span class=result>         2 </span>
+        22 |<span class=result>         0          0          0          1 </span>|<span class=result>         1 </span>
+        23 |<span class=result>         0          0          0          1 </span>|<span class=result>         1 </span>
+-----------+--------------------------------------------+----------
+     Total |<span class=result>        19         15         30         10 </span>|<span class=result>        74 </span>
+<br><br>
+<br><br>
+<span class=input>. tab $svr_newv</span>
+<br><br>
+<span class=result>  </span>this is the |
+  new version |
+ of the trunk |
+     variable |      Freq.     Percent        Cum.
 --------------+-----------------------------------
-     Turn &lt;35 |<span class=result>         16       21.62       21.62</span>
-    Turn = 36 |<span class=result>          9       12.16       33.78</span>
-    Turn = 37 |<span class=result>          4        5.41       39.19</span>
-Turn 38 to 45 |<span class=result>         39       52.70       91.89</span>
-    Turn &gt; 45 |<span class=result>          6        8.11      100.00</span>
+    Turn = 36 |<span class=result>         19       25.68       25.68</span>
+    Turn = 37 |<span class=result>         15       20.27       45.95</span>
+Turn 38 to 45 |<span class=result>         30       40.54       86.49</span>
+    Turn &gt; 45 |<span class=result>         10       13.51      100.00</span>
 --------------+-----------------------------------
         Total |<span class=result>         74      100.00</span>
 <br><br>
-<span class=input>. tab turn turn_m5</span>
+<span class=input>. </span>
+<span class=input>. </span>
+<span class=input>. ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- Recode Method 4: same as method 3, but do it for multiple variables loop loop</span>
+<span class=input>&gt; ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; /*</span>
+<span class=input>&gt; 1. Define string using local strings to avoid some retyping. </span>
+<span class=input>&gt; 2. Summarize outputs iteration by iteration, verbose or not</span>
+<span class=input>&gt; 3. Summarize outputs at the end overall</span>
+<span class=input>&gt; 4. if new and old variables have the same name, understand we want to use the </span>
+<span class=input>&gt;         same name, will relabel generate a new variable with the same variable name</span>
+<span class=input>&gt;         and keep old variable as old_abc, where abc is the current var name</span>
+<span class=input>&gt; */</span>
+<span class=input>. global svr_newv_all ""</span>
 <br><br>
-<span class=result>      </span>Turn |
-    Circle |          RECODE of turn (Turn Circle (ft.) )
-    (ft.)  |  Turn &lt;35  Turn = 36  Turn = 37  Turn 38 t  Turn &gt; 45 |     Total
------------+-------------------------------------------------------+----------
-        31 |<span class=result>         1          0          0          0          0 </span>|<span class=result>         1 </span>
-        32 |<span class=result>         1          0          0          0          0 </span>|<span class=result>         1 </span>
-        33 |<span class=result>         2          0          0          0          0 </span>|<span class=result>         2 </span>
-        34 |<span class=result>         6          0          0          0          0 </span>|<span class=result>         6 </span>
-        35 |<span class=result>         6          0          0          0          0 </span>|<span class=result>         6 </span>
-        36 |<span class=result>         0          9          0          0          0 </span>|<span class=result>         9 </span>
-        37 |<span class=result>         0          0          4          0          0 </span>|<span class=result>         4 </span>
-        38 |<span class=result>         0          0          0          3          0 </span>|<span class=result>         3 </span>
-        39 |<span class=result>         0          0          0          1          0 </span>|<span class=result>         1 </span>
-        40 |<span class=result>         0          0          0          6          0 </span>|<span class=result>         6 </span>
-        41 |<span class=result>         0          0          0          4          0 </span>|<span class=result>         4 </span>
-        42 |<span class=result>         0          0          0          7          0 </span>|<span class=result>         7 </span>
-        43 |<span class=result>         0          0          0         12          0 </span>|<span class=result>        12 </span>
-        44 |<span class=result>         0          0          0          3          0 </span>|<span class=result>         3 </span>
-        45 |<span class=result>         0          0          0          3          0 </span>|<span class=result>         3 </span>
-        46 |<span class=result>         0          0          0          0          3 </span>|<span class=result>         3 </span>
-        48 |<span class=result>         0          0          0          0          2 </span>|<span class=result>         2 </span>
-        51 |<span class=result>         0          0          0          0          1 </span>|<span class=result>         1 </span>
------------+-------------------------------------------------------+----------
-     Total |<span class=result>        16          9          4         39          6 </span>|<span class=result>        74 </span>
+<span class=input>. foreach it_var of numlist 1 2 3 {</span>
+  2<span class=input>.         </span>
+<span class=input>.         //-- Variable by Variable Naming Settings       </span>
+<span class=input>.         if (`it_var' == 1) {</span>
+  3<span class=input>.                 //-- Set Variable Strings</span>
+<span class=input>.                 global svr_newv "price_2m"</span>
+  4<span class=input>.                 global svr_oldv "price"</span>
+  5<span class=input>.                 global slb_labl "price discretized 2 levels"</span>
+  6<span class=input>.                 global slb_note "reset the price variable into two groups, original variable has"</span>
+  7<span class=input>.                 global slb_note "$slb_note 74 observations with 74 unique values. "</span>
+  8<span class=input>. </span>
+<span class=input>.                 //-- value resetting</span>
+<span class=input>.                 #delimit;</span>
+delimiter now ;
+<span class=input>.                 global slb_valv "</span>
+<span class=input>&gt;                         (min/6000 = 1 "price &lt;= 6000")</span>
+<span class=input>&gt;                         (6001/max = 2 "price &gt;  6000")</span>
+<span class=input>&gt;                         (else  =. )</span>
+<span class=input>&gt;                   ";</span>
+  9<span class=input>.                 #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>.                 //-- states verbose show or not</span>
+<span class=input>.                 global bl_verbose_print = 0</span>
+ 10<span class=input>.         }</span>
+ 11<span class=input>.         if (`it_var' == 2) {</span>
+ 12<span class=input>.                 //-- Set Variable Strings</span>
+<span class=input>.                 global svr_newv "price_3m"</span>
+ 13<span class=input>.                 global svr_oldv "price"</span>
+ 14<span class=input>.                 global slb_labl "price discretized 3 levels"</span>
+ 15<span class=input>.                 global slb_note "reset the price variable into two groups, original variable has"</span>
+ 16<span class=input>.                 global slb_note "$slb_note 74 observations with 74 unique values. "</span>
+ 17<span class=input>. </span>
+<span class=input>.                 //-- value resetting</span>
+<span class=input>.                 #delimit;</span>
+delimiter now ;
+<span class=input>.                 global slb_valv "</span>
+<span class=input>&gt;                         (min/5500  = 1 "price &lt;= 5500")</span>
+<span class=input>&gt;                         (5501/8500 = 2 "5501 &lt;= price &lt;= 8500")</span>
+<span class=input>&gt;                         (8501/max  = 3 "8501 &lt;= price")</span>
+<span class=input>&gt;                         (else  =. )</span>
+<span class=input>&gt;                   ";</span>
+ 18<span class=input>.                 #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>.                 //-- states verbose show or not</span>
+<span class=input>.                 global bl_verbose_print = 0</span>
+ 19<span class=input>.         }</span>
+ 20<span class=input>.         if (`it_var' == 3) {</span>
+ 21<span class=input>.                 //-- Set Variable Strings</span>
+<span class=input>.                 * this is an example where I relabel and revalue names, but keep variable name</span>
+<span class=input>.                 * auto keep an old version</span>
+<span class=input>.                 global svr_newv "foreign"</span>
+ 22<span class=input>.                 global svr_oldv "foreign"</span>
+ 23<span class=input>.                 global slb_labl "is car domestic (relabled, previous 1 is foreign now 0)"</span>
+ 24<span class=input>.                 global slb_note "reseting the foreign variable previously 1 is foreign 0"</span>
+ 25<span class=input>.                 global slb_note "$slb_note is domestic, now 1 is domestic 0 is foreign"</span>
+ 26<span class=input>. </span>
+<span class=input>.                 //-- value resetting</span>
+<span class=input>.                 #delimit;</span>
+delimiter now ;
+<span class=input>.                 global slb_valv "</span>
+<span class=input>&gt;                         (1 = 0 "foreign car")</span>
+<span class=input>&gt;                         (0 = 1 "domestic car")</span>
+<span class=input>&gt;                         (else  =. )</span>
+<span class=input>&gt;                   ";</span>
+ 27<span class=input>.                 #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>.                 //-- states verbose show or not</span>
+<span class=input>.                 global bl_verbose_print = 1</span>
+ 28<span class=input>.         }</span>
+ 29<span class=input>.         </span>
+<span class=input>.         //-- recode</span>
+<span class=input>.         di "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"</span>
+ 30<span class=input>.         di "Generate the `it_var'th variable: Generates $svr_newv based on $svr_oldv"</span>
+ 31<span class=input>.         di "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"</span>
+ 32<span class=input>.         * generate</span>
+<span class=input>.         global svr_oldv_use "${svr_oldv}"</span>
+ 33<span class=input>.         if ("$svr_newv" == "$svr_oldv") {</span>
+ 34<span class=input>.                 * allows for relabeling the same variable keeping name</span>
+<span class=input>.                 global svr_oldv_use "_prev_${svr_oldv}"</span>
+ 35<span class=input>.                 clonevar _prev_${svr_oldv} = $svr_oldv</span>
+ 36<span class=input>.                 notes $svr_oldv_use: "this variable $svr_oldv_use is replaced by $svr_newv"</span>
+ 37<span class=input>.         }</span>
+ 38<span class=input>.         capture drop $svr_newv</span>
+ 39<span class=input>.         recode $svr_oldv_use $slb_valv, gen($svr_newv)</span>
+ 40<span class=input>.         label variable $svr_newv "$slb_labl"</span>
+ 41<span class=input>.         notes $svr_newv: $slb_note</span>
+ 42<span class=input>.         </span>
+<span class=input>.         //-- summarize</span>
+<span class=input>.         d $svr_newv, f</span>
+ 43<span class=input>.         summ $svr_oldv_use $svr_newv</span>
+ 44<span class=input>.         tab $svr_newv</span>
+ 45<span class=input>.         pwcorr $svr_oldv_use $svr_newv, sig</span>
+ 46<span class=input>.         if ($bl_verbose_print) {</span>
+ 47<span class=input>.                 d $svr_oldv_use $svr_newv, f</span>
+ 48<span class=input>.                 notes $svr_oldv_use $svr_newv</span>
+ 49<span class=input>.                 tab $svr_oldv_use $svr_newv</span>
+ 50<span class=input>.                 label list $svr_newv</span>
+ 51<span class=input>.         }</span>
+ 52<span class=input>.         </span>
+<span class=input>.         //-- Store all strings for easier later retrieval</span>
+<span class=input>.         global svr_newv_all `"$svr_newv_all $svr_newv"'</span>
+ 53<span class=input>.         </span>
+<span class=input>. }</span>
+<span class=result>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+<span class=result>Generate the 1th variable: Generates price_2m based on price</span>
+<span class=result>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+(74 differences between price and price_2m)
 <br><br>
+<span class=result>              </span>storage   display    value
+variable name   type    format     label      variable label
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<span class=result>price_2m       </span> int     %13.0g     price_2m * <span class=result>price discretized 2 levels</span>
 <br><br>
-<span class=input>. tab turn_m5 turn_m5_alt</span>
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       price |<span class=result>         74    6165.257    2949.496       3291      15906</span>
+    price_2m |<span class=result>         74    1.310811    .4659848          1          2</span>
 <br><br>
-<span class=result>    </span>RECODE of |
-   turn (Turn |
- Circle (ft.) |            Recode using inlist and inrange
-            ) |  Turn &lt;35  Turn = 36  Turn = 37  Turn 38 t  Turn &gt; 45 |     Total
---------------+-------------------------------------------------------+----------
-     Turn &lt;35 |<span class=result>        16          0          0          0          0 </span>|<span class=result>        16 </span>
-    Turn = 36 |<span class=result>         0          9          0          0          0 </span>|<span class=result>         9 </span>
-    Turn = 37 |<span class=result>         0          0          4          0          0 </span>|<span class=result>         4 </span>
-Turn 38 to 45 |<span class=result>         0          0          0         39          0 </span>|<span class=result>        39 </span>
-    Turn &gt; 45 |<span class=result>         0          0          0          0          6 </span>|<span class=result>         6 </span>
---------------+-------------------------------------------------------+----------
-        Total |<span class=result>        16          9          4         39          6 </span>|<span class=result>        74 </span>
+<span class=result>        </span>price |
+discretized 2 |
+       levels |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+price &lt;= 6000 |<span class=result>         51       68.92       68.92</span>
+ price &gt; 6000 |<span class=result>         23       31.08      100.00</span>
+--------------+-----------------------------------
+        Total |<span class=result>         74      100.00</span>
 <br><br>
+<span class=result>             </span>|    price price_2m
+-------------+------------------
+       price | <span class=result>  1.0000 </span>
+<span class=result>             </span>|
+             |
+    price_2m | <span class=result>  0.8001   1.0000 </span>
+<span class=result>             </span>|<span class=result>   0.0000</span>
+<span class=result>             </span>|
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Generate the 2th variable: Generates price_3m based on price
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+(74 differences between price and price_3m)
+<br><br>
+<span class=result>              </span>storage   display    value
+variable name   type    format     label      variable label
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<span class=result>price_3m       </span> int     %21.0g     price_3m * <span class=result>price discretized 3 levels</span>
+<br><br>
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       price |<span class=result>         74    6165.257    2949.496       3291      15906</span>
+    price_3m |<span class=result>         74    1.581081    .7764824          1          3</span>
+<br><br>
+<span class=result>  </span>price discretized 3 |
+               levels |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+        price &lt;= 5500 |<span class=result>         44       59.46       59.46</span>
+5501 &lt;= price &lt;= 8500 |<span class=result>         17       22.97       82.43</span>
+        8501 &lt;= price |<span class=result>         13       17.57      100.00</span>
+----------------------+-----------------------------------
+                Total |<span class=result>         74      100.00</span>
+<br><br>
+<span class=result>             </span>|    price price_3m
+-------------+------------------
+       price | <span class=result>  1.0000 </span>
+<span class=result>             </span>|
+             |
+    price_3m | <span class=result>  0.9085   1.0000 </span>
+<span class=result>             </span>|<span class=result>   0.0000</span>
+<span class=result>             </span>|
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Generate the 3th variable: Generates foreign based on foreign
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+(74 differences between _prev_foreign and foreign)
+<br><br>
+<span class=result>              </span>storage   display    value
+variable name   type    format     label      variable label
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<span class=result>foreign        </span> byte    %12.0g     foreign  * <span class=result>is car domestic (relabled, previous 1 is foreign now 0)</span>
+<br><br>
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+_prev_fore~n |<span class=result>         74    .2972973    .4601885          0          1</span>
+     foreign |<span class=result>         74    .7027027    .4601885          0          1</span>
+<br><br>
+<span class=result>      </span>is car |
+    domestic |
+  (relabled, |
+  previous 1 |
+  is foreign |
+      now 0) |      Freq.     Percent        Cum.
+-------------+-----------------------------------
+ foreign car |<span class=result>         22       29.73       29.73</span>
+domestic car |<span class=result>         52       70.27      100.00</span>
+-------------+-----------------------------------
+       Total |<span class=result>         74      100.00</span>
+<br><br>
+<span class=result>             </span>| _prev_~n  foreign
+-------------+------------------
+_prev_fore~n | <span class=result>  1.0000 </span>
+<span class=result>             </span>|
+             |
+     foreign | <span class=result> -1.0000   1.0000 </span>
+<span class=result>             </span>|<span class=result>   1.0000</span>
+<span class=result>             </span>|
+<br><br>
+              storage   display    value
+variable name   type    format     label      variable label
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<span class=result>_prev_foreign  </span> byte    %8.0g      origin   * <span class=result>Car type</span>
+<span class=result>foreign        </span> byte    %12.0g     foreign  * <span class=result>is car domestic (relabled, previous 1 is foreign now 0)</span>
+<br><br>
+<span class=result>_prev_foreign:</span>
+  1.  "this variable _prev_foreign is replaced by foreign"
+<br><br>
+<span class=result>foreign:</span>
+  1.  reseting the foreign variable previously 1 is foreign 0 is domestic, now 1 is domestic 0 is foreign
+<br><br>
+           |    is car domestic
+           | (relabled, previous 1
+           |   is foreign now 0)
+  Car type | foreign c  domestic  |     Total
+-----------+----------------------+----------
+  Domestic |<span class=result>         0         52 </span>|<span class=result>        52 </span>
+   Foreign |<span class=result>        22          0 </span>|<span class=result>        22 </span>
+-----------+----------------------+----------
+     Total |<span class=result>        22         52 </span>|<span class=result>        74 </span>
+<br><br>
+foreign:
+<span class=result>           0 foreign car</span>
+<span class=result>           1 domestic car</span>
+<br><br>
+<span class=input>. //-- recode</span>
+<span class=input>. di "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"</span>
+<span class=result>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+<br><br>
+<span class=input>. di "We just finished Generating `it_var' Variables, here is their joint summary"</span>
+<span class=result>We just finished Generating  Variables, here is their joint summary</span>
+<br><br>
+<span class=input>. di "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"</span>
+<span class=result>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+<br><br>
+<span class=input>. d $svr_newv_all, f</span>
+<br><br>
+<span class=result>              </span>storage   display    value
+variable name   type    format     label      variable label
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<span class=result>price_2m       </span> int     %13.0g     price_2m * <span class=result>price discretized 2 levels</span>
+<span class=result>price_3m       </span> int     %21.0g     price_3m * <span class=result>price discretized 3 levels</span>
+<span class=result>foreign        </span> byte    %12.0g     foreign  * <span class=result>is car domestic (relabled, previous 1 is foreign now 0)</span>
+<br><br>
+<span class=input>. summ $svr_newv_all</span>
+<br><br>
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    price_2m |<span class=result>         74    1.310811    .4659848          1          2</span>
+    price_3m |<span class=result>         74    1.581081    .7764824          1          3</span>
+     foreign |<span class=result>         74    .7027027    .4601885          0          1</span>
+<br><br>
+<span class=input>. pwcorr $svr_newv_all, sig</span>
+<br><br>
+<span class=result>             </span>| price_2m price_3m  foreign
+-------------+---------------------------
+    price_2m | <span class=result>  1.0000 </span>
+<span class=result>             </span>|
+             |
+    price_3m | <span class=result>  0.8570   1.0000 </span>
+<span class=result>             </span>|<span class=result>   0.0000</span>
+<span class=result>             </span>|
+     foreign | <span class=result> -0.1381  -0.1233   1.0000 </span>
+<span class=result>             </span>|<span class=result>   0.2406   0.2953</span>
+<span class=result>             </span>|
 <br><br>
 <span class=input>. </span>
 <span class=input>. </span>
@@ -202,8 +497,8 @@ Turn 38 to 45 |<span class=result>         0          0          0         39   
 <span class=result>      </span>name:  <span class=result>stata_recode_discrete_subset</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//gen/replace/fs_recode.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>closed on:  <span class=result> 9 Oct 2019, 08:09:41</span>
------------------------------------------------------------------------------------------------------------------------------
+<span class=result> </span>closed on:  <span class=result>16 Apr 2020, 03:33:05</span>
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </pre>
 </body>
 </html>
