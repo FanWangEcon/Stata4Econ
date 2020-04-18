@@ -16,11 +16,11 @@ BODY{background-color: ffffff;
 <body>
 <h2>Stata Recode a Discrete Variable with Alternative Labels and Values Subgroups: recode, inrange, inlist (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</h2>
 <pre>
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  <span class=result>stata_recode_discrete_subset</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//gen/replace/fs_recode.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>opened on:  <span class=result>16 Apr 2020, 03:33:05</span>
+<span class=result> </span>opened on:  <span class=result>17 Apr 2020, 21:53:30</span>
 <br><br>
 <span class=input>. log on $st_logname</span>
 (log already on)
@@ -48,6 +48,8 @@ BODY{background-color: ffffff;
 <span class=input>. ///////////////////////////////////////////////////////////////////////////////</span>
 <span class=input>&gt; ///--- Recode Method 1</span>
 <span class=input>&gt; ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>. ///--- Recode Method 1a: recode</span>
 <span class=input>&gt; capture drop turn_m5</span>
 <br><br>
 <span class=input>. recode turn ///</span>
@@ -60,11 +62,64 @@ BODY{background-color: ffffff;
 <span class=input>&gt;         , gen(turn_m5)</span>
 (74 differences between turn and turn_m5)
 <br><br>
+<span class=input>. tab turn_m5</span>
+<br><br>
+<span class=result>    </span>RECODE of |
+   turn (Turn |
+ Circle (ft.) |
+            ) |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+     Turn &lt;35 |<span class=result>         16       21.62       21.62</span>
+    Turn = 36 |<span class=result>          9       12.16       33.78</span>
+    Turn = 37 |<span class=result>          4        5.41       39.19</span>
+Turn 38 to 45 |<span class=result>         39       52.70       91.89</span>
+    Turn &gt; 45 |<span class=result>          6        8.11      100.00</span>
+--------------+-----------------------------------
+        Total |<span class=result>         74      100.00</span>
+<br><br>
 <span class=input>. </span>
-<span class=input>. ///////////////////////////////////////////////////////////////////////////////</span>
-<span class=input>&gt; ///--- Recode Method 2</span>
-<span class=input>&gt; ///////////////////////////////////////////////////////////////////////////////</span>
-<span class=input>&gt; clonevar turn_m5_alt = turn</span>
+<span class=input>. ///--- Recode Method 1b: egen cut</span>
+<span class=input>&gt; capture drop turn_m5_cut</span>
+<br><br>
+<span class=input>. egen turn_m5_cut = cut(turn), at(31, 36, 37, 38, 46, 51) label</span>
+(1 missing value generated)
+<br><br>
+<span class=input>. tab turn_m5_cut</span>
+<br><br>
+turn_m5_cut |      Freq.     Percent        Cum.
+------------+-----------------------------------
+        31- |<span class=result>         16       21.92       21.92</span>
+        36- |<span class=result>          9       12.33       34.25</span>
+        37- |<span class=result>          4        5.48       39.73</span>
+        38- |<span class=result>         39       53.42       93.15</span>
+        46- |<span class=result>          5        6.85      100.00</span>
+------------+-----------------------------------
+      Total |<span class=result>         73      100.00</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. capture drop turn_m7_cut</span>
+<br><br>
+<span class=input>. egen turn_m7_cut = cut(turn), at(31(3)52) label</span>
+<br><br>
+<span class=input>. tab turn_m7_cut</span>
+<br><br>
+turn_m7_cut |      Freq.     Percent        Cum.
+------------+-----------------------------------
+        31- |<span class=result>          4        5.41        5.41</span>
+        34- |<span class=result>         21       28.38       33.78</span>
+        37- |<span class=result>          8       10.81       44.59</span>
+        40- |<span class=result>         17       22.97       67.57</span>
+        43- |<span class=result>         18       24.32       91.89</span>
+        46- |<span class=result>          5        6.76       98.65</span>
+        49- |<span class=result>          1        1.35      100.00</span>
+------------+-----------------------------------
+      Total |<span class=result>         74      100.00</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Recode Method 1c: inrange and inlist</span>
+<span class=input>&gt; capture drop turn_m5_alt</span>
+<br><br>
+<span class=input>. clonevar turn_m5_alt = turn</span>
 <br><br>
 <span class=input>. label variable turn_m5_alt "Recode using inlist and inrange"</span>
 <br><br>
@@ -87,14 +142,78 @@ BODY{background-color: ffffff;
 <br><br>
 <span class=input>. label values turn_m5_alt turn_m5_alt</span>
 <br><br>
+<span class=input>. tab turn_m5_alt</span>
+<br><br>
+<span class=result> </span>Recode using |
+   inlist and |
+      inrange |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+     Turn &lt;35 |<span class=result>         16       21.62       21.62</span>
+    Turn = 36 |<span class=result>          9       12.16       33.78</span>
+    Turn = 37 |<span class=result>          4        5.41       39.19</span>
+Turn 38 to 45 |<span class=result>         39       52.70       91.89</span>
+    Turn &gt; 45 |<span class=result>          6        8.11      100.00</span>
+--------------+-----------------------------------
+        Total |<span class=result>         74      100.00</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- compare </span>
+<span class=input>&gt; tab turn_m5 turn_m5_cut</span>
+<br><br>
+<span class=result>    </span>RECODE of |
+   turn (Turn |
+ Circle (ft.) |                      turn_m5_cut
+            ) |       31-        36-        37-        38-        46- |     Total
+--------------+-------------------------------------------------------+----------
+     Turn &lt;35 |<span class=result>        16          0          0          0          0 </span>|<span class=result>        16 </span>
+    Turn = 36 |<span class=result>         0          9          0          0          0 </span>|<span class=result>         9 </span>
+    Turn = 37 |<span class=result>         0          0          4          0          0 </span>|<span class=result>         4 </span>
+Turn 38 to 45 |<span class=result>         0          0          0         39          0 </span>|<span class=result>        39 </span>
+    Turn &gt; 45 |<span class=result>         0          0          0          0          5 </span>|<span class=result>         5 </span>
+--------------+-------------------------------------------------------+----------
+        Total |<span class=result>        16          9          4         39          5 </span>|<span class=result>        73 </span>
+<br><br>
+<br><br>
+<span class=input>. tab turn_m5 turn_m5_alt</span>
+<br><br>
+<span class=result>    </span>RECODE of |
+   turn (Turn |
+ Circle (ft.) |            Recode using inlist and inrange
+            ) |  Turn &lt;35  Turn = 36  Turn = 37  Turn 38 t  Turn &gt; 45 |     Total
+--------------+-------------------------------------------------------+----------
+     Turn &lt;35 |<span class=result>        16          0          0          0          0 </span>|<span class=result>        16 </span>
+    Turn = 36 |<span class=result>         0          9          0          0          0 </span>|<span class=result>         9 </span>
+    Turn = 37 |<span class=result>         0          0          4          0          0 </span>|<span class=result>         4 </span>
+Turn 38 to 45 |<span class=result>         0          0          0         39          0 </span>|<span class=result>        39 </span>
+    Turn &gt; 45 |<span class=result>         0          0          0          0          6 </span>|<span class=result>         6 </span>
+--------------+-------------------------------------------------------+----------
+        Total |<span class=result>        16          9          4         39          6 </span>|<span class=result>        74 </span>
+<br><br>
+<br><br>
+<span class=input>. tab turn_m5 turn_m7_cut</span>
+<br><br>
+<span class=result>    </span>RECODE of |
+   turn (Turn |
+ Circle (ft.) |                                 turn_m7_cut
+            ) |       31-        34-        37-        40-        43-        46-        49- |     Total
+--------------+-----------------------------------------------------------------------------+----------
+     Turn &lt;35 |<span class=result>         4         12          0          0          0          0          0 </span>|<span class=result>        16 </span>
+    Turn = 36 |<span class=result>         0          9          0          0          0          0          0 </span>|<span class=result>         9 </span>
+    Turn = 37 |<span class=result>         0          0          4          0          0          0          0 </span>|<span class=result>         4 </span>
+Turn 38 to 45 |<span class=result>         0          0          4         17         18          0          0 </span>|<span class=result>        39 </span>
+    Turn &gt; 45 |<span class=result>         0          0          0          0          0          5          1 </span>|<span class=result>         6 </span>
+--------------+-----------------------------------------------------------------------------+----------
+        Total |<span class=result>         4         21          8         17         18          5          1 </span>|<span class=result>        74 </span>
+<br><br>
+<br><br>
 <span class=input>. </span>
 <span class=input>. ///////////////////////////////////////////////////////////////////////////////</span>
-<span class=input>&gt; ///--- Recode Method 3: Recode based on single variable, </span>
+<span class=input>&gt; ///--- Recode Method 2a: Recode based on single variable,</span>
 <span class=input>&gt; ///    slightly less typing, compose ingredients together</span>
 <span class=input>&gt; ///////////////////////////////////////////////////////////////////////////////</span>
 <span class=input>&gt; /*</span>
-<span class=input>&gt; Define string using local strings to avoid some retyping. </span>
-<span class=input>&gt; try to make variable label not longer than width limit. </span>
+<span class=input>&gt; Define string using local strings to avoid some retyping.</span>
+<span class=input>&gt; try to make variable label not longer than width limit.</span>
 <span class=input>&gt; */</span>
 <span class=input>. </span>
 <span class=input>. //-- Set Variable Strings</span>
@@ -143,7 +262,7 @@ delimiter now cr
 <br><br>
 <span class=result>              </span>storage   display    value
 variable name   type    format     label      variable label
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <span class=result>trunk          </span> int     %8.0g                 <span class=result>Trunk space (cu. ft.)</span>
 <span class=result>trunk_new      </span> int     %13.0g     trunk_new
                                             * <span class=result>this is the new version of the trunk variable</span>
@@ -205,21 +324,21 @@ Turn 38 to 45 |<span class=result>         30       40.54       86.49</span>
 <span class=input>. </span>
 <span class=input>. </span>
 <span class=input>. ///////////////////////////////////////////////////////////////////////////////</span>
-<span class=input>&gt; ///--- Recode Method 4: same as method 3, but do it for multiple variables loop loop</span>
+<span class=input>&gt; ///--- Recode Method 2b: same as method 2a, but do it for multiple variables loop loop</span>
 <span class=input>&gt; ///////////////////////////////////////////////////////////////////////////////</span>
 <span class=input>&gt; /*</span>
-<span class=input>&gt; 1. Define string using local strings to avoid some retyping. </span>
+<span class=input>&gt; 1. Define string using local strings to avoid some retyping.</span>
 <span class=input>&gt; 2. Summarize outputs iteration by iteration, verbose or not</span>
 <span class=input>&gt; 3. Summarize outputs at the end overall</span>
-<span class=input>&gt; 4. if new and old variables have the same name, understand we want to use the </span>
+<span class=input>&gt; 4. if new and old variables have the same name, understand we want to use the</span>
 <span class=input>&gt;         same name, will relabel generate a new variable with the same variable name</span>
 <span class=input>&gt;         and keep old variable as old_abc, where abc is the current var name</span>
 <span class=input>&gt; */</span>
 <span class=input>. global svr_newv_all ""</span>
 <br><br>
 <span class=input>. foreach it_var of numlist 1 2 3 {</span>
-  2<span class=input>.         </span>
-<span class=input>.         //-- Variable by Variable Naming Settings       </span>
+  2<span class=input>. </span>
+<span class=input>.         //-- Variable by Variable Naming Settings</span>
 <span class=input>.         if (`it_var' == 1) {</span>
   3<span class=input>.                 //-- Set Variable Strings</span>
 <span class=input>.                 global svr_newv "price_2m"</span>
@@ -289,7 +408,7 @@ delimiter now cr
 <span class=input>.                 //-- states verbose show or not</span>
 <span class=input>.                 global bl_verbose_print = 1</span>
  28<span class=input>.         }</span>
- 29<span class=input>.         </span>
+ 29<span class=input>. </span>
 <span class=input>.         //-- recode</span>
 <span class=input>.         di "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"</span>
  30<span class=input>.         di "Generate the `it_var'th variable: Generates $svr_newv based on $svr_oldv"</span>
@@ -306,7 +425,7 @@ delimiter now cr
  39<span class=input>.         recode $svr_oldv_use $slb_valv, gen($svr_newv)</span>
  40<span class=input>.         label variable $svr_newv "$slb_labl"</span>
  41<span class=input>.         notes $svr_newv: $slb_note</span>
- 42<span class=input>.         </span>
+ 42<span class=input>. </span>
 <span class=input>.         //-- summarize</span>
 <span class=input>.         d $svr_newv, f</span>
  43<span class=input>.         summ $svr_oldv_use $svr_newv</span>
@@ -318,10 +437,10 @@ delimiter now cr
  49<span class=input>.                 tab $svr_oldv_use $svr_newv</span>
  50<span class=input>.                 label list $svr_newv</span>
  51<span class=input>.         }</span>
- 52<span class=input>.         </span>
+ 52<span class=input>. </span>
 <span class=input>.         //-- Store all strings for easier later retrieval</span>
 <span class=input>.         global svr_newv_all `"$svr_newv_all $svr_newv"'</span>
- 53<span class=input>.         </span>
+ 53<span class=input>. </span>
 <span class=input>. }</span>
 <span class=result>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
 <span class=result>Generate the 1th variable: Generates price_2m based on price</span>
@@ -330,7 +449,7 @@ delimiter now cr
 <br><br>
 <span class=result>              </span>storage   display    value
 variable name   type    format     label      variable label
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <span class=result>price_2m       </span> int     %13.0g     price_2m * <span class=result>price discretized 2 levels</span>
 <br><br>
     Variable |        Obs        Mean    Std. Dev.       Min        Max
@@ -362,7 +481,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 <br><br>
 <span class=result>              </span>storage   display    value
 variable name   type    format     label      variable label
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <span class=result>price_3m       </span> int     %21.0g     price_3m * <span class=result>price discretized 3 levels</span>
 <br><br>
     Variable |        Obs        Mean    Std. Dev.       Min        Max
@@ -394,7 +513,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 <br><br>
 <span class=result>              </span>storage   display    value
 variable name   type    format     label      variable label
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <span class=result>foreign        </span> byte    %12.0g     foreign  * <span class=result>is car domestic (relabled, previous 1 is foreign now 0)</span>
 <br><br>
     Variable |        Obs        Mean    Std. Dev.       Min        Max
@@ -425,7 +544,7 @@ _prev_fore~n | <span class=result>  1.0000 </span>
 <br><br>
               storage   display    value
 variable name   type    format     label      variable label
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <span class=result>_prev_foreign  </span> byte    %8.0g      origin   * <span class=result>Car type</span>
 <span class=result>foreign        </span> byte    %12.0g     foreign  * <span class=result>is car domestic (relabled, previous 1 is foreign now 0)</span>
 <br><br>
@@ -463,7 +582,7 @@ foreign:
 <br><br>
 <span class=result>              </span>storage   display    value
 variable name   type    format     label      variable label
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <span class=result>price_2m       </span> int     %13.0g     price_2m * <span class=result>price discretized 2 levels</span>
 <span class=result>price_3m       </span> int     %21.0g     price_3m * <span class=result>price discretized 3 levels</span>
 <span class=result>foreign        </span> byte    %12.0g     foreign  * <span class=result>is car domestic (relabled, previous 1 is foreign now 0)</span>
@@ -497,8 +616,8 @@ variable name   type    format     label      variable label
 <span class=result>      </span>name:  <span class=result>stata_recode_discrete_subset</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//gen/replace/fs_recode.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>closed on:  <span class=result>16 Apr 2020, 03:33:05</span>
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<span class=result> </span>closed on:  <span class=result>17 Apr 2020, 21:53:30</span>
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </pre>
 </body>
 </html>

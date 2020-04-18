@@ -51,6 +51,8 @@ sysuse auto, clear
 ///////////////////////////////////////////////////////////////////////////////
 ///--- Recode Method 1
 ///////////////////////////////////////////////////////////////////////////////
+
+///--- Recode Method 1a: recode
 capture drop turn_m5
 recode turn ///
 	(min/35 = 1 "Turn <35") ///
@@ -60,10 +62,19 @@ recode turn ///
 	(46/max = 5 "Turn > 45") ///
 	(else  =. ) ///
 	, gen(turn_m5)
+tab turn_m5
 
-///////////////////////////////////////////////////////////////////////////////
-///--- Recode Method 2
-///////////////////////////////////////////////////////////////////////////////
+///--- Recode Method 1b: egen cut
+capture drop turn_m5_cut
+egen turn_m5_cut = cut(turn), at(31, 36, 37, 38, 46, 51) label
+tab turn_m5_cut
+
+capture drop turn_m7_cut
+egen turn_m7_cut = cut(turn), at(31(3)52) label
+tab turn_m7_cut
+
+///--- Recode Method 1c: inrange and inlist
+capture drop turn_m5_alt
 clonevar turn_m5_alt = turn
 label variable turn_m5_alt "Recode using inlist and inrange"
 replace turn_m5_alt = 1 if inrange(turn, 31, 35)
@@ -73,14 +84,20 @@ replace turn_m5_alt = 4 if inrange(turn, 38, 45)
 replace turn_m5_alt = 5 if inlist(turn, 46, 48, 51)
 label define turn_m5_alt 1 "Turn <35" 2 "Turn = 36" 3 "Turn = 37" 4 "Turn 38 to 45" 5 "Turn > 45", modify
 label values turn_m5_alt turn_m5_alt
+tab turn_m5_alt
+
+///--- compare 
+tab turn_m5 turn_m5_cut
+tab turn_m5 turn_m5_alt
+tab turn_m5 turn_m7_cut
 
 ///////////////////////////////////////////////////////////////////////////////
-///--- Recode Method 3: Recode based on single variable, 
+///--- Recode Method 2a: Recode based on single variable,
 ///    slightly less typing, compose ingredients together
 ///////////////////////////////////////////////////////////////////////////////
 /*
-Define string using local strings to avoid some retyping. 
-try to make variable label not longer than width limit. 
+Define string using local strings to avoid some retyping.
+try to make variable label not longer than width limit.
 */
 
 //-- Set Variable Strings
@@ -119,20 +136,20 @@ tab $svr_newv
 
 
 ///////////////////////////////////////////////////////////////////////////////
-///--- Recode Method 4: same as method 3, but do it for multiple variables loop loop
+///--- Recode Method 2b: same as method 2a, but do it for multiple variables loop loop
 ///////////////////////////////////////////////////////////////////////////////
 /*
-1. Define string using local strings to avoid some retyping. 
+1. Define string using local strings to avoid some retyping.
 2. Summarize outputs iteration by iteration, verbose or not
 3. Summarize outputs at the end overall
-4. if new and old variables have the same name, understand we want to use the 
+4. if new and old variables have the same name, understand we want to use the
 	same name, will relabel generate a new variable with the same variable name
 	and keep old variable as old_abc, where abc is the current var name
 */
 global svr_newv_all ""
 foreach it_var of numlist 1 2 3 {
-	
-	//-- Variable by Variable Naming Settings	
+
+	//-- Variable by Variable Naming Settings
 	if (`it_var' == 1) {
 		//-- Set Variable Strings
 		global svr_newv "price_2m"
@@ -196,7 +213,7 @@ foreach it_var of numlist 1 2 3 {
 		//-- states verbose show or not
 		global bl_verbose_print = 1
 	}
-	
+
 	//-- recode
 	di "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	di "Generate the `it_var'th variable: Generates $svr_newv based on $svr_oldv"
@@ -213,7 +230,7 @@ foreach it_var of numlist 1 2 3 {
 	recode $svr_oldv_use $slb_valv, gen($svr_newv)
 	label variable $svr_newv "$slb_labl"
 	notes $svr_newv: $slb_note
-	
+
 	//-- summarize
 	d $svr_newv, f
 	summ $svr_oldv_use $svr_newv
@@ -225,10 +242,10 @@ foreach it_var of numlist 1 2 3 {
 		tab $svr_oldv_use $svr_newv
 		label list $svr_newv
 	}
-	
+
 	//-- Store all strings for easier later retrieval
 	global svr_newv_all `"$svr_newv_all $svr_newv"'
-	
+
 }
 //-- recode
 di "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
