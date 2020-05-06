@@ -1,0 +1,196 @@
+
+<html>
+<head>
+<title>Stata By Group Fill Missing Values by Nonmissing Values (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/group/fs_group.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</title>
+<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css">
+BODY{background-color: ffffff;
+    font-family: monaco, "courier new", monospace;
+     color: #000000}
+.input {color: #CC6600}
+.result{color: #000099}
+.error{color: #dd0000}
+</style>
+</head>
+<body>
+<h2>Stata By Group Fill Missing Values by Nonmissing Values (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/group/fs_group.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</h2>
+<pre>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <span class=result>stata_recode_discrete_subset</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//gen/group/fs_group.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>opened on:  <span class=result> 5 May 2020, 19:56:12</span>
+<br><br>
+<span class=input>. log on $st_logname</span>
+(log already on)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///-- Site Link: Fan's Project Reusable Stata Codes Table of Content</span>
+<span class=input>&gt; di "https://fanwangecon.github.io/"</span>
+<span class=result>https://fanwangecon.github.io/</span>
+<br><br>
+<span class=input>. di "https://fanwangecon.github.io/Stata4Econ/"</span>
+<span class=result>https://fanwangecon.github.io/Stata4Econ/</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///-- File Title</span>
+<span class=input>&gt; global filetitle "Stata By Group Fill Missing Values by Nonmissing Values"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Load Data</span>
+<span class=input>&gt; set more off</span>
+<br><br>
+<span class=input>. sysuse auto, clear</span>
+(1978 Automobile Data)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- Fill Missing Values with NonMissing Min</span>
+<span class=input>&gt; ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>. ///--- there are 18 trunk categories</span>
+<span class=input>&gt; codebook trunk</span>
+<br><br>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<span class=result>trunk                                                                                                                                         Trunk space (cu. ft.)</span>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<br><br>
+                  type:  numeric (<span class=result>int</span>)
+<br><br>
+                 range:  [<span class=result>5</span>,<span class=result>23</span>]                       units:  <span class=result>1</span>
+<span class=result>         </span>unique values:  <span class=result>18                       </span>missing .:  <span class=result>0</span>/<span class=result>74</span>
+<br><br>
+                  mean:<span class=result>   13.7568</span>
+              std. dev:<span class=result>    4.2774</span>
+<br><br>
+           percentiles:        10%       25%       50%       75%       90%
+<span class=result>                                 8        10        14        17        20</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. * generate some random variable</span>
+<span class=input>. gen var_one_val_in_group = uniform()</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. * keep one only value each group, all else null</span>
+<span class=input>. * keep lowest weight length not null</span>
+<span class=input>. bys trunk (weight length): replace var_one_val_in_group =. if _n != 1</span>
+(56 real changes made, 56 to missing)
+<br><br>
+<span class=input>. </span>
+<span class=input>. * now populate this randomly selected value within each trunk group to all in group</span>
+<span class=input>. * sort by var_test, the non-missing value shows up first</span>
+<span class=input>. bys trunk (var_one_val_in_group): gen var_test_fill = var_one_val_in_group[1]</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. sort trunk price</span>
+<br><br>
+<span class=input>. list trunk price weight length var_one_val_in_group var_test_fill, sepby(trunk)</span>
+<br><br>
+     +--------------------------------------------------------+
+     | <span class=result>trunk    price   weight   length   var_on~p   var_te~l </span>|
+     |--------------------------------------------------------|
+  1. | <span class=result>    5    4,499    1,760      149   .3369739   .3369739 </span>|
+     |--------------------------------------------------------|
+  2. | <span class=result>    6    6,229    2,370      170    .357423    .357423 </span>|
+     |--------------------------------------------------------|
+  3. | <span class=result>    7    3,667    2,750      179          .   .6775706 </span>|
+  4. | <span class=result>    7    4,172    2,690      179   .6775706   .6775706 </span>|
+  5. | <span class=result>    7    4,934    3,470      198          .   .6775706 </span>|
+     |--------------------------------------------------------|
+  6. | <span class=result>    8    3,984    2,120      163          .    .566447 </span>|
+  7. | <span class=result>    8    4,589    2,020      165    .566447    .566447 </span>|
+  8. | <span class=result>    8    5,079    2,280      170          .    .566447 </span>|
+  9. | <span class=result>    8    6,486    2,520      182          .    .566447 </span>|
+ 10. | <span class=result>    8    8,129    2,750      184          .    .566447 </span>|
+     |--------------------------------------------------------|
+ 11. | <span class=result>    9    3,299    2,110      163          .     .90876 </span>|
+ 12. | <span class=result>    9    3,748    2,200      165          .     .90876 </span>|
+ 13. | <span class=result>    9    3,829    2,580      169          .     .90876 </span>|
+ 14. | <span class=result>    9    4,389    1,800      147     .90876     .90876 </span>|
+     |--------------------------------------------------------|
+ 15. | <span class=result>   10    3,895    1,830      142   .4374087   .4374087 </span>|
+ 16. | <span class=result>   10    4,187    2,650      179          .   .4374087 </span>|
+ 17. | <span class=result>   10    4,195    2,730      180          .   .4374087 </span>|
+ 18. | <span class=result>   10    4,453    2,230      170          .   .4374087 </span>|
+ 19. | <span class=result>   10    5,799    2,240      172          .   .4374087 </span>|
+     |--------------------------------------------------------|
+ 20. | <span class=result>   11    3,798    2,050      164          .   .8544706 </span>|
+ 21. | <span class=result>   11    3,995    1,980      154          .   .8544706 </span>|
+ 22. | <span class=result>   11    4,099    2,930      186          .   .8544706 </span>|
+ 23. | <span class=result>   11    4,425    1,800      157   .8544706   .8544706 </span>|
+ 24. | <span class=result>   11    4,647    3,260      170          .   .8544706 </span>|
+ 25. | <span class=result>   11    4,749    3,350      173          .   .8544706 </span>|
+ 26. | <span class=result>   11    5,719    2,670      175          .   .8544706 </span>|
+ 27. | <span class=result>   11    6,295    2,070      174          .   .8544706 </span>|
+     |--------------------------------------------------------|
+ 28. | <span class=result>   12    3,799    2,640      168          .   .6315421 </span>|
+ 29. | <span class=result>   12    7,140    2,160      172   .6315421   .6315421 </span>|
+ 30. | <span class=result>   12    9,735    2,650      177          .   .6315421 </span>|
+     |--------------------------------------------------------|
+ 31. | <span class=result>   13    3,955    3,430      197          .   .7253782 </span>|
+ 32. | <span class=result>   13    4,082    3,400      200   .7253782   .7253782 </span>|
+ 33. | <span class=result>   13    4,424    3,420      203          .   .7253782 </span>|
+ 34. | <span class=result>   13   15,906    4,290      204          .   .7253782 </span>|
+     |--------------------------------------------------------|
+ 35. | <span class=result>   14    4,181    3,370      200          .    .742014 </span>|
+ 36. | <span class=result>   14    5,899    2,410      174    .742014    .742014 </span>|
+ 37. | <span class=result>   14   11,995    3,170      193          .    .742014 </span>|
+ 38. | <span class=result>   14   12,990    3,420      192          .    .742014 </span>|
+     |--------------------------------------------------------|
+ 39. | <span class=result>   15    4,516    3,370      198          .   .9405864 </span>|
+ 40. | <span class=result>   15    4,697    1,930      155   .9405864   .9405864 </span>|
+ 41. | <span class=result>   15    5,397    2,040      155          .   .9405864 </span>|
+ 42. | <span class=result>   15    9,690    2,830      189          .   .9405864 </span>|
+ 43. | <span class=result>   15   13,466    3,830      201          .   .9405864 </span>|
+     |--------------------------------------------------------|
+ 44. | <span class=result>   16    4,060    3,330      201          .   .8831605 </span>|
+ 45. | <span class=result>   16    4,296    2,130      161          .   .8831605 </span>|
+ 46. | <span class=result>   16    4,733    3,300      198          .   .8831605 </span>|
+ 47. | <span class=result>   16    4,816    3,250      196          .   .8831605 </span>|
+ 48. | <span class=result>   16    5,104    3,220      200          .   .8831605 </span>|
+ 49. | <span class=result>   16    5,172    3,310      198          .   .8831605 </span>|
+ 50. | <span class=result>   16    5,189    3,280      200          .   .8831605 </span>|
+ 51. | <span class=result>   16    5,222    3,210      201          .   .8831605 </span>|
+ 52. | <span class=result>   16    5,379    4,060      221          .   .8831605 </span>|
+ 53. | <span class=result>   16    6,303    4,130      217          .   .8831605 </span>|
+ 54. | <span class=result>   16    6,850    1,990      156   .8831605   .8831605 </span>|
+ 55. | <span class=result>   16   14,500    3,900      204          .   .8831605 </span>|
+     |--------------------------------------------------------|
+ 56. | <span class=result>   17    3,291    2,830      195          .   .0850656 </span>|
+ 57. | <span class=result>   17    4,010    3,600      206          .   .0850656 </span>|
+ 58. | <span class=result>   17    4,482    2,200      165   .0850656   .0850656 </span>|
+ 59. | <span class=result>   17    4,504    3,180      193          .   .0850656 </span>|
+ 60. | <span class=result>   17    4,723    3,200      199          .   .0850656 </span>|
+ 61. | <span class=result>   17    5,886    3,600      206          .   .0850656 </span>|
+ 62. | <span class=result>   17   10,371    4,030      206          .   .0850656 </span>|
+ 63. | <span class=result>   17   10,372    3,880      207          .   .0850656 </span>|
+     |--------------------------------------------------------|
+ 64. | <span class=result>   18   13,594    4,720      230   .2557557   .2557557 </span>|
+     |--------------------------------------------------------|
+ 65. | <span class=result>   20    4,890    3,690      218          .   .1477107 </span>|
+ 66. | <span class=result>   20    5,705    3,690      212   .1477107   .1477107 </span>|
+ 67. | <span class=result>   20    5,798    3,700      214          .   .1477107 </span>|
+ 68. | <span class=result>   20    7,827    4,080      222          .   .1477107 </span>|
+ 69. | <span class=result>   20    8,814    4,060      220          .   .1477107 </span>|
+ 70. | <span class=result>   20   11,385    4,330      221          .   .1477107 </span>|
+     |--------------------------------------------------------|
+ 71. | <span class=result>   21    5,788    3,670      218   .7502809   .7502809 </span>|
+ 72. | <span class=result>   21    6,342    3,740      220          .   .7502809 </span>|
+     |--------------------------------------------------------|
+ 73. | <span class=result>   22   11,497    4,840      233    .337951    .337951 </span>|
+     |--------------------------------------------------------|
+ 74. | <span class=result>   23    6,165    3,720      212   .7360283   .7360283 </span>|
+     +--------------------------------------------------------+
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- End Log and to HTML</span>
+<span class=input>&gt; log close _all</span>
+<span class=result>      </span>name:  <span class=result>stata_recode_discrete_subset</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//gen/group/fs_group.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>closed on:  <span class=result> 5 May 2020, 19:56:12</span>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</pre>
+</body>
+</html>

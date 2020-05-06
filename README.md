@@ -47,15 +47,18 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
     + Three row categories, two interacting column categories, statistics for multiple variables
     + **core**: *regres + estpost tabstat*
 
-# 3. Dataset Manipulation
+# 3. Dataset Wrangling
 
-## 3.1 Generate
+## 3.1 Generate and Replace
 
 1. [Generate Re-group Categorical Variable](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/gen/replace/fs_recode.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/replace/fs_recode.pdf)
     + Change or Reduce the number of categories for a categorical variable.
-    + 3 methods: a. recode; b. egen cut; c. inlist/inrange;
+    + 3 methods: a. recode; b. egen cut; c. inlist/inrange.
     + Semi-automated loop: reset relabel regroup many variables with some time saving.
     + **core**: *recode turn (min/35 = 1 "Turn <35") ... (46/max = 5 "Turn > 45") (else  =. ), gen(turn_m5); egen var = cut(turn), at(31(3)52) label; if inrange(turn, 31, 35), if inlist(turn, 46, 48, 51)*
+2. [Within-Group Fill and Replace Values](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/group/fs_group.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/group/fs_group.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/gen/group/fs_group.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/gen/group/fs_group.pdf)
+    + Fill missing values in group by single nonmissing value in group.
+    + **core**: *bys trunk (var_one_val_in_group): gen var_test_fill = var_one_val_in_group[1]*
 
 ## 3.2 Summary
 
