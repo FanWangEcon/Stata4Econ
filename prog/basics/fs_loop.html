@@ -1,0 +1,84 @@
+
+<html>
+<head>
+<title>Loop Over String and Numeric Vectors in Stata (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_loop.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</title>
+<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css">
+BODY{background-color: ffffff;
+    font-family: monaco, "courier new", monospace;
+     color: #000000}
+.input {color: #CC6600}
+.result{color: #000099}
+.error{color: #dd0000}
+</style>
+</head>
+<body>
+<h2>Loop Over String and Numeric Vectors in Stata (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_loop.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</h2>
+<pre>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <span class=result>stata_fs_loop</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//prog/basics/fs_loop.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>opened on:  <span class=result> 5 May 2020, 20:35:14</span>
+<br><br>
+<span class=input>. log on $st_logname</span>
+(log already on)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///-- Site Link: Fan's Project Reusable Stata Codes Table of Content</span>
+<span class=input>&gt; di "https://fanwangecon.github.io/"</span>
+<span class=result>https://fanwangecon.github.io/</span>
+<br><br>
+<span class=input>. di "https://fanwangecon.github.io/Stata4Econ/"</span>
+<span class=result>https://fanwangecon.github.io/Stata4Econ/</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///-- File Title</span>
+<span class=input>&gt; global filetitle "Loop Over String and Numeric Vectors in Stata"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- Loop over String</span>
+<span class=input>&gt; ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>. #delimit;</span>
+delimiter now ;
+<span class=input>. global ls_svr_outcome "</span>
+<span class=input>&gt;         el_i_mand_talk_m2a el_i_mand_talk_m2b el_i_mand_talk_m2c</span>
+<span class=input>&gt;         el_i_mand_write_m2a el_i_mand_write_m2b el_i_mand_write_m2c</span>
+<span class=input>&gt;         el_i_mnew_m2a el_i_mnew_m2b</span>
+<span class=input>&gt;         el_i_nnet_m2a el_i_nnet_m2b</span>
+<span class=input>&gt;         ";</span>
+<br><br>
+<span class=input>. #delimit cr</span>
+delimiter now cr
+<span class=input>. </span>
+<span class=input>. local it_counter = 0</span>
+<br><br>
+<span class=input>. foreach svr_outcome in $ls_svr_outcome {</span>
+  2<span class=input>.         local it_counter = `it_counter' + 1</span>
+  3<span class=input>.         di "`it_counter'th item of string list: `svr_outcome'"</span>
+  4<span class=input>. }</span>
+<span class=result>1th item of string list: el_i_mand_talk_m2a</span>
+<span class=result>2th item of string list: el_i_mand_talk_m2b</span>
+<span class=result>3th item of string list: el_i_mand_talk_m2c</span>
+<span class=result>4th item of string list: el_i_mand_write_m2a</span>
+<span class=result>5th item of string list: el_i_mand_write_m2b</span>
+<span class=result>6th item of string list: el_i_mand_write_m2c</span>
+<span class=result>7th item of string list: el_i_mnew_m2a</span>
+<span class=result>8th item of string list: el_i_mnew_m2b</span>
+<span class=result>9th item of string list: el_i_nnet_m2a</span>
+<span class=result>10th item of string list: el_i_nnet_m2b</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- End Log and to HTML</span>
+<span class=input>&gt; log close _all</span>
+<span class=result>      </span>name:  <span class=result>stata_fs_loop</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//prog/basics/fs_loop.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>closed on:  <span class=result> 5 May 2020, 20:35:14</span>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</pre>
+</body>
+</html>

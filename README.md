@@ -80,6 +80,9 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 1. [Local, Global and Scalar](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/define/fs_boolean.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/define/fs_boolean.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/prog/define/fs_boolean.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/define/fs_boolean.pdf)
     + local, global and scalar as boolean controls
     + **core**: *local bl_includereg1 = 1, if (`bl_includereg1'); global bl_includereg3 = 0, if ($bl_includereg3); scalar bl_includereg5 = 0, if (bl_includereg5);*
+2. [Loops](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_loop.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_loop.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/prog/basics/fs_loop.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_loop.pdf)
+    + local, global and scalar as boolean controls
+    + **core**: *#delimit; global ls "vara varb"; #delimit cr; foreach svr_outcome in $ls {}*
 
 ## 4.2 Matrix
 
