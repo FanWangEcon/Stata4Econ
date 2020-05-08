@@ -1,0 +1,167 @@
+
+<html>
+<head>
+<title>Labeling Stata Variables, and Get Label and all Value Labels from Variables (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_label.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</title>
+<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css">
+BODY{background-color: ffffff;
+    font-family: monaco, "courier new", monospace;
+     color: #000000}
+.input {color: #CC6600}
+.result{color: #000099}
+.error{color: #dd0000}
+</style>
+</head>
+<body>
+<h2>Labeling Stata Variables, and Get Label and all Value Labels from Variables (<a href="https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_label.do">DO</a>, more see: <a href="https://fanwangecon.github.io/">Fan</a> and <a href="https://fanwangecon.github.io/Stata4Econ">Stata4Econ</a>)</h2>
+<pre>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <span class=result>stata_fs_label</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//prog/basics/fs_label.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>opened on:  <span class=result> 7 May 2020, 20:28:04</span>
+<br><br>
+<span class=input>. log on $st_logname</span>
+(log already on)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///-- Site Link: Fan's Project Reusable Stata Codes Table of Content</span>
+<span class=input>&gt; di "https://fanwangecon.github.io/"</span>
+<span class=result>https://fanwangecon.github.io/</span>
+<br><br>
+<span class=input>. di "https://fanwangecon.github.io/Stata4Econ/"</span>
+<span class=result>https://fanwangecon.github.io/Stata4Econ/</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///-- File Title</span>
+<span class=input>&gt; global filetitle "Labeling Stata Variables, and Get Label and all Value Labels from Variables"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Load Data</span>
+<span class=input>&gt; set more off</span>
+<br><br>
+<span class=input>. sysuse auto, clear</span>
+(1978 Automobile Data)
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- Labeling</span>
+<span class=input>&gt; ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>. label variable make "Make and Model from the mtcars dataset"</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. label define foreign_lab 0 "domestic made" 1 "foreign made", modify</span>
+<br><br>
+<span class=input>. label values foreign foreign_lab </span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; ///--- Get Label Values</span>
+<span class=input>&gt; ///////////////////////////////////////////////////////////////////////////////</span>
+<span class=input>&gt; </span>
+<span class=input>. ///--- Variable Labels show</span>
+<span class=input>&gt; labelbook foreign_lab, d</span>
+<br><br>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+value label <span class=result>foreign_lab </span>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<br><br>
+      <span class=result>values</span>                                    <span class=result>labels</span>
+       range:  [<span class=result>0</span>,<span class=result>1</span>]                     string length:  [<span class=result>12</span>,<span class=result>13</span>]
+           N:  <span class=result>2                 </span>unique at full length:  <span class=result>yes</span>
+<span class=result>        </span>gaps:  <span class=result>no                  </span>unique at length 12:  <span class=result>yes</span>
+<span class=result>  </span>missing .*:  <span class=result>0                           </span>null string:  <span class=result>no</span>
+<span class=result>                               </span>leading/trailing blanks:  <span class=result>no</span>
+<span class=result>                                    </span>numeric -&gt; numeric:  <span class=result>no</span>
+<span class=result>  </span><span class=result>definition</span>
+           0  <span class=result> </span><span class=result><u>domestic mad</u></span><span class=result>e</span>
+           1   <span class=result>foreign made</span>
+<br><br>
+   variables:  <span class=result>foreign</span>
+<br><br>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Get Variable Label and Values hard-coded</span>
+<span class=input>&gt; local st_var_label : variable label foreign</span>
+<br><br>
+<span class=input>. local st_foreign_val_0_lab : label foreign_lab 0</span>
+<br><br>
+<span class=input>. local st_foreign_val_1_lab : label foreign_lab 1</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. di "st_var_label:`st_var_label'"</span>
+<span class=result>st_var_label:Car type</span>
+<br><br>
+<span class=input>. di "st_foreign_val_0_lab:`st_foreign_val_0_lab'"</span>
+<span class=result>st_foreign_val_0_lab:domestic made</span>
+<br><br>
+<span class=input>. di "st_foreign_val_1_lab:`st_foreign_val_1_lab'"</span>
+<span class=result>st_foreign_val_1_lab:foreign made</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. ///--- Get Variable Label and Values more Automated</span>
+<span class=input>&gt; /*</span>
+<span class=input>&gt; For automated value printing etc:</span>
+<span class=input>&gt; Given Variable Name:</span>
+<span class=input>&gt; 1. get the label of the variable</span>
+<span class=input>&gt; 2. get all label values</span>
+<span class=input>&gt; */</span>
+<span class=input>. </span>
+<span class=input>. * 0. Var name</span>
+<span class=input>. global st_var "foreign"</span>
+<br><br>
+<span class=input>. * 1. get variable label</span>
+<span class=input>. local st_var_label : variable label ${st_var}</span>
+<br><br>
+<span class=input>. global st_var_label "`st_var_label'"</span>
+<br><br>
+<span class=input>. * 2. all values of foreign label</span>
+<span class=input>. local st_var_val_lab_name: value label ${st_var}</span>
+<br><br>
+<span class=input>. levelsof ${st_var}, local(ls_var_levels) clean</span>
+0 1
+<br><br>
+<span class=input>. di "`st_var_val_lab_name'"</span>
+<span class=result>foreign_lab</span>
+<br><br>
+<span class=input>. di "`ls_var_levels'"</span>
+<span class=result>0 1</span>
+<br><br>
+<span class=input>. * 3. all label values</span>
+<span class=input>. global st_var_val_labs ""</span>
+<br><br>
+<span class=input>. local it_ctr = 0</span>
+<br><br>
+<span class=input>. foreach it_foreign_lvl of numlist `ls_var_levels' {</span>
+  2<span class=input>.         local foreign_lvl_lab : label `st_var_val_lab_name' `it_foreign_lvl'</span>
+  3<span class=input>.         di "`it_foreign_lvl':`foreign_lvl_lab'"</span>
+  4<span class=input>.         local it_ctr = `it_ctr' + 1</span>
+  5<span class=input>.         if (`it_ctr' &gt; 1 ) {</span>
+  6<span class=input>.                 global st_var_val_labs "${st_var_val_labs}, "</span>
+  7<span class=input>.         }</span>
+  8<span class=input>.         global st_var_val_labs "${st_var_val_labs}`it_foreign_lvl'=`foreign_lvl_lab'"</span>
+  9<span class=input>. }</span>
+<span class=result>0:domestic made</span>
+<span class=result>1:foreign made</span>
+<br><br>
+<span class=input>. * 4. final outputs</span>
+<span class=input>. di "${st_var_label}"</span>
+<span class=result>Car type</span>
+<br><br>
+<span class=input>. di "For Outcome ${st_var_label}: ${st_var_val_labs}"</span>
+<span class=result>For Outcome Car type: 0=domestic made, 1=foreign made</span>
+<br><br>
+<span class=input>. </span>
+<span class=input>. </span>
+<span class=input>. ///--- End Log and to HTML</span>
+<span class=input>&gt; log close _all</span>
+<span class=result>      </span>name:  <span class=result>stata_fs_label</span>
+<span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//prog/basics/fs_label.smcl</span>
+<span class=result>  </span>log type:  <span class=result>smcl</span>
+<span class=result> </span>closed on:  <span class=result> 7 May 2020, 20:28:04</span>
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</pre>
+</body>
+</html>

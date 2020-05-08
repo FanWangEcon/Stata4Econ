@@ -83,6 +83,11 @@ Please contact [FanWangEcon](https://fanwangecon.github.io/) for issues or probl
 2. [Loops](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_loop.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_loop.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/prog/basics/fs_loop.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_loop.pdf)
     + local, global and scalar as boolean controls
     + **core**: *#delimit; global ls "vara varb"; #delimit cr; foreach svr_outcome in $ls {}*
+3. [Labels](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_label.pdf): [**DO**](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_label.do) \| [**HTML**](https://fanwangecon.github.io/Stata4Econ/prog/basics/fs_label.html) \| [**PDF**](https://github.com/FanWangEcon/Stata4Econ/blob/master/prog/basics/fs_label.pdf)
+    + label a variable, label the values of a discrete variable
+    + output variable lable as string, and output all variable values with labels as single string.
+    + **core**: *labelbook + local st : variable label foreign + local st : label foreign_lab 0*
+
 
 ## 4.2 Matrix
 
