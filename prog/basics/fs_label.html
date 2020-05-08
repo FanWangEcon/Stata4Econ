@@ -20,7 +20,7 @@ BODY{background-color: ffffff;
       name:  <span class=result>stata_fs_label</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//prog/basics/fs_label.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>opened on:  <span class=result> 7 May 2020, 20:28:04</span>
+<span class=result> </span>opened on:  <span class=result> 7 May 2020, 20:47:06</span>
 <br><br>
 <span class=input>. log on $st_logname</span>
 (log already on)
@@ -106,7 +106,9 @@ value label <span class=result>foreign_lab </span>
 <span class=input>&gt; For automated value printing etc:</span>
 <span class=input>&gt; Given Variable Name:</span>
 <span class=input>&gt; 1. get the label of the variable</span>
-<span class=input>&gt; 2. get all label values</span>
+<span class=input>&gt; 2. get all value labels</span>
+<span class=input>&gt; 3. get the number of observation each value of categorical</span>
+<span class=input>&gt; 4. generate string based on these</span>
 <span class=input>&gt; */</span>
 <span class=input>. </span>
 <span class=input>. * 0. Var name</span>
@@ -129,7 +131,17 @@ value label <span class=result>foreign_lab </span>
 <span class=input>. di "`ls_var_levels'"</span>
 <span class=result>0 1</span>
 <br><br>
-<span class=input>. * 3. all label values</span>
+<span class=input>. * 3. Number of Observations from Each category</span>
+<span class=input>. tab ${st_var}, matcell(mt_obs)</span>
+<br><br>
+<span class=result>     </span>Car type |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+domestic made |<span class=result>         52       70.27       70.27</span>
+ foreign made |<span class=result>         22       29.73      100.00</span>
+--------------+-----------------------------------
+        Total |<span class=result>         74      100.00</span>
+<br><br>
+<span class=input>. * 4. all label values</span>
 <span class=input>. global st_var_val_labs ""</span>
 <br><br>
 <span class=input>. local it_ctr = 0</span>
@@ -141,26 +153,32 @@ value label <span class=result>foreign_lab </span>
   5<span class=input>.         if (`it_ctr' &gt; 1 ) {</span>
   6<span class=input>.                 global st_var_val_labs "${st_var_val_labs}, "</span>
   7<span class=input>.         }</span>
-  8<span class=input>.         global st_var_val_labs "${st_var_val_labs}`it_foreign_lvl'=`foreign_lvl_lab'"</span>
-  9<span class=input>. }</span>
+  8<span class=input>.         global it_cate_obs = el(mt_obs, `it_ctr', 1)</span>
+  9<span class=input>.         global st_var_val_labs "${st_var_val_labs}`it_foreign_lvl'=`foreign_lvl_lab' [N=${it_cate_obs}]"</span>
+ 10<span class=input>. }</span>
 <span class=result>0:domestic made</span>
 <span class=result>1:foreign made</span>
 <br><br>
+<span class=input>. </span>
 <span class=input>. * 4. final outputs</span>
 <span class=input>. di "${st_var_label}"</span>
 <span class=result>Car type</span>
 <br><br>
 <span class=input>. di "For Outcome ${st_var_label}: ${st_var_val_labs}"</span>
-<span class=result>For Outcome Car type: 0=domestic made, 1=foreign made</span>
+<span class=result>For Outcome Car type: 0=domestic made [N=52], 1=foreign made [N=22]</span>
 <br><br>
-<span class=input>. </span>
+<span class=input>. global slb_table_varinfo "${st_var_label} (${st_var_val_labs}, NA excluded from Regression)"</span>
+<br><br>
+<span class=input>. di "${slb_table_varinfo}"</span>
+<span class=result>Car type (0=domestic made [N=52], 1=foreign made [N=22], NA excluded from Regression)</span>
+<br><br>
 <span class=input>. </span>
 <span class=input>. ///--- End Log and to HTML</span>
 <span class=input>&gt; log close _all</span>
 <span class=result>      </span>name:  <span class=result>stata_fs_label</span>
 <span class=result>       </span>log:  <span class=result>C:\Users\fan/Stata4Econ//prog/basics/fs_label.smcl</span>
 <span class=result>  </span>log type:  <span class=result>smcl</span>
-<span class=result> </span>closed on:  <span class=result> 7 May 2020, 20:28:04</span>
+<span class=result> </span>closed on:  <span class=result> 7 May 2020, 20:47:06</span>
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </pre>
 </body>
