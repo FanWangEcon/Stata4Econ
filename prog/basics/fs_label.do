@@ -101,8 +101,7 @@ foreach it_foreign_lvl of numlist `ls_var_levels' {
 	global it_cate_obs = el(mt_obs, `it_ctr', 1)
 	global st_var_val_labs "${st_var_val_labs}`it_foreign_lvl'=`foreign_lvl_lab' [N=${it_cate_obs}]"
 }
-
-* 4. final outputs
+* 5. final outputs
 di "${st_var_label}"
 di "For Outcome ${st_var_label}: ${st_var_val_labs}"
 global slb_table_varinfo "${st_var_label} (${st_var_val_labs}, NA excluded from Regression)"
